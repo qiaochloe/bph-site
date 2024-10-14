@@ -2,6 +2,7 @@ import "~/styles/globals.css";
 
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
+import Link from "next/link";
 
 import { TRPCReactProvider } from "~/trpc/react";
 
@@ -11,13 +12,30 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
+function TopNav() {
+  return (
+    <nav className="flex items-center w-full p-4 justify-between">
+      <div>
+        <Link href="/">Home </Link>
+        <Link href="/puzzle">Puzzle</Link>
+      </div>
+      <div>
+        <Link href="/login">Login</Link>
+      </div>
+    </nav>
+  );
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <TopNav />
+        <main className="flex min-h-screen flex-col items-center justify-center">
+          {children}
+        </main>
       </body>
     </html>
   );

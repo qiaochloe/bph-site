@@ -11,6 +11,6 @@ export default async function Home() {
   void api.post.getLatest.prefetch();
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center">Hello!</main>
+    <main className="flex min-h-screen flex-col items-center justify-center">Login!</main>
   );
 }
