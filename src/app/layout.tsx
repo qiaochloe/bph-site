@@ -17,7 +17,8 @@ function TopNav() {
     <nav className="flex items-center w-full p-4 justify-between">
       <div>
         <Link href="/">Home </Link>
-        <Link href="/puzzle">Puzzle</Link>
+        <Link href="/puzzle">Puzzle </Link>
+        <Link href="/teams">Teams</Link>
       </div>
       <div>
         <Link href="/login">Login</Link>
