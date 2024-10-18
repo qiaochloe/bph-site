@@ -13,32 +13,33 @@ import {
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
 
-/**
- * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
- * database instance for multiple projects.
- *
- * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
- */
 export const createTable = pgTableCreator((name) => `bph_site_${name}`);
 
-export const interactionTypeEnum = pgEnum("interaction_type", ["in-person", "remote"]);
+// TEAMS, PUZZLES, and GUESSES
+export const authorizationEnum = pgEnum("authorization_level", ["admin", "user"]);
+export const interactionModeEnum = pgEnum("interaction_type", ["in-person", "remote"]);
 
 export const teams = createTable(
   "team",
   {
-    id: serial("id").primaryKey(),
-    name: varchar("name", { length: 256 }).notNull(),
+    id: varchar("id", { length: 255 })
+      .notNull()
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    name: varchar("name", { length: 255 }).notNull(),
+    password: varchar("password", { length: 255 }).notNull(),
+    authorization: authorizationEnum("authorization_level").notNull().default("user"),
+    interactionMode: interactionModeEnum("interaction_type").notNull(),
     finishTime: timestamp("finish_time", { withTimezone: true }),
-    interactionType: interactionTypeEnum("interaction_type").notNull(),
   }
 )
 
 export const puzzles = createTable(
   "puzzle",
   {
-    id: serial("id").primaryKey(),
-    name: varchar("name", { length: 256 }).notNull(),
-    answer: varchar("answer", { length: 256 }).notNull(),
+    // This is also the name of the puzzle
+    id: varchar("name", { length: 255 }).notNull().primaryKey(),
+    answer: varchar("answer", { length: 255 }).notNull(),
   }
 )
 
@@ -46,9 +47,9 @@ export const guesses = createTable(
   "guess",
   {
     id: serial("id").primaryKey(),
-    puzzleId: integer("puzzle_id").notNull().references(() => puzzles.id),
-    teamId: integer("team_id").notNull().references(() => teams.id),
-    guess: varchar("guess", { length: 256 }).notNull(),
+    puzzleId: varchar("puzzle_id").notNull().references(() => puzzles.id),
+    teamId: varchar("team_id").notNull().references(() => teams.id),
+    guess: varchar("guess", { length: 255 }).notNull(),
     isCorrect: boolean("is_correct").notNull(),
   }
 )

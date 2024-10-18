@@ -27,6 +27,7 @@
     "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"],
+      "@/auth": ["./src/server/auth.ts"],
       "@/components/*": ["./src/components/*"]
     }
   },

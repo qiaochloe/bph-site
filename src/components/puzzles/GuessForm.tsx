@@ -20,7 +20,7 @@ const formSchema = z.object({
 })
 
 type FormProps = {
-  puzzleId: number;
+  puzzleId: string;
 }
 
 export function GuessForm({ puzzleId }: FormProps) {
