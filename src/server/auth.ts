@@ -2,13 +2,12 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { type DefaultSession } from "next-auth";
 // import { DrizzleAdapter } from "@auth/drizzle-adapter";
-// TODO: need logic to deal with plaintext password
 
 import { eq, and } from 'drizzle-orm'
 import { db } from "~/server/db";
 import { teams } from "~/server/db/schema";
-
 import { object, string } from "zod"
+import { compare } from "bcrypt";
 
 export const signInSchema = object({
   name: string({ required_error: "Team name is required" })
@@ -29,7 +28,7 @@ declare module "next-auth" {
     //   emailVerified: Date;
     //   name: string;
     //   image: any;
-      // role: UserRole;
+    // role: UserRole;
     // } // & DefaultSession["user"];
   }
 
@@ -47,7 +46,7 @@ declare module "next-auth" {
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
  */
-export const { auth, signIn, signOut, handlers} = NextAuth({
+export const { auth, signIn, signOut, handlers } = NextAuth({
   session: {
     strategy: "jwt",
   },
@@ -88,15 +87,16 @@ export const { auth, signIn, signOut, handlers} = NextAuth({
         // TODO: Add logic to salt and has password
         // const pwHash = saltAndHashPassword(credentials.password)
 
+        // TODO: Make sure to check that the name is unique
         // Check if team exists in the database
-        const user = await db.select().from(teams).where(
-          and(eq(teams.name, name), eq(teams.password, password))
-        ).limit(1);
+        const user = await db.query.teams.findFirst({
+          where: eq(teams.name, name)
+        });
 
-        if (user.length > 0) {
+        if (user /* && (await compare(password, user.password)) */) {
           return {
-            id: user[0]?.id,
-            name: user[0]?.name,
+            id: user.id,
+            name: user.name,
           }
         }
         return null;

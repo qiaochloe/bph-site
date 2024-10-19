@@ -3,7 +3,7 @@
 import { z } from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { create } from "~/app/actions/actions"
+import { insertGuess } from "~/app/actions/actions"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -32,7 +32,7 @@ export function GuessForm({ puzzleId }: FormProps) {
   })
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    await create(puzzleId, data.guess);
+    await insertGuess(puzzleId, data.guess);
     form.reset();
   }
 

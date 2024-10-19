@@ -1,13 +1,28 @@
 'use server'
 
 import { db } from "~/server/db";
-import { guesses } from "~/server/db/schema";
+import { puzzles, guesses } from "~/server/db/schema";
+import { eq } from "drizzle-orm";
+import { auth } from "~/server/auth";
 
-export async function create(puzzleId: string, guess: string) {
+export async function insertGuess(puzzleId: string, guess: string) {
+  const session = await auth();
+  if (!session?.user?.id) {
+    throw new Error("Not logged in");
+  }
+
+  const puzzle = await db.query.puzzles.findFirst({
+    where: eq(puzzles.id, puzzleId)
+  });
+
+  if (!puzzle) {
+    throw new Error("Puzzle not found");
+  } 
+
   await db.insert(guesses).values({
     puzzleId: puzzleId,
     guess: guess,
-    teamId: "team-1", // TODO: Get teamId from session
-    isCorrect: false, // TODO: Check if guess is correct
+    teamId: session.user.id,
+    isCorrect: puzzle.answer === guess,
   })
 }

@@ -2,9 +2,9 @@ import { api } from "~/trpc/server";
 import { auth } from "@/auth"
 import { GuessForm } from "~/components/puzzles/GuessForm";
 
-
 export default async function Home() {
   const session = await auth()
+  if (!session) return null 
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-4">
