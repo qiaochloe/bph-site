@@ -52,6 +52,7 @@ export const guesses = createTable(
     teamId: varchar("team_id").notNull().references(() => teams.id),
     guess: varchar("guess", { length: 255 }).notNull(),
     isCorrect: boolean("is_correct").notNull(),
+    // TODO: Add timestamp
   }
 )
 

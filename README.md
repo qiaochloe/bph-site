@@ -9,7 +9,7 @@
 - [x] Add simple puzzle page
     - [x] Add client guess submission 
     - [x] Add server side validation
-    - [ ] Display previous guesses
+    - [x] Display previous guesses
     - [ ] Automatically sanitize the guess (ONLY ALPHABETIC CAPS)
     - [ ] Don't double jeapordize the team for the same guess
 
@@ -18,10 +18,10 @@
 - [x] Add login page
 - [x] Add registration page
 
+- [ ] Add admin dashboard
 - [ ] Add hinting system
     - [ ] Add hint request form
     - [ ] Add hint response form
-    - [ ] Add admin dashboard
     - [ ] Handle authorization
 
 - [ ] Display list of puzzles dynamically
