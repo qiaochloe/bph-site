@@ -19,6 +19,7 @@ export const createTable = pgTableCreator((name) => `bph_site_${name}`);
 export const authorizationEnum = pgEnum("authorization_level", ["admin", "user"]);
 export const interactionModeEnum = pgEnum("interaction_type", ["in-person", "remote"]);
 
+// TODO: Differentiate between username (id) and display name
 export const teams = createTable(
   "team",
   {

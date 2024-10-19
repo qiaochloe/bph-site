@@ -8,18 +8,15 @@
 - [x] Add leaderboard page
 - [x] Add simple puzzle page
     - [x] Add client guess submission 
-    - [ ] Add server side validation
+    - [x] Add server side validation
     - [ ] Display previous guesses
     - [ ] Automatically sanitize the guess (ONLY ALPHABETIC CAPS)
     - [ ] Don't double jeapordize the team for the same guess
 
-- [ ] Handle authentication with roles
-- [ ] Use tRPC for API routes
-- [ ] Add registration page
-
-- [ ] Add login page
-    - [ ] Handle authentication
-    - [ ] Handle session management
+- [x] Handle authentication
+- [x] Handle session management
+- [x] Add login page
+- [x] Add registration page
 
 - [ ] Add hinting system
     - [ ] Add hint request form
@@ -33,6 +30,9 @@
 - [ ] Test-solving
 
 # Notes
+
+Check out https://github.com/TheEdoRan/next-safe-action
+
 ## API Routes vs Websockets
 
 API routes follow a request-response model. The client sends a request (GET, POST, PUT) to the server, and the server responds with data. This is a synchronous communication because the client makes a request, waits for a response, and closes the connection.
