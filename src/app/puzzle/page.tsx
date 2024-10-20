@@ -13,13 +13,16 @@ import {
 } from "@/components/ui/table"
 import { eq, and } from "drizzle-orm";
 
+const PUZZLEID = "puzzle-2"
+
 export default async function Home() {
   const session = await auth()
   // TODO: Redirect to login if not logged in
   if (!session?.user?.id) return null
 
+
   const previousGuesses = await db.query.guesses.findMany({
-    where: and(eq(guesses.teamId, session.user.id), eq(guesses.puzzleId, "puzzle-1"))
+    where: and(eq(guesses.teamId, session.user.id), eq(guesses.puzzleId, PUZZLEID))
   });
 
   const hasCorrectGuess = previousGuesses.some(guess => guess.isCorrect);
@@ -28,9 +31,10 @@ export default async function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-4">
       <h1 className="p-4">Puzzle!</h1>
-      <p>What is the answer to this puzzle?</p>
-      {!hasCorrectGuess && <GuessForm puzzleId="puzzle-1" />}
-
+      <p className="p-4">What is the answer to this puzzle?</p>
+      <div>
+        {!hasCorrectGuess && <GuessForm puzzleId={PUZZLEID} />}
+      </div>
       <h1 className="p-4">Previous Guesses!</h1>
       <Table>
         <TableBody>
