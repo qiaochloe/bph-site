@@ -3,7 +3,7 @@
 import { db } from "~/server/db";
 import { puzzles, guesses, teams, authorizationEnum, interactionModeEnum } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
-import { auth } from "~/server/auth";
+import { auth } from "@/auth";
 
 export async function insertGuess(puzzleId: string, guess: string) {
   const session = await auth();
