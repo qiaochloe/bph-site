@@ -10,30 +10,39 @@
     - [x] Add client guess submission 
     - [x] Add server side validation
     - [x] Display previous guesses
-    - [ ] Automatically sanitize the guess (ONLY ALPHABETIC CAPS)
-    - [ ] Don't double jeapordize the team for the same guess
-
+    - [ ] Automatically sanitize the guess client-side (ONLY ALPHABETIC CAPS)
+    - [ ] Don't double jeapordize the team for the same guess (client-side)
 - [x] Handle authentication
 - [x] Handle session management
-- [x] Add login page
 - [x] Add registration page
+- [x] Add login page
+    - [ ] Add password reset
+- [ ] Finish data-modeling using gph-site/puzzles/models.py
+- [ ] Add puzzle unlock system
+    - [ ] Display list of puzzles dynamically
 
-- [ ] Add admin dashboard
+## Necessary for running the hunt 
+
+- [ ] Add admin panel
+    - [ ] Add a Big Board (a live-updating team progress page)
+    - [ ] Add Submission Queue (a live-updating queue of submitted guesses)
+- [ ] Add test-solving system
+- [ ] Add errata system
 - [ ] Add hinting system
     - [ ] Add hint request form
     - [ ] Add hint response form
-    - [ ] Handle authorization
-
-- [ ] Display list of puzzles dynamically
-- [ ] Add errata system
+- [ ] Discord bot
+- [ ] Log Vercel
 - [ ] Index the database
-- [ ] Test-solving
+
+## Architecture
+
+DNS -> Cloudflare -> Digital Ocean -> Reverse proxy -> Digital Ocean
+                                                    -> Vercel
+
+The DNS can also do reverse proxying. We can also reduce cost by $20/month by using a static site.
 
 # Notes
-
-Check out https://github.com/TheEdoRan/next-safe-action
-
-## API Routes vs Websockets
 
 API routes follow a request-response model. The client sends a request (GET, POST, PUT) to the server, and the server responds with data. This is a synchronous communication because the client makes a request, waits for a response, and closes the connection.
 
@@ -48,3 +57,6 @@ tRPC allows you to build typesafe APIs.
 1. Define routers in the `server/api/routers/` folder. Routers contain multiple procedures. They can be queries, mutations, or subscriptions. 
 2. Merge these routers in `server/api/root.ts` into a centralized `appRouter`. 
 3. Call procedures in the frontend using the `useRouter` hook.
+
+## Database
+Filters are usually better than making a new data table
