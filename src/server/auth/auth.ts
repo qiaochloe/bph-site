@@ -10,7 +10,7 @@ import { object, string } from "zod"
 import { compare } from "bcrypt";
 
 export const signInSchema = object({
-  name: string({ required_error: "Team name is required" })
+  username: string({ required_error: "Team name is required" })
     .min(1, "Team name is required"),
   password: string({ required_error: "Password is required" })
     .min(1, "Password is required")
@@ -28,18 +28,20 @@ declare module "next-auth" {
     //   emailVerified: Date;
     //   name: string;
     //   image: any;
-    // role: UserRole;
+    // role: Userrole;
     // } // & DefaultSession["user"];
   }
 
   interface User {
     id?: string | undefined;
-    name?: string | null | undefined;
+    username: string;
+    displayName: string;
+    role: string;
     // image?: string | null | undefined;
     // emailVerified: Date;
     // email?: string | null | undefined;
     // ...other properties
-    // role: UserRole;
+    // role: Userrole;
   }
 }
 
@@ -54,7 +56,9 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
     jwt: async ({ token, user }) => {
       if (user) {
         token.id = user.id;
-        token.name = user.name;
+        token.username = user.username;
+        token.displayName = user.displayName;
+        token.role = user.role;
       }
       return token;
     },
@@ -63,7 +67,9 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         session.user = {
           ...session.user,
           id: token.id as string,
-          name: token.name as string
+          username: token.username as string,
+          displayName: token.displayName as string,
+          role: token.role as string
         };
       }
       return session;
@@ -74,31 +80,35 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
     Credentials({
       // These are the fields to be submitted
       credentials: {
-        name: {},
+        username: {},
         password: {},
       },
       authorize: async (credentials) => {
-        if (!credentials?.name || !credentials?.password) {
+        if (!credentials?.username || !credentials?.password) {
           return null;
         }
 
-        const { name, password } = await signInSchema.parseAsync(credentials)
+        const { username, password } = await signInSchema.parseAsync(credentials)
 
         // TODO: Add logic to salt and has password
         // const pwHash = saltAndHashPassword(credentials.password)
 
         // TODO: Make sure to check that the name is unique
         // Check if team exists in the database
+
         const user = await db.query.teams.findFirst({
-          where: eq(teams.name, name)
+          where: eq(teams.username, username)
         });
 
         if (user /* && (await compare(password, user.password)) */) {
           return {
             id: user.id,
-            name: user.name,
+            username: user.username,
+            displayName: user.displayName,
+            role: user.role
           }
         }
+
         return null;
       }
     })

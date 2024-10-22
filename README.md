@@ -17,9 +17,10 @@
 - [x] Add registration page
 - [x] Add login page
     - [ ] Add password reset
-- [ ] Finish data-modeling using gph-site/puzzles/models.py
+- [x] Finish data-modeling using gph-site/puzzles/models.py
 - [ ] Add puzzle unlock system
     - [ ] Display list of puzzles dynamically
+- [ ] Add round system
 
 ## Necessary for running the hunt 
 

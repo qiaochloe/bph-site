@@ -1,5 +1,4 @@
 import { db } from "~/server/db";
-import { api } from "~/trpc/server";
 import {
   Table,
   TableBody,
@@ -12,8 +11,8 @@ import {
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
+  // TODO: Also order by number of correct guesses, last correct submission time
   const teams = await db.query.teams.findMany({
-    // TODO: Also order by number of correct guesses, last correct submission time
     orderBy: (model, { asc }) => [asc(model.finishTime)],
     with: {
       guesses: true,
@@ -38,7 +37,7 @@ export default async function Home() {
               teams.map((team, index) => (
                 <TableRow>
                   <TableCell>{index + 1}</TableCell>
-                  <TableCell>{team.name}</TableCell>
+                  <TableCell>{team.displayName}</TableCell>
                   <TableCell className="text-center">{team.guesses.filter((guess) => guess.isCorrect).length}</TableCell>
                   <TableCell>{team.finishTime ? team.finishTime.toLocaleString() : ''}</TableCell>
                 </TableRow>

@@ -1,4 +1,3 @@
-import { api } from "~/trpc/server";
 import { auth } from "@/auth"
 import { db } from "~/server/db";
 import { guesses } from "~/server/db/schema"
@@ -13,27 +12,24 @@ import {
 } from "@/components/ui/table"
 import { eq, and } from "drizzle-orm";
 
-const PUZZLEID = "puzzle-2"
+const PUZZLE_ID = "puzzle1"
 
 export default async function Home() {
   const session = await auth()
-  // TODO: Redirect to login if not logged in
   if (!session?.user?.id) return null
 
-
   const previousGuesses = await db.query.guesses.findMany({
-    where: and(eq(guesses.teamId, session.user.id), eq(guesses.puzzleId, PUZZLEID))
+    where: and(eq(guesses.teamId, session.user.id), eq(guesses.puzzleId, PUZZLE_ID))
   });
 
   const hasCorrectGuess = previousGuesses.some(guess => guess.isCorrect);
 
-  // TODO: Add proper time stamping later
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-4">
       <h1 className="p-4">Puzzle!</h1>
       <p className="p-4">What is the answer to this puzzle?</p>
       <div>
-        {!hasCorrectGuess && <GuessForm puzzleId={PUZZLEID} />}
+        {!hasCorrectGuess && <GuessForm puzzleId={PUZZLE_ID} />}
       </div>
       <h1 className="p-4">Previous Guesses!</h1>
       <Table>
@@ -43,7 +39,7 @@ export default async function Home() {
               <TableRow>
                 <TableCell>{guess.guess}</TableCell>
                 <TableCell>{guess.isCorrect ? "✅" : "❌"}</TableCell>
-                <TableCell>Sep 22 at 00:16</TableCell>
+                <TableCell>{guess.submitTime.toLocaleString()}</TableCell>
               </TableRow>
             ))}
         </TableBody>

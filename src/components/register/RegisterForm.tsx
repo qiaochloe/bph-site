@@ -22,11 +22,13 @@ import {
 import { interactionModeEnum } from '~/server/db/schema'
 
 const formSchema = z.object({
-  // TODO: include display name
-  name: z.string().max(50),
+  // TODO: validate that this is unique and does not contain special characters
+  username: z.string().max(50),
+  displayName: z.string().max(50),
   password: z.string().max(50),
   interactionMode: z.enum(interactionModeEnum.enumValues),
   // TODO: include additional team members
+  // Check if we can make this consistent with the db schema automatically
 })
 
 type FormProps = {
@@ -38,7 +40,7 @@ export function RegisterForm() {
   })
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    await insertTeam(data.name, data.password, data.interactionMode);
+    await insertTeam(data.username, data.displayName, data.password, data.interactionMode);
     form.reset();
   }
 
@@ -47,14 +49,28 @@ export function RegisterForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name="name"
+          name="username"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Team name</FormLabel>
+              <FormLabel>Username</FormLabel>
+              <FormControl>
+                <Input placeholder="jcarberry" {...field} />
+              </FormControl>
+              <FormDescription>This is the private username your team will use when logging in.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="displayName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Display name</FormLabel>
               <FormControl>
                 <Input placeholder="Josiah Carberry" {...field} />
               </FormControl>
-              <FormDescription>This is the private username your team will use when logging in.</FormDescription>
+              <FormDescription>This is the public display name. You can change at any time.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -98,7 +114,7 @@ export function RegisterForm() {
                       <RadioGroupItem value="remote" />
                     </FormControl>
                     <FormLabel className="font-normal">
-                      Remotely
+                      Remote
                     </FormLabel>
                   </FormItem>
                 </RadioGroup>

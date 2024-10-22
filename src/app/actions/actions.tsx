@@ -1,7 +1,7 @@
 'use server'
 
 import { db } from "~/server/db";
-import { puzzles, guesses, teams, authorizationEnum, interactionModeEnum } from "~/server/db/schema";
+import { puzzles, guesses, teams, roleEnum, interactionModeEnum } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
 import { auth } from "@/auth";
 
@@ -20,20 +20,23 @@ export async function insertGuess(puzzleId: string, guess: string) {
   }
 
   await db.insert(guesses).values({
+    teamId: session.user.id,
     puzzleId,
     guess,
-    teamId: session.user.id,
     isCorrect: puzzle.answer === guess,
+    submitTime: new Date(),
   })
 }
 
-export async function insertTeam(name: string, password: string, interactionMode: (typeof interactionModeEnum.enumValues)[number]) {
+export async function insertTeam(username: string, displayName: string, password: string, interactionMode: (typeof interactionModeEnum.enumValues)[number]) {
   // TODO: check if team already exists
   // Also hash and salt the password
   await db.insert(teams).values({
-    name,
+    username,
+    displayName,
     password,
-    authorization: "user" as const,
+    role: "user" as const,
     interactionMode,
+    createTime: new Date(),
   })
 }
