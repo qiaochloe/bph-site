@@ -16,7 +16,7 @@ const PUZZLE_ID = "puzzle1"
 
 export default async function Home() {
   const session = await auth()
-  if (!session?.user?.id) return null
+  if (!session?.user?.id) return <div>You are not authorized to view this puzzle</div>
 
   const previousGuesses = await db.query.guesses.findMany({
     where: and(eq(guesses.teamId, session.user.id), eq(guesses.puzzleId, PUZZLE_ID))
