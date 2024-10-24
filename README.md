@@ -24,7 +24,6 @@
 
 This project is built using **Next.js v14** using the App Router (not the Pages Router). The frontend is in the `src/app` folder, and the backend is in the `src/server` folder.
 
-
 We use Vercel **Postgres** as the database and **Drizzle** as the ORM. All of the code for the database is in the `src/app/server/db` folder.
 
 Most of the client-to-server communication is currently handled by Vercel Server Actions. 
@@ -73,6 +72,7 @@ Check that you are reading documentation for v5, which has some significant diff
 - [x] Add registration page
 - [x] Add login page
 - [x] Finish data-modeling using gph-site/puzzles/models.py
+- [x] Add middleware for authentication
 
 ## By Puzzlethon
 
