@@ -73,6 +73,9 @@ Check that you are reading documentation for v5, which has some significant diff
 - [x] Add login page
 - [x] Finish data-modeling using gph-site/puzzles/models.py
 - [x] Add middleware for authentication
+- [x] Redesign the login page to look more like the registration page
+- [x] Add puzzle drop system when the hunt starts
+- [x] Display list of puzzles dynamically
 
 ## By Puzzlethon
 
@@ -81,11 +84,8 @@ Please mark the TODO list when you are done with something. These are just high-
 ### Backend
 - [ ] Validate that the guess has not already been submitted before
 - [ ] Automatically convert the guess to uppercase alphabetic characters
-- [ ] Add time-based puzzle unlock system 
-- [ ] Display list of puzzles dynamically
 
 ### Frontend
-- [x] Redesign the login page to look more like the registration page
 - [ ] Add React hooks to update "login" to "logout" on the top right corner when the user is logged in
 
 ## By Brown Puzzlehunt

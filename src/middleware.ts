@@ -1,8 +1,27 @@
 import { auth } from "@/auth"
+import { HUNT_START_TIME } from "@/hunt.config"
 
 export default auth((req) => {
-  if (!req.auth && req.nextUrl.pathname !== "/login") {
+  // Allow admins to access all pages
+  if (req.auth?.user?.role === "admin") {
+    return
+  }
+
+  // Protect admin pages from non-admin users 
+  if (req.auth?.user?.role !== "admin" && req.nextUrl.pathname.startsWith("/admin")) {
+    const newUrl = new URL("./", req.nextUrl.origin)
+    return Response.redirect(newUrl)
+  }
+
+  // Protect puzzle pages from unauthenticated users
+  if ((!req.auth && req.nextUrl.pathname.match("/puzzle/.+"))) {
     const newUrl = new URL("/login", req.nextUrl.origin)
+    return Response.redirect(newUrl)
+  }
+
+  // Protect puzzle pages before the hunt starts
+  if (new Date() < HUNT_START_TIME && req.nextUrl.pathname.match("/puzzle/.+")) {
+    const newUrl = new URL("/puzzle", req.nextUrl.origin)
     return Response.redirect(newUrl)
   }
 })
@@ -10,6 +29,5 @@ export default auth((req) => {
 export const config = {
   matcher: [
     "/((?!api|_next/static|_next/image|favicon.ico).*)",
-    "/app/puzzle/:path*"
   ],
 }

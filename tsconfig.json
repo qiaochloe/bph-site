@@ -28,7 +28,9 @@
     "paths": {
       "~/*": ["./src/*"],
       "@/auth": ["./src/server/auth/auth.ts"],
-      "@/components/*": ["./src/components/*"]
+      "@/components/*": ["./src/components/*"],
+      "@/hunt.config": ["./src/hunt.config.ts"],
+      "@/db": ["./src/server/db/index.ts"]
     }
   },
   "include": [
