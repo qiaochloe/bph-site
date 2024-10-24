@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { insertGuess } from "~/app/actions/actions"
-
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -24,6 +24,7 @@ type FormProps = {
 }
 
 export function GuessForm({ puzzleId }: FormProps) {
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -34,6 +35,7 @@ export function GuessForm({ puzzleId }: FormProps) {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     await insertGuess(puzzleId, data.guess);
     form.reset();
+    router.refresh();
   }
 
   return (

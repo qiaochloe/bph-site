@@ -76,12 +76,14 @@ Check that you are reading documentation for v5, which has some significant diff
 - [x] Redesign the login page to look more like the registration page
 - [x] Add puzzle drop system when the hunt starts
 - [x] Display list of puzzles dynamically
+- [x] Reload the page when the user submits a guess
 
 ## By Puzzlethon
 
 Please mark the TODO list when you are done with something. These are just high-level tasks that need to be done, but you can add more specific tasks as you work on them. There are also more tasks marked with `TODO` scattered around the codebase.
 
 ### Backend
+- [ ] Validate that the guess is not an empty string
 - [ ] Validate that the guess has not already been submitted before
 - [ ] Automatically convert the guess to uppercase alphabetic characters
 
@@ -104,6 +106,10 @@ Please mark the TODO list when you are done with something. These are just high-
 - [ ] Redis layer
 - [ ] Add round system
 - [ ] Add password reset
+
+
+## Would be nice to have
+- [ ] Sync guesses between team members using streams
 
 # Some design decisions
 
