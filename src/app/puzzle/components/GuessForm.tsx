@@ -3,7 +3,6 @@
 import { z } from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { insertGuess } from "~/app/actions/actions"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -14,6 +13,8 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form"
+
+import { insertGuess } from "../actions"
 
 const formSchema = z.object({
   guess: z.string().max(50),

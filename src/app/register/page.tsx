@@ -1,6 +1,6 @@
 "use server"
 import { auth } from "@/auth"
-import { RegisterForm } from "@/components/register/RegisterForm"
+import { RegisterForm } from "./RegisterForm"
 
 export default async function Home() {
   const session = await auth();

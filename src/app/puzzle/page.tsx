@@ -1,8 +1,9 @@
 "use server"
 import { HUNT_START_TIME } from "@/hunt.config"
 import Link from "next/link"
-import { db } from "@/db"
+import { db } from "@/db/index"
 
+// TODO: should puzzles page be available to non-logged in users?
 export default async function Home() {
     return (
         <main>
