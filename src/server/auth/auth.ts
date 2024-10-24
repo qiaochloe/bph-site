@@ -100,7 +100,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
           where: eq(teams.username, username)
         });
 
-        if (user /* && (await compare(password, user.password)) */) {
+        if (user && password === user.password) {
           return {
             id: user.id,
             username: user.username,

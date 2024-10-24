@@ -3,7 +3,9 @@
 import { db } from "~/server/db";
 import { puzzles, guesses, teams, roleEnum, interactionModeEnum } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
-import { auth } from "@/auth";
+import { auth, signIn, signOut } from "@/auth";
+import { AuthError } from "next-auth";
+import { except } from "drizzle-orm/mysql-core";
 
 export async function insertGuess(puzzleId: string, guess: string) {
   const session = await auth();
@@ -39,4 +41,21 @@ export async function insertTeam(username: string, displayName: string, password
     interactionMode,
     createTime: new Date(),
   })
+}
+
+export async function login(username: string, password: string) {
+  try {
+    await signIn("credentials", { username, password, redirect: false });
+    return { error: null }
+  } catch (error) {
+    if (error instanceof AuthError) {
+        return { error: 'Username or password is incorrect' };
+    } else {
+      return { error: 'An unexpected error occurred' };
+    }
+  } 
+}
+
+export async function logout() {
+  await signOut();
 }

@@ -1,7 +1,8 @@
+"use server";
 import { auth } from "@/auth"
 import { db } from "~/server/db";
 import { guesses } from "~/server/db/schema"
-import { GuessForm } from "~/components/puzzles/GuessForm";
+import { GuessForm } from "~/app/puzzle/GuessForm";
 import {
   Table,
   TableBody,
@@ -34,14 +35,13 @@ export default async function Home() {
       <h1 className="p-4">Previous Guesses!</h1>
       <Table>
         <TableBody>
-          {
-            previousGuesses.map((guess) => (
-              <TableRow>
-                <TableCell>{guess.guess}</TableCell>
-                <TableCell>{guess.isCorrect ? "✅" : "❌"}</TableCell>
-                <TableCell>{guess.submitTime.toLocaleString()}</TableCell>
-              </TableRow>
-            ))}
+          {previousGuesses.map((guess) => (
+            <TableRow key={guess.id}>
+              <TableCell>{guess.guess}</TableCell>
+              <TableCell>{guess.isCorrect ? "✅" : "❌"}</TableCell>
+              <TableCell>{guess.submitTime.toLocaleString()}</TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     </main>

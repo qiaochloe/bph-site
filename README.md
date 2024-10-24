@@ -85,7 +85,7 @@ Please mark the TODO list when you are done with something. These are just high-
 - [ ] Display list of puzzles dynamically
 
 ### Frontend
-- [ ] Redesign the login page to look more like the registration page
+- [x] Redesign the login page to look more like the registration page
 - [ ] Add React hooks to update "login" to "logout" on the top right corner when the user is logged in
 
 ## By Brown Puzzlehunt

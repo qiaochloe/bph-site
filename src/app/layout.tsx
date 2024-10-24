@@ -4,8 +4,6 @@ import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 import Link from "next/link";
 
-import { TRPCReactProvider } from "~/trpc/react";
-
 export const metadata: Metadata = {
   title: "Brown Puzzle Hunt",
   description: "",
@@ -13,6 +11,7 @@ export const metadata: Metadata = {
 };
 
 function TopNav() {
+  // TODO: dynamically change the login/logout button based on the user's status
   return (
     <nav className="flex items-center w-full p-4 justify-between">
       <div>
