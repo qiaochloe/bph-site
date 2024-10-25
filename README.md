@@ -44,8 +44,7 @@ Finally, on the frontend, we are using **Shadcn UI** components with the **Tailw
 Make sure to check that you are reading documentation for Next.js with the App Router, not the Pages Router.
 
 Auth.js is formerly known as NextAuth.js. 
-Most documentation out there is still for v4, so check that you are reading documentation for v5
-It has some significant differences that are more compatible with the Next.js App Router. 
+Most documentation out there is still for v4, so check that you are reading documentation for v5.
 
 - [Next.js](https://nextjs.org/docs/app) with the App Router
 - [Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres)
@@ -168,9 +167,9 @@ Note that there might be some old code that uses the `tRPC` library. That can be
 
 Websockets provide persistent, asynchronous, bidirectional communication between the client and server. It is asynchronous because the client can send messages to the server at any time, and the server can send messages to the client at any time. This is useful for real-time applications like chat apps, multiplayer games, and collaborative tools.
 
-It's nice to have websockets to sync data between different team members. For example, if one person makes a guess, we want to update the page of everyone else on the team immediately. **But historically, websockets has been the root of all of our problems.** It probably comes down to how Django hnadles websockets, but we're going to try to avoid them entirely.
+It's nice to have websockets to sync data between different team members. For example, if one person makes a guess, we want to update the page of everyone else on the team immediately. **But historically, websockets have been the root of all of our problems.** It probably comes down to how Django handles websockets, but we're going to try to avoid them entirely.
 
-If we really want websockets, we need to either host it on another server, use a websocket provider, or use a real-time database. Vercel does not support websockes because it is serverless.
+If we really want websockets, we need to either host it on another server, use a websocket provider, or use a real-time database. Vercel does not support websockets because it is serverless.
 
 ### Server-Side Events (SSE) or Streaming 
 
