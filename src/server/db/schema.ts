@@ -26,7 +26,7 @@ export const createTable = pgTableCreator((name) => `bph_site_${name}`);
 // TEAMS, PUZZLES, and GUESSES
 export const roleEnum = pgEnum("role", ["admin", "user"]);
 export const interactionModeEnum = pgEnum("interaction_type", ["in-person", "remote"]);
-export const hintStatusEnum = pgEnum("status", ["no_response", "answered"]);
+export const hintStatusEnum = pgEnum("status", ["no_response", "answered", "refunded"]);
 
 export const teams = createTable(
   "team",

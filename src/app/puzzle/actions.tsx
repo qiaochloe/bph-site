@@ -1,12 +1,14 @@
 'use server'
 
 import { db } from "~/server/db";
-import { puzzles, guesses, teams, roleEnum, interactionModeEnum } from "~/server/db/schema";
+import { puzzles, guesses, roleEnum, interactionModeEnum, hints } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
 import { auth, signIn, signOut } from "@/auth";
 import { AuthError } from "next-auth";
 import { except } from "drizzle-orm/mysql-core";
 
+// TODO: don't let teams submit the same guess twice
+// Remember to handle errors in the GuessForm component
 export async function insertGuess(puzzleId: string, guess: string) {
   const session = await auth();
   if (!session?.user?.id) {
@@ -27,5 +29,20 @@ export async function insertGuess(puzzleId: string, guess: string) {
     guess,
     isCorrect: puzzle.answer === guess,
     submitTime: new Date(),
+  })
+}
+
+export async function insertHint(puzzleId: string, hint: string) {
+  const session = await auth();
+  if (!session?.user?.id) {
+    throw new Error("Not logged in");
+  }
+
+  await db.insert(hints).values({
+    teamId: session.user.id,
+    puzzleId,
+    request: hint,
+    requestTime: new Date(),
+    status: "no_response",
   })
 }

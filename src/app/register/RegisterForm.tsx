@@ -23,7 +23,8 @@ import { interactionModeEnum } from "~/server/db/schema";
 import { insertTeam } from "./actions";
 
 export const registerFormSchema = z.object({
-  // TODO: validate that username is unique and does not contain special characters
+  // TODO: validate that username is unique in another server component
+  // TODO: validate that username does not contain special characters
   username: z
     .string()
     .min(8, { message: "Username must be at least 8 characters long" })
@@ -73,7 +74,9 @@ export function RegisterForm({}: RegisterFormProps) {
       // form.reset();
 
       // Redirect to login page
+      // #GoodFirstIssue
       // TODO: give user some sort of confirmation that they've been registered before redirecting
+      // Using a toast might be nice: https://ui.shadcn.com/docs/components/toast
       router.push("/login");
 
     } catch (error) {
@@ -82,8 +85,11 @@ export function RegisterForm({}: RegisterFormProps) {
     }
   };
 
+  // #GoodFirstIssue
   // TODO: size of the form changes when the error message is shown
   // See: LoginForm.tsx
+  
+  // #GoodFirstIssue
   // TODO: might be nice to have people confirm their password twice
   return (
     <Form {...form}>

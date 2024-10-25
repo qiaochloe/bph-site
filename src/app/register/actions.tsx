@@ -4,8 +4,10 @@ import { db } from "@/db/index";
 import { teams, interactionModeEnum } from "@/db/schema";
 
 export async function insertTeam(username: string, displayName: string, password: string, interactionMode: (typeof interactionModeEnum.enumValues)[number]) {
-  // TODO: check if team already exists
-  // Also hash and salt the password
+  // TODO: check if team username already exists before inserting
+  // Remember to handle the error in the register form
+
+  // TODO: Hash and salt the password before inserting
   await db.insert(teams).values({
     username,
     displayName,

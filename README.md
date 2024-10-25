@@ -32,29 +32,33 @@ Note that Server Actions can only be defined in Server Components marked with th
 To make them available in Client Components marked with the `use client` directive, they must be imported or passed as a prop.
 All of the code for Server Actions is in the `src/app/actions` folder.
 
-Authentication, authorization, and session management is handled by **NextAuth.js**.
+Authentication, authorization, and session management is handled by **Auth.js**.
 We only support username/password authentication using the `Credentials` provider.
 Sessions are stored in Json Web Tokens (JWTs) instead of database sessions.
 The setup is in the `src/app/server/auth` folder.
 
-Finally, on the frontend, we are using **Shadcn UI** components with the **Tailwind CSS** framework. Components are in the `src/components` folder.
+Finally, on the frontend, we are using **Shadcn UI** components with the **Tailwind CSS** framework. Components are in the `src/components/ui` folder.
 
 ## Quick Links
 
-Again, make sure to check that you are reading documentation for Next.js with the App Router, not the Pages Router.
+Make sure to check that you are reading documentation for Next.js with the App Router, not the Pages Router.
 
-Additionally, most documentation for NextAuth.js is for v4. 
-Check that you are reading documentation for v5, which has some significant differences that are more compatible with the Next.js App Router. 
+Auth.js is formerly known as NextAuth.js. 
+Most documentation out there is still for v4, so check that you are reading documentation for v5
+It has some significant differences that are more compatible with the Next.js App Router. 
 
 - [Next.js](https://nextjs.org/docs/app) with the App Router
 - [Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres)
 - [Drizzle](https://orm.drizzle.team/docs/overview)
-- [NextAuth.js](https://authjs.dev/) v5
+- [Auth.js](https://authjs.dev/) v5
 - [Vercel Server Actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations)
 - [Tailwind CSS](https://tailwindcss.com/docs/installation)
 - [Shadcn](https://ui.shadcn.com/docs)
 
 # Roadmap
+
+Please mark the TODO list when you are done with something. These are just high-level tasks that need to be done, but you can add more specific tasks as you work on them. There are also more tasks marked with `TODO` scattered around the codebase.
+
 ## First Steps
 
 - [x] Deploy to Vercel
@@ -67,46 +71,71 @@ Check that you are reading documentation for v5, which has some significant diff
     - [x] Add client guess submission 
     - [x] Add server side validation
     - [x] Display previous guesses
+    - [x] Validate that the guess is not an empty string
 - [x] Handle authentication
-- [x] Handle session management
-- [x] Add registration page
-- [x] Add login page
+    - [x] Add registration page
+    - [x] Add login page
+    - [x] Add session management
+    - [x] Add middleware
+    - [x] Redesign the login page to look more like the registration page
 - [x] Finish data-modeling using gph-site/puzzles/models.py
-- [x] Add middleware for authentication
-- [x] Redesign the login page to look more like the registration page
-- [x] Add puzzle drop system when the hunt starts
-- [x] Display list of puzzles dynamically
-- [x] Reload the page when the user submits a guess
+- [x] Add puzzle drop system
+    - [x] Display list of puzzles dynamically
+    - [x] Display puzzles when hunt starts
+- [x] Add hinting system
+    - [x] Add hint request form
+    - [x] Add previous hints table
+    - [x] Add hint response table in the admin panel
 
 ## By Puzzlethon
 
-Please mark the TODO list when you are done with something. These are just high-level tasks that need to be done, but you can add more specific tasks as you work on them. There are also more tasks marked with `TODO` scattered around the codebase.
+**Goals:**
 
-### Backend
-- [ ] Validate that the guess is not an empty string
+1. In terms of hunt logistics:
+    1. Registration opens
+    2. Registration closes
+    3. When the hunt starts, puzzles drop
+    4. When the hunt ends, guesses are frozen
+
+2. Teams can:
+    1. Register (`src/app/register`)
+    2. Login (`src/app/login`)
+    3. Make guesses (`src/app/puzzle/components/GuessForm.tsx`)
+    4. See previous guesses (`src/app/puzzle/components/PreviousGuessTable.tsx`)
+    5. Request hints (`src/app/puzzle/components/HintForm.tsx`)
+    6. See previous hints (`src/app/puzzle/components/PreviousHintTable.tsx`)
+    7. See the leaderboard (`src/app/leaderboard`)
+
+3. Admins can:
+    1. See all teams (`src/app/admin/teams`)
+    2. See all guesses (`src/app/admin/guesses`)
+    3. See all requests for hints (`src/app/admin/hints`)
+    4. Give teams hints (`src/app/admin/hints`)
+
+**TODO Backlog:**
+
+- [ ] Make the leaderboard page order by puzzles completed 
+- [ ] Add logic for "completing the hunt"
 - [ ] Validate that the guess has not already been submitted before
 - [ ] Automatically convert the guess to uppercase alphabetic characters
-
-### Frontend
-- [ ] Add React hooks to update "login" to "logout" on the top right corner when the user is logged in
+- [ ] Update "login" to "logout" on the nav bar when the user is logged in
+- [ ] Hash and salt the password
+- [ ] Validate that the username is not already taken before inserting a new team
 
 ## By Brown Puzzlehunt
 
-- [ ] Add admin panel
+- [ ] Extend the admin panel
     - [ ] Add a Big Board (a live-updating team progress page)
     - [ ] Add Submission Queue (a live-updating queue of submitted guesses)
 - [ ] Add test-solving system
+    - [ ] Remember to exclude those users from the leaderboard
 - [ ] Add errata system
-- [ ] Add hinting system
-    - [ ] Add hint request form
-    - [ ] Add hint response form
 - [ ] Discord bot
 - [ ] Logging
 - [ ] Index the database
 - [ ] Redis layer
 - [ ] Add round system
 - [ ] Add password reset
-
 
 ## Would be nice to have
 - [ ] Sync guesses between team members using streams

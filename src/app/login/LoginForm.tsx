@@ -44,6 +44,7 @@ export function LoginForm() {
     }
   };
 
+  // #GoodFirstIssue
   // TODO: size of the form changes when the error message is shown
   return (
     <Form {...form}>

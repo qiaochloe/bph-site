@@ -3,6 +3,8 @@ import { HUNT_START_TIME } from "@/hunt.config"
 import Link from "next/link"
 import { db } from "@/db/index"
 
+// NOTE: eventually, we probably want to create a layout for puzzle pages
+
 // TODO: should puzzles page be available to non-logged in users?
 export default async function Home() {
     return (

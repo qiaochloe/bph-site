@@ -24,6 +24,12 @@ export default auth((req) => {
     const newUrl = new URL("/puzzle", req.nextUrl.origin)
     return Response.redirect(newUrl)
   }
+
+  // Redirect register page to home page if the user is logged in
+  if (req.auth && req.nextUrl.pathname === "/register") {
+    const newUrl = new URL("/", req.nextUrl.origin)
+    return Response.redirect(newUrl)
+  }
 })
 
 export const config = {

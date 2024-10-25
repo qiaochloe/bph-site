@@ -1,28 +1,31 @@
-'use client'
+"use client";
 
-import { z } from 'zod';
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/ui/form"
+} from "@/components/ui/form";
 
-import { insertGuess } from "../actions"
+import { insertGuess } from "../actions";
 
 const formSchema = z.object({
-  guess: z.string().max(50),
-})
+  guess: z
+    .string()
+    .min(1, { message: "Guess cannot be empty" })
+    .max(50, { message: "Answer will not be longer than 50 characters" }),
+});
 
 type FormProps = {
   puzzleId: string;
-}
+};
 
 export function GuessForm({ puzzleId }: FormProps) {
   const router = useRouter();
@@ -31,13 +34,15 @@ export function GuessForm({ puzzleId }: FormProps) {
     defaultValues: {
       guess: "",
     },
-  })
+  });
 
+  // #GoodFirstIssue
+  // TODO: automatically change the answer to UPPERCASE ALPHABETIC
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     await insertGuess(puzzleId, data.guess);
     form.reset();
     router.refresh();
-  }
+  };
 
   return (
     <Form {...form}>
@@ -57,5 +62,5 @@ export function GuessForm({ puzzleId }: FormProps) {
         <Button type="submit">Submit</Button>
       </form>
     </Form>
-  )
+  );
 }
