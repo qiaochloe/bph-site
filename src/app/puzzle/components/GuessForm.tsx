@@ -36,8 +36,8 @@ export function GuessForm({ puzzleId }: FormProps) {
     },
   });
 
-  // #GoodFirstIssue
   // TODO: automatically change the answer to UPPERCASE ALPHABETIC
+  // #GoodFirstIssue
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     await insertGuess(puzzleId, data.guess);
     form.reset();

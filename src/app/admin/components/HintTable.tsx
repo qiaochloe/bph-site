@@ -30,14 +30,22 @@ import { respondToHint } from "../actions";
 
 // NOTE: more about the data table component: https://ui.shadcn.com/docs/components/data-table
 
-// Define the columns for the table using TanStack
 /* TODO: 
   Convert team ID to team name
   Convert puzzle ID to puzzle name
   Shorten request time to just the time (if it is today) and the date (if it is not today)
   Exclude the year from the date
   Display claimer as initials
+  #GoodFirstIssue
 */
+
+/*
+IMPORTANT TODO: Make sure to handle synchronization issues between
+multiple people trying to claim the same hint at the same time
+#BadFirstIssue
+*/
+
+// Define the columns for the table using TanStack
 export const columns: ColumnDef<typeof hints.$inferSelect>[] = [
   {
     accessorKey: "id",
@@ -218,16 +226,24 @@ export function DataTable<TData, TValue>({
                       <TableRow>
                         <TableCell colSpan={columns.length}>
                           <div className="bg-gray-50 p-4">
-                            {/* TODO: Make this more compact by creating two columns */}
+                            {/* 
+                              TODO: Make this more compact by creating two columns
+                              #GoodFirstIssue
+                            */}
                             <h3 className="font-bold">Additional Details:</h3>
                             <p>ID: {row.getValue("id")}</p>
-                            {/* TODO: link to puzzle */}
+                            {/* TODO: link to puzzle 
+                              #GoodFirstIssue
+                              */}
                             <p>Puzzle: {row.getValue("puzzleId")}</p>
-                            {/* TODO: link to team */}
+                            {/* TODO: link to team 
+                              #GoodFirstIssue
+                            */}
                             <p>Team: {row.getValue("teamId")}</p>
                             {/* TODO: Add a claim button here if it is not claimed yet;
-                                    Automatically update the claim time 
-                                    Add an unclaim button here too */}
+                              Automatically update the claim time 
+                              Add an unclaim button here too
+                            */}
                             <p>Claimer: {row.getValue("claimer")}</p>
                             <br />
                             <p>

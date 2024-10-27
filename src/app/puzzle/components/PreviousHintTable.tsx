@@ -8,6 +8,7 @@ import {
 import { hints } from "~/server/db/schema";
 
 // TODO: Make the table not expand when there is a hint with a long request
+// #GoodFirstIssue
 export function PreviousHintTable({
   previousHints,
 }: {

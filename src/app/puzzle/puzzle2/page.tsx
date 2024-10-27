@@ -11,6 +11,7 @@ import { PreviousGuessTable } from "~/app/puzzle/components/PreviousGuessTable";
 import { PreviousHintTable } from "~/app/puzzle/components/PreviousHintTable";
 
 // TODO: Dynamically get the puzzle ID from the URL
+// #BadFirstIssue
 const PUZZLE_ID = "puzzle2";
 
 export default async function Home() {

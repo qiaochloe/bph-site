@@ -9,6 +9,7 @@ import { except } from "drizzle-orm/mysql-core";
 
 // TODO: don't let teams submit the same guess twice
 // Remember to handle errors in the GuessForm component
+// #GoodFirstIssue
 export async function insertGuess(puzzleId: string, guess: string) {
   const session = await auth();
   if (!session?.user?.id) {

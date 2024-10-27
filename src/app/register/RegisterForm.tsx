@@ -24,7 +24,9 @@ import { insertTeam } from "./actions";
 
 export const registerFormSchema = z.object({
   // TODO: validate that username is unique in another server component
+
   // TODO: validate that username does not contain special characters
+  // #GoodFirstIssue
   username: z
     .string()
     .min(8, { message: "Username must be at least 8 characters long" })
@@ -85,12 +87,12 @@ export function RegisterForm({}: RegisterFormProps) {
     }
   };
 
-  // #GoodFirstIssue
   // TODO: size of the form changes when the error message is shown
   // See: LoginForm.tsx
-  
   // #GoodFirstIssue
+  
   // TODO: might be nice to have people confirm their password twice
+  // #GoodFirstIssue
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
