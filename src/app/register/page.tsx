@@ -3,8 +3,8 @@ import { RegisterForm } from "./RegisterForm"
 
 export default async function Home() {
   return (
-    <main>
+    <div className="flex flex-col items-center justify-center h-screen">
       <RegisterForm />
-    </main>
+    </div>
   )
 }
