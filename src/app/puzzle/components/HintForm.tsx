@@ -33,8 +33,8 @@ export function HintForm({ puzzleId }: FormProps) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       hintRequest: "",
-    },
-  })
+    }
+  });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     await insertHint(puzzleId, data.hintRequest);
@@ -44,7 +44,7 @@ export function HintForm({ puzzleId }: FormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
           name="hintRequest"

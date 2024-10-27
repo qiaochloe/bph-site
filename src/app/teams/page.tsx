@@ -20,7 +20,7 @@ export default async function Home() {
   });
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center">
+    <div className="flex min-h-screen flex-col items-center">
       Teams!
       <div>
         <Table>
@@ -45,6 +45,6 @@ export default async function Home() {
           </TableBody>
         </Table>
       </div>
-    </main>
+    </div>
   );
 }

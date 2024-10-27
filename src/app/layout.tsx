@@ -35,7 +35,7 @@ export default function RootLayout({
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
         <TopNav />
-        <main className="flex min-h-screen flex-col items-center justify-center">
+        <main>
           {children}
         </main>
       </body>

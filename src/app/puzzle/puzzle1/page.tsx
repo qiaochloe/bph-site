@@ -35,10 +35,9 @@ export default async function Home() {
   const hasCorrectGuess = previousGuesses.some((guess) => guess.isCorrect);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-4">
-      <h1 className="p-4">Puzzle!</h1>
-      <p className="p-4">What is the answer to this puzzle?</p>
-
+    <div className="flex min-h-screen flex-col items-center">
+      <h1 className="m-4">Puzzle!</h1>
+      <p className="m-4">What is the answer to this puzzle?</p>
       {!hasCorrectGuess && <GuessForm puzzleId={PUZZLE_ID} />}
 
       <h1 className="m-4">Previous Guesses</h1>
@@ -47,7 +46,9 @@ export default async function Home() {
       <HintForm puzzleId={PUZZLE_ID} />
 
       <h1 className="m-4">Previous Hints</h1>
-      <PreviousHintTable previousHints={previousHints} />
-    </main>
+      <div>
+        <PreviousHintTable previousHints={previousHints} />
+      </div>
+    </div>
   );
 }

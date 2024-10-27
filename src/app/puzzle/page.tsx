@@ -8,7 +8,7 @@ import { db } from "@/db/index"
 // TODO: should puzzles page be available to non-logged in users?
 export default async function Home() {
     return (
-        <main>
+        <div className="flex min-h-screen flex-col items-center justify-center">
             <p>This is the puzzle page.</p>
             { new Date() < HUNT_START_TIME ? (
                 <p>The hunt has not started yet.</p>
@@ -33,6 +33,6 @@ export default async function Home() {
               </ul>
             </>
             }
-        </main>
+        </div>
     )
 }

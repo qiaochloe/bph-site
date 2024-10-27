@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/table";
 import { hints } from "~/server/db/schema";
 
+// TODO: Make the table not expand when there is a hint with a long request
 export function PreviousHintTable({
   previousHints,
 }: {
