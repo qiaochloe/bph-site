@@ -2,9 +2,11 @@
 
 import {
   ColumnDef,
+  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
+  getFilteredRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 
@@ -23,6 +25,7 @@ import { useRouter } from "next/navigation";
 import { hints } from "@/db/schema";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { respondToHint } from "../actions";
 
 // NOTE: more about the data table component: https://ui.shadcn.com/docs/components/data-table
@@ -37,43 +40,43 @@ import { respondToHint } from "../actions";
 */
 export const columns: ColumnDef<typeof hints.$inferSelect>[] = [
   {
-    header: "Id",
     accessorKey: "id",
+    header: () => <div className="w-16">Id</div>,
     cell: ({ row }) => (
       <div className="w-16 truncate">{row.getValue("id")}</div>
     ),
   },
   {
-    header: "Puzzle",
     accessorKey: "puzzleId",
+    header: () => <div className="w-24">Puzzle</div>,
     cell: ({ row }) => (
       <div className="w-24 truncate">{row.getValue("puzzleId")}</div>
     ),
   },
   {
-    header: "Team",
     accessorKey: "teamId",
+    header: () => <div className="w-24">Team</div>,
     cell: ({ row }) => (
       <div className="w-24 truncate">{row.getValue("teamId")}</div>
     ),
   },
   {
-    header: "Request",
     accessorKey: "request",
+    header: () => <div className="w-64">Request</div>,
     cell: ({ row }) => (
       <div className="w-64 truncate">{row.getValue("request")}</div>
     ),
   },
   {
-    header: "Response",
     accessorKey: "response",
+    header: () => <div className="w-64">Response</div>,
     cell: ({ row }) => (
       <div className="w-64 truncate">{row.getValue("response")}</div>
     ),
   },
   {
-    header: "Request Time",
     accessorKey: "requestTime",
+    header: () => <div className="w-32">Request Time</div>,
     cell: ({ row }) => {
       const time = row.getValue("requestTime");
       const formattedTime =
@@ -90,8 +93,8 @@ export const columns: ColumnDef<typeof hints.$inferSelect>[] = [
     },
   },
   {
-    header: "Claimer",
     accessorKey: "claimer",
+    header: () => <div className="w-24">Claimer</div>,
     cell: ({ row }) => (
       <div className="w-24 truncate">{row.getValue("claimer")}</div>
     ),
@@ -117,6 +120,8 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [response, setResponse] = useState("");
   const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
   const router = useRouter();
 
   const toggleRow = (rowId: string) => {
@@ -131,23 +136,46 @@ export function DataTable<TData, TValue>({
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      columnFilters,
+    },
+    initialState: {
+      pagination: {
+        pageIndex: 0,
+        pageSize: 10,
+      },
+    },
   });
 
   return (
-    <div className="flex h-[calc(100vh-100px)] flex-col">
-      <div className="flex items-center justify-end space-x-2 p-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-        >
-          Previous
-        </Button>
-        <Button variant="outline" size="sm" onClick={() => table.nextPage()}>
-          Next
-        </Button>
+    <div className="flex h-full flex-col">
+      <div className="flex items-center justify-between space-x-2 p-4">
+        <Input
+          placeholder="Filter hints..."
+          value={
+            (table.getColumn("request")?.getFilterValue() as string) ?? ""
+          }
+          onChange={(event) =>
+            table.getColumn("request")?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm"
+        />
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.previousPage()}
+          >
+            Previous
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => table.nextPage()}>
+            Next
+          </Button>
+        </div>
       </div>
-      <div className="overflow-hidden rounded-md border">
+      <div className="rounded-md border flex-grow overflow-auto">
         <div className="overflow-y-auto">
           {" "}
           <Table>
@@ -190,24 +218,29 @@ export function DataTable<TData, TValue>({
                       <TableRow>
                         <TableCell colSpan={columns.length}>
                           <div className="bg-gray-50 p-4">
+                            {/* TODO: Make this more compact by creating two columns */}
                             <h3 className="font-bold">Additional Details:</h3>
+                            <p>ID: {row.getValue("id")}</p>
                             {/* TODO: link to puzzle */}
                             <p>Puzzle: {row.getValue("puzzleId")}</p>
                             {/* TODO: link to team */}
                             <p>Team: {row.getValue("teamId")}</p>
-                            <br />
-                            <p>Request ID: {row.getValue("id")}</p>
-                            <p>
-                              Request Time:{" "}
-                              {row.getValue("requestTime")?.toLocaleString()}
-                            </p>
                             {/* TODO: Add a claim button here if it is not claimed yet;
                                     Automatically update the claim time 
                                     Add an unclaim button here too */}
                             <p>Claimer: {row.getValue("claimer")}</p>
+                            <br />
+                            <p>
+                              Request Time:{" "}
+                              {row.getValue("requestTime")?.toLocaleString()}
+                            </p>
                             <p>
                               Claim Time:{" "}
                               {row.getValue("requestTime")?.toLocaleString()}
+                            </p>
+                            <p>
+                              Response Time:{" "}
+                              {row.getValue("responseTime")?.toLocaleString()}
                             </p>
                             <br />
                             <p>Request:</p>
