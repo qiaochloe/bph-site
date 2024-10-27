@@ -14,28 +14,29 @@
 
 ## Quick start
 
-1. Copy the `.env.example` file to `.env` and fill in the values. You will only need to sign up for Vercel Postgres and integrate it with Drizzle to develop locally. 
-2. Run `pnpm install` to install the dependencies.
-3. Run `pnpm run dev` to start the development server.
-4. Run `pnpm run db:studio` to open Drizzle Studio in your browser.
-5. Run `pnpm run db:push` to push the schema in `src/server/db/schema.ts` to the database.
+1. Install [pnpm](https://pnpm.io/) from online or using Homebrew and clone this repo.
+2. Copy the `.env.example` file to `.env` and fill in the values. You will only need to sign up for Vercel Postgres and integrate it with Drizzle to develop locally. 
+3. Run `pnpm install` to install the dependencies.
+4. Run `pnpm run dev` to start the development server.
+5. Run `pnpm run db:studio` in a separate shell to open Drizzle Studio in your browser.
+6. Run `pnpm run db:push` in a separate shell to push the schema in `src/server/db/schema.ts` to the database.
 
 ## Overview
 
 This project is built using **Next.js v14** using the App Router (not the Pages Router). The frontend is in the `src/app` folder, and the backend is in the `src/server` folder.
 
-We use Vercel **Postgres** as the database and **Drizzle** as the ORM. All of the code for the database is in the `src/app/server/db` folder.
+We use Vercel **Postgres** as the database and **Drizzle** as the ORM. All of the code for the database is in the `src/server/db` folder.
 
 Most of the client-to-server communication is currently handled by Vercel Server Actions. 
 Server Actions allow us to execute database queries or API calls inside of a React component without needing to explicitly define an API route.
 Note that Server Actions can only be defined in Server Components marked with the `use server` directive.
 To make them available in Client Components marked with the `use client` directive, they must be imported or passed as a prop.
-All of the code for Server Actions is in the `src/app/actions` folder.
+Server Actions are generally located in `actions.tsx` files distributed throughout `src/app`.
 
 Authentication, authorization, and session management is handled by **Auth.js**.
 We only support username/password authentication using the `Credentials` provider.
 Sessions are stored in Json Web Tokens (JWTs) instead of database sessions.
-The setup is in the `src/app/server/auth` folder.
+The setup is in the `src/server/auth` folder.
 
 Finally, on the frontend, we are using **Shadcn UI** components with the **Tailwind CSS** framework. Components are in the `src/components/ui` folder.
 
