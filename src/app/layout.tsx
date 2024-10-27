@@ -1,4 +1,5 @@
 import "~/styles/globals.css";
+import { auth } from "@/auth";
 
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
@@ -9,11 +10,8 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-// #GoodFirstIssue
-// TODO: dynamically change the login/logout button in the TopNav based on the user's status
-// Import and use auth() to check if the user is logged in or not
-
-function TopNav() {
+async function TopNav() {
+  const session = await auth();
   return (
     <nav className="flex items-center w-full p-4 justify-between">
       <div>
@@ -22,7 +20,7 @@ function TopNav() {
         <Link href="/teams">Teams</Link>
       </div>
       <div>
-        <Link href="/login">Login</Link>
+        { session?.user ? (<Link href="/login">Logout</Link>) : (<Link href="/login">Login</Link>) }
       </div>
     </nav>
   );
