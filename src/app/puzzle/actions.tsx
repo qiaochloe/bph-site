@@ -1,11 +1,21 @@
-'use server'
+"use server";
 
 import { db } from "~/server/db";
-import { puzzles, guesses, roleEnum, interactionModeEnum, hints } from "~/server/db/schema";
+import {
+  puzzles,
+  guesses,
+  roleEnum,
+  interactionModeEnum,
+  hints,
+} from "~/server/db/schema";
 import { eq, and } from "drizzle-orm";
 import { auth, signIn, signOut } from "@/auth";
 import { AuthError } from "next-auth";
 import { except } from "drizzle-orm/mysql-core";
+
+export function sanitizeAnswer(answer: string) {
+  return answer.toUpperCase().replace(/[^A-Z]/g, "");
+}
 
 // Remember to handle errors in the GuessForm component
 export async function insertGuess(puzzleId: string, guess: string) {
@@ -15,14 +25,14 @@ export async function insertGuess(puzzleId: string, guess: string) {
   }
 
   const puzzle = await db.query.puzzles.findFirst({
-    where: eq(puzzles.id, puzzleId)
+    where: eq(puzzles.id, puzzleId),
   });
 
   if (!puzzle) {
     throw new Error("Puzzle not found");
   }
 
-  guess = guess.toUpperCase().trim();
+  guess = sanitizeAnswer(guess);
 
   // Maybe tell the user if they have already made a guess?
   const duplicateGuess = await db.query.guesses.findFirst({
@@ -32,14 +42,14 @@ export async function insertGuess(puzzleId: string, guess: string) {
   if (duplicateGuess) {
     return;
   }
-  
+
   await db.insert(guesses).values({
     teamId: session.user.id,
     puzzleId,
     guess,
-    isCorrect: puzzle.answer.toUpperCase().trim() === guess,
+    isCorrect: sanitizeAnswer(puzzle.answer) === guess,
     submitTime: new Date(),
-  })
+  });
 }
 
 export async function insertHint(puzzleId: string, hint: string) {
@@ -54,5 +64,5 @@ export async function insertHint(puzzleId: string, hint: string) {
     request: hint,
     requestTime: new Date(),
     status: "no_response",
-  })
+  });
 }
