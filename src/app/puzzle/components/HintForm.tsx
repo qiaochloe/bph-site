@@ -1,11 +1,11 @@
-"use client";
+'use client'
 
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { z } from 'zod';
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import {
   Form,
   FormControl,
@@ -14,18 +14,18 @@ import {
   FormDescription,
   FormMessage,
   FormLabel,
-} from "@/components/ui/form";
+} from "@/components/ui/form"
 
-import { Textarea } from "@/components/ui/textarea";
-import { insertHint } from "../actions";
+import { Textarea } from "@/components/ui/textarea"
+import { insertHint } from "../actions"
 
 const formSchema = z.object({
   hintRequest: z.string(),
-});
+})
 
 type FormProps = {
   puzzleId: string;
-};
+}
 
 export function HintForm({ puzzleId }: FormProps) {
   const router = useRouter();
@@ -33,14 +33,14 @@ export function HintForm({ puzzleId }: FormProps) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       hintRequest: "",
-    },
+    }
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     await insertHint(puzzleId, data.hintRequest);
     form.reset();
     router.refresh();
-  };
+  }
 
   return (
     <Form {...form}>
@@ -52,7 +52,11 @@ export function HintForm({ puzzleId }: FormProps) {
             <FormItem>
               <FormLabel>Hint Request</FormLabel>
               <FormControl>
-                <Textarea placeholder="" className="resize-none" {...field} />
+                <Textarea
+                  placeholder=""
+                  className="resize-none"
+                  {...field}
+                />
               </FormControl>
               <FormDescription>
                 Please be specific about what you need help with.
@@ -64,5 +68,5 @@ export function HintForm({ puzzleId }: FormProps) {
         <Button type="submit">Submit</Button>
       </form>
     </Form>
-  );
+  )
 }

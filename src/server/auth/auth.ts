@@ -3,22 +3,18 @@ import Credentials from "next-auth/providers/credentials";
 import { type DefaultSession } from "next-auth";
 // import { DrizzleAdapter } from "@auth/drizzle-adapter";
 
-import { eq, and } from "drizzle-orm";
+import { eq, and } from 'drizzle-orm'
 import { db } from "~/server/db";
 import { teams } from "~/server/db/schema";
-import { object, string } from "zod";
+import { object, string } from "zod"
 import { compare } from "bcrypt";
 
 export const signInSchema = object({
-  username: string({ required_error: "Team name is required" }).min(
-    1,
-    "Team name is required",
-  ),
-  password: string({ required_error: "Password is required" }).min(
-    1,
-    "Password is required",
-  ),
-});
+  username: string({ required_error: "Team name is required" })
+    .min(1, "Team name is required"),
+  password: string({ required_error: "Password is required" })
+    .min(1, "Password is required")
+})
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -73,11 +69,11 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
           id: token.id as string,
           username: token.username as string,
           displayName: token.displayName as string,
-          role: token.role as string,
+          role: token.role as string
         };
       }
       return session;
-    },
+    }
   },
   // adapter: DrizzleAdapter(db),
   providers: [
@@ -92,8 +88,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
           return null;
         }
 
-        const { username, password } =
-          await signInSchema.parseAsync(credentials);
+        const { username, password } = await signInSchema.parseAsync(credentials)
 
         // TODO: Add logic to salt and has password
         // const pwHash = saltAndHashPassword(credentials.password)
@@ -102,7 +97,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         // Check if team exists in the database
 
         const user = await db.query.teams.findFirst({
-          where: eq(teams.username, username),
+          where: eq(teams.username, username)
         });
 
         if (user && password === user.password) {
@@ -110,12 +105,12 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
             id: user.id,
             username: user.username,
             displayName: user.displayName,
-            role: user.role,
-          };
+            role: user.role
+          }
         }
 
         return null;
-      },
-    }),
-  ],
+      }
+    })
+  ]
 });

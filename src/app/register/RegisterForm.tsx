@@ -51,7 +51,7 @@ export function RegisterForm({}: RegisterFormProps) {
 
   // Prefetch the login page
   useEffect(() => {
-    router.prefetch("/login");
+    router.prefetch('/login'); 
   }, [router]);
 
   const form = useForm<z.infer<typeof registerFormSchema>>({
@@ -61,7 +61,7 @@ export function RegisterForm({}: RegisterFormProps) {
       displayName: "",
       password: "",
       interactionMode: undefined,
-    },
+    }
   });
 
   const onSubmit = async (data: z.infer<typeof registerFormSchema>) => {
@@ -80,6 +80,7 @@ export function RegisterForm({}: RegisterFormProps) {
       // TODO: give user some sort of confirmation that they've been registered before redirecting
       // Using a toast might be nice: https://ui.shadcn.com/docs/components/toast
       router.push("/login");
+
     } catch (error) {
       console.error("Error inserting team:", error);
       // Do not reset the form if there is an error
@@ -89,7 +90,7 @@ export function RegisterForm({}: RegisterFormProps) {
   // TODO: size of the form changes when the error message is shown
   // See: LoginForm.tsx
   // #GoodFirstIssue
-
+  
   // TODO: might be nice to have people confirm their password twice
   // #GoodFirstIssue
   return (

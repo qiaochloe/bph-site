@@ -27,7 +27,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { respondToHint } from "../actions";
-import Link from "next/link";
+import Link from 'next/link'
 
 // NOTE: more about the data table component: https://ui.shadcn.com/docs/components/data-table
 
@@ -163,7 +163,9 @@ export function DataTable<TData, TValue>({
       <div className="flex items-center justify-between space-x-2 p-4">
         <Input
           placeholder="Filter hints..."
-          value={(table.getColumn("request")?.getFilterValue() as string) ?? ""}
+          value={
+            (table.getColumn("request")?.getFilterValue() as string) ?? ""
+          }
           onChange={(event) =>
             table.getColumn("request")?.setFilterValue(event.target.value)
           }
@@ -182,7 +184,7 @@ export function DataTable<TData, TValue>({
           </Button>
         </div>
       </div>
-      <div className="flex-grow overflow-auto rounded-md border">
+      <div className="rounded-md border flex-grow overflow-auto">
         <div className="overflow-y-auto">
           {" "}
           <Table>
@@ -231,11 +233,11 @@ export function DataTable<TData, TValue>({
                             */}
                             <h3 className="font-bold">Additional Details:</h3>
                             <p>ID: {row.getValue("id")}</p>
-                            <p>
-                              Puzzle:{" "}
-                              <Link
+                            <p>Puzzle: 
+                              {" "}
+                              <Link 
                                 href={`/puzzle/${row.getValue("puzzleId")}`}
-                                className="text-blue-600 underline hover:text-blue-800"
+                                className="text-blue-600 hover:text-blue-800 underline"
                               >
                                 {row.getValue("puzzleId")}
                               </Link>
