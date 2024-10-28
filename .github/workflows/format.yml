@@ -13,10 +13,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Read Node.js version from .nvmrc
+        id: node
+        run: |
+          node_version=$(cat .nvmrc)
+          echo "NODE_VERSION=$node_version" >> $GITHUB_ENV
+
       - name: Install Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '.nvmrc'
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Install pnpm
         run: npm install -g pnpm
