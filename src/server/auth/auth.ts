@@ -72,9 +72,6 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
           const { username, password } =
             await signInSchema.parseAsync(credentials);
 
-          // TODO: Add logic to salt and has password
-          // const pwHash = saltAndHashPassword(credentials.password)
-
           // TODO: Make sure to check that the name is unique
           // Check if team exists in the database
 

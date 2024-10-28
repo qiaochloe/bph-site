@@ -14,8 +14,6 @@ export async function insertTeam(
   // Remember to handle the error in the register form
   // #GoodFirstIssue
 
-  // TODO: Hash and salt the password before inserting
-  // #BadFirstIssue
   hash(password, 10, async (err, hash) => {
     if (err) throw err;
 
