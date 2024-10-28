@@ -27,6 +27,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { respondToHint } from "../actions";
+import Link from 'next/link'
 
 // NOTE: more about the data table component: https://ui.shadcn.com/docs/components/data-table
 
@@ -232,10 +233,14 @@ export function DataTable<TData, TValue>({
                             */}
                             <h3 className="font-bold">Additional Details:</h3>
                             <p>ID: {row.getValue("id")}</p>
-                            {/* TODO: link to puzzle 
-                              #GoodFirstIssue
-                              */}
-                            <p>Puzzle: {row.getValue("puzzleId")}</p>
+                            <p>Puzzle: 
+                              <Link 
+                                href={`/puzzle/${row.getValue("puzzleId")}`}
+                                className="text-blue-600 hover:text-blue-800 underline"
+                              >
+                                {row.getValue("puzzleId")}
+                              </Link>
+                            </p>
                             {/* TODO: link to team 
                               #GoodFirstIssue
                             */}
