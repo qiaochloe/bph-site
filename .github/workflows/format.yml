@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
 
       - name: Install Node.js
         uses: actions/setup-node@v2
@@ -19,11 +21,13 @@ jobs:
           node-version: '16'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Run Prettier
-        run: npx prettier --check .
+        run: npx prettier --write .
 
-      - name: Display formatting errors
-        if: failure()
-        run: echo "Code formatting issues detected. Please run Prettier locally to fix."
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: 'Apply formatting changes'
+          branch: ${{ github.head_ref }}
