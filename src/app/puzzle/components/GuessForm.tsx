@@ -16,11 +16,18 @@ import {
 
 import { insertGuess } from "../actions";
 
+function sanitizeAnswer(answer: any) {
+  return (typeof answer === 'string') ? answer.toUpperCase().replace(/[^A-Z]/g, "") : "";
+}
+
 const formSchema = z.object({
-  guess: z
-    .string()
-    .min(1, { message: "Guess cannot be empty" })
-    .max(50, { message: "Answer will not be longer than 50 characters" }),
+  guess: z.preprocess(
+    sanitizeAnswer,
+    z
+      .string()
+      .min(1, { message: "Guess must contain at least one alphabetical character" })
+      .max(50, { message: "Answer will not be longer than 50 characters" }),
+  ),
 });
 
 type FormProps = {
@@ -36,8 +43,6 @@ export function GuessForm({ puzzleId }: FormProps) {
     },
   });
 
-  // TODO: automatically change the answer to UPPERCASE ALPHABETIC
-  // #GoodFirstIssue
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     await insertGuess(puzzleId, data.guess);
     form.reset();

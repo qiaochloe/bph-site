@@ -30,7 +30,11 @@ export async function insertGuess(puzzleId: string, guess: string) {
 
   // Maybe tell the user if they have already made a guess?
   const duplicateGuess = await db.query.guesses.findFirst({
-    where: and(eq(guesses.guess, guess), eq(guesses.teamId, session.user.id)),
+    where: and(
+      eq(guesses.guess, guess),
+      eq(guesses.teamId, session.user.id),
+      eq(guesses.puzzleId, puzzleId),
+    ),
   });
 
   if (duplicateGuess) {
