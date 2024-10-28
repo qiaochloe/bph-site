@@ -3,11 +3,13 @@ import Credentials from "next-auth/providers/credentials";
 import { type DefaultSession } from "next-auth";
 // import { DrizzleAdapter } from "@auth/drizzle-adapter";
 
-import { eq, and } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { db } from "~/server/db";
 import { teams } from "~/server/db/schema";
 import { object, string } from "zod";
 import { compare } from "bcrypt";
+
+import { authConfig } from "./auth.config";
 
 export const signInSchema = object({
   username: string({ required_error: "Team name is required" }).min(
@@ -53,33 +55,7 @@ declare module "next-auth" {
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
  */
 export const { auth, signIn, signOut, handlers } = NextAuth({
-  session: {
-    strategy: "jwt",
-  },
-  callbacks: {
-    jwt: async ({ token, user }) => {
-      if (user) {
-        token.id = user.id;
-        token.username = user.username;
-        token.displayName = user.displayName;
-        token.role = user.role;
-      }
-      return token;
-    },
-    session: async ({ session, token }) => {
-      if (token) {
-        session.user = {
-          ...session.user,
-          id: token.id as string,
-          username: token.username as string,
-          displayName: token.displayName as string,
-          role: token.role as string,
-        };
-      }
-      return session;
-    },
-  },
-  // adapter: DrizzleAdapter(db),
+  ...authConfig,
   providers: [
     Credentials({
       // These are the fields to be submitted
@@ -88,33 +64,38 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         password: {},
       },
       authorize: async (credentials) => {
-        if (!credentials?.username || !credentials?.password) {
+        try {
+          if (!credentials?.username || !credentials?.password) {
+            return null;
+          }
+
+          const { username, password } =
+            await signInSchema.parseAsync(credentials);
+
+          // TODO: Make sure to check that the name is unique
+          // Check if team exists in the database
+
+          const user = await db.query.teams.findFirst({
+            where: eq(teams.username, username),
+          });
+
+          if (user) {
+            const validCredentials = await compare(password, user.password);
+            if (validCredentials) {
+              return {
+                id: user.id,
+                username: user.username,
+                displayName: user.displayName,
+                role: user.role,
+              };
+            }
+          }
+
+          return null;
+        } catch (error) {
+          console.error(error);
           return null;
         }
-
-        const { username, password } =
-          await signInSchema.parseAsync(credentials);
-
-        // TODO: Add logic to salt and has password
-        // const pwHash = saltAndHashPassword(credentials.password)
-
-        // TODO: Make sure to check that the name is unique
-        // Check if team exists in the database
-
-        const user = await db.query.teams.findFirst({
-          where: eq(teams.username, username),
-        });
-
-        if (user && password === user.password) {
-          return {
-            id: user.id,
-            username: user.username,
-            displayName: user.displayName,
-            role: user.role,
-          };
-        }
-
-        return null;
       },
     }),
   ],

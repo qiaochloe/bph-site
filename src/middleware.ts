@@ -1,5 +1,8 @@
-import { auth } from "@/auth";
+import { authConfig } from "@/auth.config";
+import NextAuth from "next-auth";
 import { HUNT_START_TIME } from "@/hunt.config";
+
+export const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
   // Allow admins to access all pages

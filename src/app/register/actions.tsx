@@ -1,7 +1,8 @@
 "use server";
 
 import { db } from "@/db/index";
-import { teams, interactionModeEnum } from "@/db/schema";
+import { teams, type interactionModeEnum } from "@/db/schema";
+import { hash } from "bcrypt";
 
 export async function insertTeam(
   username: string,
@@ -13,14 +14,16 @@ export async function insertTeam(
   // Remember to handle the error in the register form
   // #GoodFirstIssue
 
-  // TODO: Hash and salt the password before inserting
-  // #BadFirstIssue
-  await db.insert(teams).values({
-    username,
-    displayName,
-    password,
-    role: "user" as const,
-    interactionMode,
-    createTime: new Date(),
+  hash(password, 10, async (err, hash) => {
+    if (err) throw err;
+
+    await db.insert(teams).values({
+      username,
+      displayName,
+      password: hash,
+      role: "user" as const,
+      interactionMode,
+      createTime: new Date(),
+    });
   });
 }
