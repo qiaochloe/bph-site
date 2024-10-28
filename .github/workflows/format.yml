@@ -5,13 +5,19 @@ on:
     branches:
       - main
 
+
 jobs:
   format:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
 
       - name: Read Node.js version from .nvmrc
         id: node
