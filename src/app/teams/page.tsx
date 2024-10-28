@@ -6,7 +6,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 
 export const dynamic = "force-dynamic";
 
@@ -28,20 +28,25 @@ export default async function Home() {
             <TableRow>
               <TableHead>#</TableHead>
               <TableHead className="w-[10em]">Team Name</TableHead>
-              <TableHead className="w-[10em] text-center">Total Solved</TableHead>
+              <TableHead className="w-[10em] text-center">
+                Total Solved
+              </TableHead>
               <TableHead>Finish Time</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {
-              teams.map((team, index) => (
-                <TableRow>
-                  <TableCell>{index + 1}</TableCell>
-                  <TableCell>{team.displayName}</TableCell>
-                  <TableCell className="text-center">{team.guesses.filter((guess) => guess.isCorrect).length}</TableCell>
-                  <TableCell>{team.finishTime ? team.finishTime.toLocaleString() : ''}</TableCell>
-                </TableRow>
-              ))}
+            {teams.map((team, index) => (
+              <TableRow>
+                <TableCell>{index + 1}</TableCell>
+                <TableCell>{team.displayName}</TableCell>
+                <TableCell className="text-center">
+                  {team.guesses.filter((guess) => guess.isCorrect).length}
+                </TableCell>
+                <TableCell>
+                  {team.finishTime ? team.finishTime.toLocaleString() : ""}
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </div>
