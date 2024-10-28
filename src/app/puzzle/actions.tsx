@@ -13,7 +13,7 @@ import { auth, signIn, signOut } from "@/auth";
 import { AuthError } from "next-auth";
 import { except } from "drizzle-orm/mysql-core";
 
-export function sanitizeAnswer(answer: string) {
+export async function sanitizeAnswer(answer: string) {
   return answer.toUpperCase().replace(/[^A-Z]/g, "");
 }
 
@@ -32,11 +32,15 @@ export async function insertGuess(puzzleId: string, guess: string) {
     throw new Error("Puzzle not found");
   }
 
-  guess = sanitizeAnswer(guess);
+  guess = await sanitizeAnswer(guess);
 
   // Maybe tell the user if they have already made a guess?
   const duplicateGuess = await db.query.guesses.findFirst({
-    where: and(eq(guesses.guess, guess), eq(guesses.teamId, session.user.id)),
+    where: and(
+      eq(guesses.guess, guess),
+      eq(guesses.teamId, session.user.id),
+      eq(guesses.puzzleId, puzzleId),
+    ),
   });
 
   if (duplicateGuess) {
@@ -47,7 +51,7 @@ export async function insertGuess(puzzleId: string, guess: string) {
     teamId: session.user.id,
     puzzleId,
     guess,
-    isCorrect: sanitizeAnswer(puzzle.answer) === guess,
+    isCorrect: (await sanitizeAnswer(puzzle.answer)) === guess,
     submitTime: new Date(),
   });
 }
