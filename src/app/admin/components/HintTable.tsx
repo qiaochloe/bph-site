@@ -234,6 +234,7 @@ export function DataTable<TData, TValue>({
                             <h3 className="font-bold">Additional Details:</h3>
                             <p>ID: {row.getValue("id")}</p>
                             <p>Puzzle: 
+                              {" "}
                               <Link 
                                 href={`/puzzle/${row.getValue("puzzleId")}`}
                                 className="text-blue-600 hover:text-blue-800 underline"
