@@ -13,10 +13,6 @@ import { auth, signIn, signOut } from "@/auth";
 import { AuthError } from "next-auth";
 import { except } from "drizzle-orm/mysql-core";
 
-export async function sanitizeAnswer(answer: string) {
-  return answer.toUpperCase().replace(/[^A-Z]/g, "");
-}
-
 // Remember to handle errors in the GuessForm component
 export async function insertGuess(puzzleId: string, guess: string) {
   const session = await auth();
@@ -31,8 +27,6 @@ export async function insertGuess(puzzleId: string, guess: string) {
   if (!puzzle) {
     throw new Error("Puzzle not found");
   }
-
-  guess = await sanitizeAnswer(guess);
 
   // Maybe tell the user if they have already made a guess?
   const duplicateGuess = await db.query.guesses.findFirst({
@@ -51,7 +45,7 @@ export async function insertGuess(puzzleId: string, guess: string) {
     teamId: session.user.id,
     puzzleId,
     guess,
-    isCorrect: (await sanitizeAnswer(puzzle.answer)) === guess,
+    isCorrect: puzzle.answer === guess,
     submitTime: new Date(),
   });
 }
