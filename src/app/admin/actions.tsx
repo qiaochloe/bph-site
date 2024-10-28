@@ -1,4 +1,4 @@
-"use server"
+"use server";
 
 import { auth } from "@/auth";
 import { hints } from "@/db/schema";
@@ -11,8 +11,11 @@ export async function respondToHint(hintId: number, response: string) {
     throw new Error("Not authorized");
   }
 
-  await db.update(hints).set({
-    response,
-    responseTime: new Date(),
-  }).where(eq(hints.id, hintId))
+  await db
+    .update(hints)
+    .set({
+      response,
+      responseTime: new Date(),
+    })
+    .where(eq(hints.id, hintId));
 }

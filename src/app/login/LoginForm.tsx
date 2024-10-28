@@ -18,7 +18,7 @@ import { login, logout } from "./actions";
 
 export const loginFormSchema = z.object({
   username: z.string(),
-  password: z.string()
+  password: z.string(),
 });
 
 export function LoginForm() {
