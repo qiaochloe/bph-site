@@ -235,7 +235,7 @@ export function DataTable<TData, TValue>({
                             <p>ID: {row.getValue("id")}</p>
                             <p>Puzzle: 
                               <Link 
-                                href={`/puzzle/${row.getValue("puzzleId")}`} // Adjust the path based on your routing structure
+                                href={`/puzzle/${row.getValue("puzzleId")}`}
                                 className="text-blue-600 hover:text-blue-800 underline"
                               >
                                 {row.getValue("puzzleId")}
