@@ -22,6 +22,8 @@ export async function insertGuess(puzzleId: string, guess: string) {
     throw new Error("Puzzle not found");
   }
 
+  guess = guess.toUpperCase().trim();
+
   // Maybe tell the user if they have already made a guess?
   const duplicateGuess = await db.query.guesses.findFirst({
     where: and(eq(guesses.guess, guess), eq(guesses.teamId, session.user.id)),
@@ -35,7 +37,7 @@ export async function insertGuess(puzzleId: string, guess: string) {
     teamId: session.user.id,
     puzzleId,
     guess,
-    isCorrect: puzzle.answer === guess,
+    isCorrect: puzzle.answer.toUpperCase().trim() === guess,
     submitTime: new Date(),
   })
 }
