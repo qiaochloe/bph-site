@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useToast } from "@/hooks/use-toast"
+import { useToast } from "~/hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
 import {
   Form,
@@ -68,6 +68,8 @@ export function RegisterForm({ }: RegisterFormProps) {
     }
   });
 
+  const { toast } = useToast();
+
   const onSubmit = async (data: z.infer<typeof registerFormSchema>) => {
     try {
       await insertTeam(
@@ -83,13 +85,13 @@ export function RegisterForm({ }: RegisterFormProps) {
       // #GoodFirstIssue
       // TODO: give user some sort of confirmation that they've been registered before redirecting
       // Using a toast might be nice: https://ui.shadcn.com/docs/components/toast
-      useToast()({
+      toast({
         title: "Welcome to Brown Puzzle Hunt, " + data.displayName + "!",
         description: "Username: " + data.username,
         // action: (
         //   <ToastAction altText="Go to puzzles">Puzzles</ToastAction>
         // ),
-      })
+      });
       router.push("/login");
 
     } catch (error) {
