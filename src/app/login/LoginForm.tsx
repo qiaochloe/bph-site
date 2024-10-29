@@ -83,7 +83,10 @@ export function LoginForm() {
         {error && <p className="text-red-500">{error}</p>}
         <Button type="submit">Log In</Button>
         <div className="text-sm">
-          New to the hunt? <Link href="/register" className="hover:underline text-blue-500">Register</Link>
+          New to the hunt?{" "}
+          <Link href="/register" className="text-blue-500 hover:underline">
+            Register
+          </Link>
         </div>
       </form>
     </Form>
