@@ -15,7 +15,10 @@ export default async function Home() {
         <p>The hunt has not started yet.</p>
       ) : !session?.user?.id ? (
         <div>
-          <Link href="/login" className="hover:underline">Login</Link> to access puzzles.
+          <Link href="/login" className="hover:underline">
+            Login
+          </Link>{" "}
+          to access puzzles.
         </div>
       ) : (
         <>
