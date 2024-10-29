@@ -6,7 +6,6 @@ import { db } from "@/db/index";
 
 // NOTE: eventually, we probably want to create a layout for puzzle pages
 
-// TODO: should puzzles page be available to non-logged in users?
 export default async function Home() {
   const session = await auth();
   return (
