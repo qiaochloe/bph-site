@@ -1,7 +1,13 @@
-'use server'
+"use server";
 
 import { db } from "~/server/db";
-import { puzzles, guesses, roleEnum, interactionModeEnum, hints } from "~/server/db/schema";
+import {
+  puzzles,
+  guesses,
+  roleEnum,
+  interactionModeEnum,
+  hints,
+} from "~/server/db/schema";
 import { eq, and } from "drizzle-orm";
 import { auth, signIn, signOut } from "@/auth";
 import { AuthError } from "next-auth";
@@ -15,7 +21,7 @@ export async function insertGuess(puzzleId: string, guess: string) {
   }
 
   const puzzle = await db.query.puzzles.findFirst({
-    where: eq(puzzles.id, puzzleId)
+    where: eq(puzzles.id, puzzleId),
   });
 
   if (!puzzle) {
@@ -24,20 +30,24 @@ export async function insertGuess(puzzleId: string, guess: string) {
 
   // Maybe tell the user if they have already made a guess?
   const duplicateGuess = await db.query.guesses.findFirst({
-    where: and(eq(guesses.guess, guess), eq(guesses.teamId, session.user.id)),
+    where: and(
+      eq(guesses.guess, guess),
+      eq(guesses.teamId, session.user.id),
+      eq(guesses.puzzleId, puzzleId),
+    ),
   });
 
   if (duplicateGuess) {
     return;
   }
-  
+
   await db.insert(guesses).values({
     teamId: session.user.id,
     puzzleId,
     guess,
     isCorrect: puzzle.answer === guess,
     submitTime: new Date(),
-  })
+  });
 }
 
 export async function insertHint(puzzleId: string, hint: string) {
@@ -52,5 +62,5 @@ export async function insertHint(puzzleId: string, hint: string) {
     request: hint,
     requestTime: new Date(),
     status: "no_response",
-  })
+  });
 }
