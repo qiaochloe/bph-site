@@ -14,15 +14,22 @@ export function PreviousGuessTable({
 }) {
   return (
     <Table>
-      {/* <TableHeader>Previous Guesses</TableHeader> */}
       <TableBody>
-        {previousGuesses.map((guess) => (
-          <TableRow key={guess.id}>
-            <TableCell>{guess.guess}</TableCell>
-            <TableCell>{guess.isCorrect ? "✅" : "❌"}</TableCell>
-            <TableCell>{guess.submitTime.toLocaleString()}</TableCell>
-          </TableRow>
-        ))}
+        {previousGuesses
+          .sort((a, b) => (a.submitTime > b.submitTime ? -1 : 1))
+          .map((guess) => (
+            <TableRow key={guess.id}>
+              <TableCell>{guess.guess}</TableCell>
+              <TableCell>
+                {guess.isCorrect ? (
+                  <p className="text-emerald-600">CORRECT</p>
+                ) : (
+                  <p className="text-rose-600">INCORRECT</p>
+                )}
+              </TableCell>
+              <TableCell>{guess.submitTime.toLocaleString()}</TableCell>
+            </TableRow>
+          ))}
       </TableBody>
     </Table>
   );

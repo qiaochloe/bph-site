@@ -1,15 +1,19 @@
-'use server'
+"use server";
 
 import { db } from "~/server/db";
-import { puzzles, guesses, roleEnum, interactionModeEnum, hints } from "~/server/db/schema";
-import { eq } from "drizzle-orm";
+import {
+  puzzles,
+  guesses,
+  roleEnum,
+  interactionModeEnum,
+  hints,
+} from "~/server/db/schema";
+import { eq, and } from "drizzle-orm";
 import { auth, signIn, signOut } from "@/auth";
 import { AuthError } from "next-auth";
 import { except } from "drizzle-orm/mysql-core";
 
-// TODO: don't let teams submit the same guess twice
 // Remember to handle errors in the GuessForm component
-// #GoodFirstIssue
 export async function insertGuess(puzzleId: string, guess: string) {
   const session = await auth();
   if (!session?.user?.id) {
@@ -17,11 +21,24 @@ export async function insertGuess(puzzleId: string, guess: string) {
   }
 
   const puzzle = await db.query.puzzles.findFirst({
-    where: eq(puzzles.id, puzzleId)
+    where: eq(puzzles.id, puzzleId),
   });
 
   if (!puzzle) {
     throw new Error("Puzzle not found");
+  }
+
+  // Maybe tell the user if they have already made a guess?
+  const duplicateGuess = await db.query.guesses.findFirst({
+    where: and(
+      eq(guesses.guess, guess),
+      eq(guesses.teamId, session.user.id),
+      eq(guesses.puzzleId, puzzleId),
+    ),
+  });
+
+  if (duplicateGuess) {
+    return;
   }
 
   await db.insert(guesses).values({
@@ -30,7 +47,7 @@ export async function insertGuess(puzzleId: string, guess: string) {
     guess,
     isCorrect: puzzle.answer === guess,
     submitTime: new Date(),
-  })
+  });
 }
 
 export async function insertHint(puzzleId: string, hint: string) {
@@ -45,5 +62,5 @@ export async function insertHint(puzzleId: string, hint: string) {
     request: hint,
     requestTime: new Date(),
     status: "no_response",
-  })
+  });
 }
