@@ -27,7 +27,7 @@ export default async function Home() {
               .sort((a, b) => a.name.localeCompare(b.name))
               .map((puzzle) => (
                 <li key={puzzle.id}>
-                  <Link href={`/puzzle/${puzzle.id}`}>{puzzle.name}</Link>
+                  <Link className="hover:underline" href={`/puzzle/${puzzle.id}`}>{puzzle.name}</Link>
                 </li>
               ))}
           </ul>

@@ -8,7 +8,7 @@ export default async function Home() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
       <h1>Welcome!</h1>
-      {!session?.user?.id && <Link href="/register">Register here.</Link>}
+      {!session?.user?.id && <Link className="hover:underline" href="/register">Register</Link>}
     </div>
   );
 }
