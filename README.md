@@ -1,10 +1,10 @@
 # Table of Contents
 
 1. [Quick Start](#quick-start)
-2. [Overview](#overview)
 3. [Quick Links](#quick-links)
+2. [Overview](#overview)
 4. [Roadmap](#roadmap)
-   1. [First Steps](#first-steps)
+   1. [Current Progress](#current-progress)
    2. [By Puzzlethon](#by-puzzlethon)
    3. [By Brown Puzzlehunt](#by-brown-puzzlehunt)
 5. [Some design decisions](#some-design-decisions)
@@ -15,11 +15,26 @@
 ## Quick start
 
 1. Install [pnpm](https://pnpm.io/) from online or using Homebrew and clone this repo.
-2. Copy the `.env.example` file to `.env` and fill in the values. You will only need to sign up for Vercel Postgres and integrate it with Drizzle to develop locally. 
+2. Copy the `.env.example` file to `.env` and fill in the values. You will only need to sign up for **Vercel Postgres** and integrate it with Drizzle to develop locally. 
 3. Run `pnpm install` to install the dependencies.
 4. Run `pnpm run dev` to start the development server.
 5. Run `pnpm run db:studio` in a separate shell to open Drizzle Studio in your browser.
 6. Run `pnpm run db:push` in a separate shell to push the schema in `src/server/db/schema.ts` to the database.
+
+## Quick Links
+
+Make sure to check that you are reading documentation for Next.js with the App Router, not the Pages Router.
+
+Auth.js is formerly known as NextAuth.js. 
+Most documentation out there is still for v4, so check that you are reading documentation for v5.
+
+- [Next.js](https://nextjs.org/docs/app) with the App Router
+- [Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres)
+- [Drizzle](https://orm.drizzle.team/docs/overview)
+- [Auth.js](https://authjs.dev/) v5
+- [Vercel Server Actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations)
+- [Tailwind CSS](https://tailwindcss.com/docs/installation)
+- [Shadcn](https://ui.shadcn.com/docs)
 
 ## Overview
 
@@ -40,26 +55,9 @@ The setup is in the `src/server/auth` folder.
 
 Finally, on the frontend, we are using **Shadcn UI** components with the **Tailwind CSS** framework. Components are in the `src/components/ui` folder.
 
-## Quick Links
-
-Make sure to check that you are reading documentation for Next.js with the App Router, not the Pages Router.
-
-Auth.js is formerly known as NextAuth.js. 
-Most documentation out there is still for v4, so check that you are reading documentation for v5.
-
-- [Next.js](https://nextjs.org/docs/app) with the App Router
-- [Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres)
-- [Drizzle](https://orm.drizzle.team/docs/overview)
-- [Auth.js](https://authjs.dev/) v5
-- [Vercel Server Actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations)
-- [Tailwind CSS](https://tailwindcss.com/docs/installation)
-- [Shadcn](https://ui.shadcn.com/docs)
-
 # Roadmap
 
-Please mark the TODO list when you are done with something. These are just high-level tasks that need to be done, but you can add more specific tasks as you work on them. There are also more tasks marked with `TODO` scattered around the codebase.
-
-## First Steps
+## Current Progress
 
 - [x] Deploy to Vercel
 - [x] Add Vercel Postgres
@@ -67,17 +65,23 @@ Please mark the TODO list when you are done with something. These are just high-
 - [x] Attach database to UI
 - [x] Create basic schema for puzzles and teams
 - [x] Add leaderboard page
+    - [x] Make the leaderboard page order by puzzles completed 
 - [x] Add simple puzzle page
     - [x] Add client guess submission 
     - [x] Add server side validation
     - [x] Display previous guesses
     - [x] Validate that the guess is not an empty string
+    - [x] Validate that the guess has not already been submitted before
+    - [x] Automatically convert the guess to uppercase alphabetic characters
 - [x] Handle authentication
     - [x] Add registration page
     - [x] Add login page
     - [x] Add session management
     - [x] Add middleware
     - [x] Redesign the login page to look more like the registration page
+    - [x] Validate that the username is not already taken before inserting a new team
+    - [x] Hash and salt the password
+    - [x] Update "login" to "logout" on the nav bar when the user is logged in
 - [x] Finish data-modeling using gph-site/puzzles/models.py
 - [x] Add puzzle drop system
     - [x] Display list of puzzles dynamically
@@ -114,13 +118,10 @@ Please mark the TODO list when you are done with something. These are just high-
 
 **TODO Backlog:**
 
-- [ ] Make the leaderboard page order by puzzles completed 
-- [ ] Add logic for "completing the hunt"
-- [ ] Validate that the guess has not already been submitted before
-- [ ] Automatically convert the guess to uppercase alphabetic characters
-- [ ] Update "login" to "logout" on the nav bar when the user is logged in
-- [ ] Hash and salt the password
-- [ ] Validate that the username is not already taken before inserting a new team
+- [ ] Automatically start and end registration
+- [ ] Automatically end the hunt
+- [ ] Add logic for teams "completing the hunt"
+- [ ] Add errata system
 
 ## By Brown Puzzlehunt
 
@@ -129,7 +130,6 @@ Please mark the TODO list when you are done with something. These are just high-
     - [ ] Add Submission Queue (a live-updating queue of submitted guesses)
 - [ ] Add test-solving system
     - [ ] Remember to exclude those users from the leaderboard
-- [ ] Add errata system
 - [ ] Discord bot
 - [ ] Logging
 - [ ] Index the database
@@ -138,6 +138,8 @@ Please mark the TODO list when you are done with something. These are just high-
 - [ ] Add password reset
 
 ## Would be nice to have
+
+- [ ] Sync hint claiming between team members using streams
 - [ ] Sync guesses between team members using streams
 
 # Some design decisions
