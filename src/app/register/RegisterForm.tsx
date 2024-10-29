@@ -72,7 +72,7 @@ export function RegisterForm({}: RegisterFormProps) {
     if (result.error) {
       setError(result.error);
     } else {
-      router.refresh();
+      router.push("/login");
       setError(null);
     }
   };
