@@ -7,17 +7,34 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { sql } from "drizzle-orm";
+import { asc, desc, eq } from "drizzle-orm/expressions";
+import { teams, guesses } from "~/server/db/schema";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  // TODO: Also order by number of correct guesses, last correct submission time
-  const teams = await db.query.teams.findMany({
-    orderBy: (model, { asc }) => [asc(model.finishTime)],
-    with: {
-      guesses: true,
-    },
-  });
+  const teamRows = await db
+    .select({
+      id: teams.id,
+      displayName: teams.displayName,
+      finishTime: teams.finishTime,
+      correctGuesses:
+        sql<number>`count(case when ${guesses.isCorrect} = true then 1 end)`.as(
+          "correct_guesses",
+        ),
+      lastCorrectGuessTime: sql<Date>`max(${guesses.submitTime})`.as(
+        "last_correct_guess_time",
+      ),
+    })
+    .from(teams)
+    .leftJoin(guesses, eq(teams.id, guesses.teamId))
+    .groupBy(teams.id, teams.displayName, teams.finishTime)
+    .orderBy(
+      asc(teams.finishTime),
+      desc(sql`"correct_guesses"`),
+      asc(sql`"last_correct_guess_time"`),
+    );
 
   return (
     <div className="flex min-h-screen flex-col items-center">
@@ -35,15 +52,17 @@ export default async function Home() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {teams.map((team, index) => (
+            {teamRows.map((teamRow, index) => (
               <TableRow>
                 <TableCell>{index + 1}</TableCell>
-                <TableCell>{team.displayName}</TableCell>
+                <TableCell>{teamRow.displayName}</TableCell>
                 <TableCell className="text-center">
-                  {team.guesses.filter((guess) => guess.isCorrect).length}
+                  {teamRow.correctGuesses ?? 0}
                 </TableCell>
                 <TableCell>
-                  {team.finishTime ? team.finishTime.toLocaleString() : ""}
+                  {teamRow.finishTime
+                    ? teamRow.finishTime.toLocaleString()
+                    : ""}
                 </TableCell>
               </TableRow>
             ))}
