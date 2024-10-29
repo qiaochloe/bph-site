@@ -36,6 +36,8 @@ export const registerFormSchema = z.object({
     .string()
     .min(8, { message: "Password must be at least 8 characters long" })
     .max(50, { message: "Password must be at most 50 characters long" }),
+  confirmPassword: z
+    .string(),
   interactionMode: z.enum(interactionModeEnum.enumValues),
   // TODO: include additional team members
   // Check if we can make this consistent with the db schema automatically
@@ -43,7 +45,7 @@ export const registerFormSchema = z.object({
 
 type RegisterFormProps = {};
 
-export function RegisterForm({}: RegisterFormProps) {
+export function RegisterForm({ }: RegisterFormProps) {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
@@ -58,15 +60,19 @@ export function RegisterForm({}: RegisterFormProps) {
       username: "",
       displayName: "",
       password: "",
+      confirmPassword: "",
       interactionMode: undefined,
     },
   });
+  const { watch } = form;
+
 
   const onSubmit = async (data: z.infer<typeof registerFormSchema>) => {
     const result = await insertTeam(
       data.username,
       data.displayName,
       data.password,
+      data.confirmPassword,
       data.interactionMode,
     );
 
@@ -82,8 +88,12 @@ export function RegisterForm({}: RegisterFormProps) {
   // See: LoginForm.tsx
   // #GoodFirstIssue
 
+
   // TODO: might be nice to have people confirm their password twice
   // #GoodFirstIssue
+  const password = watch("password");
+  const confirmPassword = watch("confirmPassword");
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -132,6 +142,22 @@ export function RegisterForm({}: RegisterFormProps) {
                 You'll probably share this with your team.
               </FormDescription>
               <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="confirmPassword"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Confirm Password</FormLabel>
+              <FormControl>
+                <Input type="password" placeholder="Confirm Password" {...field} />
+              </FormControl>
+              <FormDescription>
+                Don't forget.
+              </FormDescription>
+              {password !== confirmPassword && <p className="text-red-500">Passwords do not match.</p>}
             </FormItem>
           )}
         />
