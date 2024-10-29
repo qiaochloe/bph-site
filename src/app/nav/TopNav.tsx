@@ -14,7 +14,7 @@ export async function TopNav() {
         <Link href="/teams">Teams</Link>
       </div>
       <div>
-        {session?.user?.id && session?.user?.role === "admin" && (
+        {session?.user?.role === "admin" && (
           <>
             <Link href="/admin">Admin</Link>
             <>&emsp;</>
