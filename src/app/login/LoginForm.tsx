@@ -22,6 +22,9 @@ export const loginFormSchema = z.object({
 });
 
 export function LoginForm() {
+  // It might be more idiomatic to use the useFormState hook here
+  // And in other places where we have a form
+  // #BadFirstIssue
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 

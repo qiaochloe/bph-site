@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Form,
@@ -16,15 +15,12 @@ import {
   FormMessage,
   FormDescription,
 } from "@/components/ui/form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { interactionModeEnum } from "~/server/db/schema";
-
 import { insertTeam } from "./actions";
 
 export const registerFormSchema = z.object({
-  // TODO: validate that username is unique in another server component
-
   // TODO: validate that username does not contain special characters
   // #GoodFirstIssue
   username: z
@@ -47,6 +43,7 @@ export const registerFormSchema = z.object({
 type RegisterFormProps = {};
 
 export function RegisterForm({}: RegisterFormProps) {
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   // Prefetch the login page
@@ -65,24 +62,18 @@ export function RegisterForm({}: RegisterFormProps) {
   });
 
   const onSubmit = async (data: z.infer<typeof registerFormSchema>) => {
-    try {
-      await insertTeam(
-        data.username,
-        data.displayName,
-        data.password,
-        data.interactionMode,
-      );
-      // NOTE: this does not reset interactionMode for some reason
-      // form.reset();
+    const result = await insertTeam(
+      data.username,
+      data.displayName,
+      data.password,
+      data.interactionMode,
+    );
 
-      // Redirect to login page
-      // #GoodFirstIssue
-      // TODO: give user some sort of confirmation that they've been registered before redirecting
-      // Using a toast might be nice: https://ui.shadcn.com/docs/components/toast
-      router.push("/login");
-    } catch (error) {
-      console.error("Error inserting team:", error);
-      // Do not reset the form if there is an error
+    if (result.error) {
+      setError(result.error);
+    } else {
+      router.refresh();
+      setError(null);
     }
   };
 
@@ -173,6 +164,7 @@ export function RegisterForm({}: RegisterFormProps) {
             </FormItem>
           )}
         />
+        {error && <p className="text-red-500">{error}</p>}
         <Button type="submit">Submit</Button>
       </form>
     </Form>
