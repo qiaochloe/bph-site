@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useToast } from "@/hooks/use-toast"
+import { ToastAction } from "@/components/ui/toast"
 import {
   Form,
   FormLabel,
@@ -21,6 +23,8 @@ import { useRouter } from "next/navigation";
 import { interactionModeEnum } from "~/server/db/schema";
 
 import { insertTeam } from "./actions";
+
+import { Toaster } from "@/components/ui/toaster"
 
 export const registerFormSchema = z.object({
   // TODO: validate that username is unique in another server component
@@ -46,12 +50,12 @@ export const registerFormSchema = z.object({
 
 type RegisterFormProps = {};
 
-export function RegisterForm({}: RegisterFormProps) {
+export function RegisterForm({ }: RegisterFormProps) {
   const router = useRouter();
 
   // Prefetch the login page
   useEffect(() => {
-    router.prefetch('/login'); 
+    router.prefetch('/login');
   }, [router]);
 
   const form = useForm<z.infer<typeof registerFormSchema>>({
@@ -79,6 +83,13 @@ export function RegisterForm({}: RegisterFormProps) {
       // #GoodFirstIssue
       // TODO: give user some sort of confirmation that they've been registered before redirecting
       // Using a toast might be nice: https://ui.shadcn.com/docs/components/toast
+      useToast()({
+        title: "Welcome to Brown Puzzle Hunt, " + data.displayName + "!",
+        description: "Username: " + data.username,
+        // action: (
+        //   <ToastAction altText="Go to puzzles">Puzzles</ToastAction>
+        // ),
+      })
       router.push("/login");
 
     } catch (error) {
@@ -90,7 +101,7 @@ export function RegisterForm({}: RegisterFormProps) {
   // TODO: size of the form changes when the error message is shown
   // See: LoginForm.tsx
   // #GoodFirstIssue
-  
+
   // TODO: might be nice to have people confirm their password twice
   // #GoodFirstIssue
   return (

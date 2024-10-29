@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 import Link from "next/link";
+import { Toaster } from "@/components/ui/toaster"
 export const metadata: Metadata = {
   title: "Brown Puzzle Hunt",
   description: "",
@@ -20,7 +21,7 @@ async function TopNav() {
         <Link href="/teams">Teams</Link>
       </div>
       <div>
-        { session?.user ? (<Link href="/login">Logout</Link>) : (<Link href="/login">Login</Link>) }
+        {session?.user ? (<Link href="/login">Logout</Link>) : (<Link href="/login">Login</Link>)}
       </div>
     </nav>
   );
@@ -36,6 +37,7 @@ export default function RootLayout({
         <main>
           {children}
         </main>
+        <Toaster />
       </body>
     </html>
   );
