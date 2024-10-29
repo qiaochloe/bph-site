@@ -15,7 +15,7 @@ export function PreviousHintTable({
   previousHints: (typeof hints.$inferSelect)[];
 }) {
   return (
-    <Table>
+    <Table className="table-fixed">
       {/* <TableHeader>Previous hints</TableHeader> */}
       <TableHead>Request</TableHead>
       <TableHead>Response</TableHead>

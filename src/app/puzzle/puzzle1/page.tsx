@@ -47,7 +47,7 @@ export default async function Home() {
       <HintForm puzzleId={PUZZLE_ID} />
 
       <h1 className="m-4">Previous Hints</h1>
-      <div>
+      <div className="w-1/2">
         <PreviousHintTable previousHints={previousHints} />
       </div>
     </div>
