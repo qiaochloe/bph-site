@@ -17,7 +17,9 @@ import {
 import { insertGuess } from "../actions";
 
 function sanitizeAnswer(answer: any) {
-  return (typeof answer === 'string') ? answer.toUpperCase().replace(/[^A-Z]/g, "") : "";
+  return typeof answer === "string"
+    ? answer.toUpperCase().replace(/[^A-Z]/g, "")
+    : "";
 }
 
 const formSchema = z.object({
@@ -25,7 +27,9 @@ const formSchema = z.object({
     sanitizeAnswer,
     z
       .string()
-      .min(1, { message: "Guess must contain at least one alphabetical character" })
+      .min(1, {
+        message: "Guess must contain at least one alphabetical character",
+      })
       .max(50, { message: "Answer will not be longer than 50 characters" }),
   ),
 });
