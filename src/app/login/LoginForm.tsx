@@ -11,10 +11,12 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 
 import { login, logout } from "./actions";
+import Link from "next/link";
 
 export const loginFormSchema = z.object({
   username: z.string(),
@@ -57,8 +59,9 @@ export function LoginForm() {
           name="username"
           render={({ field }) => (
             <FormItem>
+              <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="Username" {...field} />
+                <Input placeholder="jcarberr" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -69,15 +72,19 @@ export function LoginForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
+              <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="Password" {...field} />
+                <Input type="password" placeholder="password" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
         {error && <p className="text-red-500">{error}</p>}
-        <Button type="submit">Submit</Button>
+        <Button type="submit">Log In</Button>
+        <div className="text-sm">
+          New to the hunt? <Link href="/register" className="hover:underline text-blue-500">Register</Link>
+        </div>
       </form>
     </Form>
   );
