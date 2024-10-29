@@ -7,23 +7,33 @@ export async function TopNav() {
   return (
     <nav className="flex w-full items-center justify-between p-4">
       <div>
-        <Link href="/" className="hover:underline">Home</Link>
+        <Link href="/" className="hover:underline">
+          Home
+        </Link>
         &emsp;
-        <Link href="/puzzle" className="hover:underline">Puzzle</Link>
+        <Link href="/puzzle" className="hover:underline">
+          Puzzle
+        </Link>
         &emsp;
-        <Link href="/teams" className="hover:underline">Teams</Link>
+        <Link href="/teams" className="hover:underline">
+          Teams
+        </Link>
       </div>
       <div>
         {session?.user?.role === "admin" && (
           <>
-            <Link href="/admin" className="hover:underline">Admin</Link>
+            <Link href="/admin" className="hover:underline">
+              Admin
+            </Link>
             <>&emsp;</>
           </>
         )}
         {session?.user?.id ? (
           <LogoutButton />
         ) : (
-          <Link href="/login" className="hover:underline">Login</Link>
+          <Link href="/login" className="hover:underline">
+            Login
+          </Link>
         )}
       </div>
     </nav>
