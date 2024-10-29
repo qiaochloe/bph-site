@@ -19,6 +19,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { interactionModeEnum } from "~/server/db/schema";
 import { insertTeam } from "./actions";
+import Link from "next/link";
 
 export const registerFormSchema = z.object({
   // TODO: validate that username does not contain special characters
@@ -93,7 +94,7 @@ export function RegisterForm({}: RegisterFormProps) {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="jcarberry" {...field} />
+                <Input placeholder="jcarberr" {...field} />
               </FormControl>
               <FormDescription>
                 This is the private username your team will use when logging in.
@@ -112,7 +113,7 @@ export function RegisterForm({}: RegisterFormProps) {
                 <Input placeholder="Josiah Carberry" {...field} />
               </FormControl>
               <FormDescription>
-                This is the public display name. You can change at any time.
+                This is the public display name.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -125,7 +126,7 @@ export function RegisterForm({}: RegisterFormProps) {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="Password" {...field} />
+                <Input type="password" placeholder="password" {...field} />
               </FormControl>
               <FormDescription>
                 You'll probably share this with your team.
@@ -165,7 +166,13 @@ export function RegisterForm({}: RegisterFormProps) {
           )}
         />
         {error && <p className="text-red-500">{error}</p>}
-        <Button type="submit">Submit</Button>
+        <Button type="submit">Register</Button>
+        <div className="text-sm">
+          Already registered for the hunt?{" "}
+          <Link href="/login" className="text-blue-500 hover:underline">
+            Login
+          </Link>
+        </div>
       </form>
     </Form>
   );

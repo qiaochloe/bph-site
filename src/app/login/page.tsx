@@ -13,7 +13,10 @@ export default async function Home() {
           <LogoutForm />
         </>
       ) : (
-        <LoginForm />
+        <>
+          <h1 className="p-4">Login!</h1>
+          <LoginForm />
+        </>
       )}
     </div>
   );
