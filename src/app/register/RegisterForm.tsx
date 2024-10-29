@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useToast } from "~/hooks/use-toast"
+import { useToast } from "~/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast"
 import {
   Form,
@@ -23,8 +23,6 @@ import { useRouter } from "next/navigation";
 import { interactionModeEnum } from "~/server/db/schema";
 
 import { insertTeam } from "./actions";
-
-import { Toaster } from "@/components/ui/toaster"
 
 export const registerFormSchema = z.object({
   // TODO: validate that username is unique in another server component
@@ -50,12 +48,12 @@ export const registerFormSchema = z.object({
 
 type RegisterFormProps = {};
 
-export function RegisterForm({ }: RegisterFormProps) {
+export function RegisterForm({}: RegisterFormProps) {
   const router = useRouter();
 
   // Prefetch the login page
   useEffect(() => {
-    router.prefetch('/login');
+    router.prefetch("/login");
   }, [router]);
 
   const form = useForm<z.infer<typeof registerFormSchema>>({
@@ -65,7 +63,7 @@ export function RegisterForm({ }: RegisterFormProps) {
       displayName: "",
       password: "",
       interactionMode: undefined,
-    }
+    },
   });
 
   const { toast } = useToast();
@@ -87,13 +85,9 @@ export function RegisterForm({ }: RegisterFormProps) {
       // Using a toast might be nice: https://ui.shadcn.com/docs/components/toast
       toast({
         title: "Welcome to Brown Puzzle Hunt, " + data.displayName + "!",
-        description: "Username: " + data.username,
-        // action: (
-        //   <ToastAction altText="Go to puzzles">Puzzles</ToastAction>
-        // ),
+        description: "Your team has been registered.",
       });
       router.push("/login");
-
     } catch (error) {
       console.error("Error inserting team:", error);
       // Do not reset the form if there is an error
