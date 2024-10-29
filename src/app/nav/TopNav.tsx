@@ -15,7 +15,10 @@ export async function TopNav() {
       </div>
       <div>
         {session?.user?.id && session?.user?.role === "admin" && (
-          <><Link href="/admin">Admin</Link><>&emsp;</></>
+          <>
+            <Link href="/admin">Admin</Link>
+            <>&emsp;</>
+          </>
         )}
         {session?.user?.id ? (
           <LogoutButton />
