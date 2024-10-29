@@ -3,6 +3,7 @@
 import { db } from "@/db/index";
 import { teams, type interactionModeEnum } from "@/db/schema";
 import { hash } from "bcrypt";
+import { eq } from "drizzle-orm";
 
 export async function insertTeam(
   username: string,
@@ -10,12 +11,16 @@ export async function insertTeam(
   password: string,
   interactionMode: (typeof interactionModeEnum.enumValues)[number],
 ) {
-  // TODO: check if team username already exists before inserting
-  // Remember to handle the error in the register form
-  // #GoodFirstIssue
+  const duplicateUsername = await db.query.teams.findFirst({
+    where: eq(teams.username, username),
+  });
+
+  if (duplicateUsername) {
+    return { error: "Username already taken" };
+  }
 
   hash(password, 10, async (err, hash) => {
-    if (err) throw err;
+    if (err) return { error: "Unexpected error occurred" };
 
     await db.insert(teams).values({
       username,
@@ -26,4 +31,6 @@ export async function insertTeam(
       createTime: new Date(),
     });
   });
+
+  return { error: null };
 }
