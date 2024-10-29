@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Form,
@@ -16,15 +15,13 @@ import {
   FormMessage,
   FormDescription,
 } from "@/components/ui/form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { interactionModeEnum } from "~/server/db/schema";
-
 import { insertTeam } from "./actions";
+import Link from "next/link";
 
 export const registerFormSchema = z.object({
-  // TODO: validate that username is unique in another server component
-
   // TODO: validate that username does not contain special characters
   // #GoodFirstIssue
   username: z
@@ -47,11 +44,12 @@ export const registerFormSchema = z.object({
 type RegisterFormProps = {};
 
 export function RegisterForm({}: RegisterFormProps) {
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   // Prefetch the login page
   useEffect(() => {
-    router.prefetch('/login'); 
+    router.prefetch("/login");
   }, [router]);
 
   const form = useForm<z.infer<typeof registerFormSchema>>({
@@ -61,36 +59,29 @@ export function RegisterForm({}: RegisterFormProps) {
       displayName: "",
       password: "",
       interactionMode: undefined,
-    }
+    },
   });
 
   const onSubmit = async (data: z.infer<typeof registerFormSchema>) => {
-    try {
-      await insertTeam(
-        data.username,
-        data.displayName,
-        data.password,
-        data.interactionMode,
-      );
-      // NOTE: this does not reset interactionMode for some reason
-      // form.reset();
+    const result = await insertTeam(
+      data.username,
+      data.displayName,
+      data.password,
+      data.interactionMode,
+    );
 
-      // Redirect to login page
-      // #GoodFirstIssue
-      // TODO: give user some sort of confirmation that they've been registered before redirecting
-      // Using a toast might be nice: https://ui.shadcn.com/docs/components/toast
+    if (result.error) {
+      setError(result.error);
+    } else {
       router.push("/login");
-
-    } catch (error) {
-      console.error("Error inserting team:", error);
-      // Do not reset the form if there is an error
+      setError(null);
     }
   };
 
   // TODO: size of the form changes when the error message is shown
   // See: LoginForm.tsx
   // #GoodFirstIssue
-  
+
   // TODO: might be nice to have people confirm their password twice
   // #GoodFirstIssue
   return (
@@ -103,7 +94,7 @@ export function RegisterForm({}: RegisterFormProps) {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="jcarberry" {...field} />
+                <Input placeholder="jcarberr" {...field} />
               </FormControl>
               <FormDescription>
                 This is the private username your team will use when logging in.
@@ -122,7 +113,7 @@ export function RegisterForm({}: RegisterFormProps) {
                 <Input placeholder="Josiah Carberry" {...field} />
               </FormControl>
               <FormDescription>
-                This is the public display name. You can change at any time.
+                This is the public display name.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -135,7 +126,7 @@ export function RegisterForm({}: RegisterFormProps) {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="Password" {...field} />
+                <Input type="password" placeholder="password" {...field} />
               </FormControl>
               <FormDescription>
                 You'll probably share this with your team.
@@ -174,7 +165,14 @@ export function RegisterForm({}: RegisterFormProps) {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        {error && <p className="text-red-500">{error}</p>}
+        <Button type="submit">Register</Button>
+        <div className="text-sm">
+          Already registered for the hunt?{" "}
+          <Link href="/login" className="text-blue-500 hover:underline">
+            Login
+          </Link>
+        </div>
       </form>
     </Form>
   );
