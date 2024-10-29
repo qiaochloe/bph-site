@@ -8,7 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { sql } from "drizzle-orm";
-import { asc, desc, eq, or } from "drizzle-orm/expressions";
+import { asc, desc, eq } from "drizzle-orm/expressions";
 import { teams, guesses } from "~/server/db/schema";
 
 export const dynamic = "force-dynamic";
