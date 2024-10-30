@@ -43,7 +43,7 @@ export const registerFormSchema = z
     // Check if we can make this consistent with the db schema automatically
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
+    message: "Passwords do not match",
     path: ["confirmPassword"],
   });
 
@@ -149,6 +149,7 @@ export function RegisterForm({}: RegisterFormProps) {
               <FormControl>
                 <Input type="password" {...field} />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
