@@ -23,25 +23,31 @@ import { interactionModeEnum } from "~/server/db/schema";
 import { insertTeam } from "./actions";
 import Link from "next/link";
 
-export const registerFormSchema = z.object({
-  // TODO: validate that username does not contain special characters
-  // #GoodFirstIssue
-  username: z
-    .string()
-    .min(8, { message: "Username must be at least 8 characters long" })
-    .max(50, { message: "Username must be at most 50 characters long" }),
-  displayName: z
-    .string()
-    .min(1, { message: "Display name is required" })
-    .max(50, { message: "Display name must be at most 50 characters long" }),
-  password: z
-    .string()
-    .min(8, { message: "Password must be at least 8 characters long" })
-    .max(50, { message: "Password must be at most 50 characters long" }),
-  interactionMode: z.enum(interactionModeEnum.enumValues),
-  // TODO: include additional team members
-  // Check if we can make this consistent with the db schema automatically
-});
+export const registerFormSchema = z
+  .object({
+    // TODO: validate that username does not contain special characters
+    // #GoodFirstIssue
+    username: z
+      .string()
+      .min(8, { message: "Username must be at least 8 characters long" })
+      .max(50, { message: "Username must be at most 50 characters long" }),
+    displayName: z
+      .string()
+      .min(1, { message: "Display name is required" })
+      .max(50, { message: "Display name must be at most 50 characters long" }),
+    password: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters long" })
+      .max(50, { message: "Password must be at most 50 characters long" }),
+    confirmPassword: z.string(),
+    interactionMode: z.enum(interactionModeEnum.enumValues),
+    // TODO: include additional team members
+    // Check if we can make this consistent with the db schema automatically
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 type RegisterFormProps = {};
 
@@ -60,6 +66,7 @@ export function RegisterForm({}: RegisterFormProps) {
       username: "",
       displayName: "",
       password: "",
+      confirmPassword: "",
       interactionMode: undefined,
     },
   });
@@ -90,8 +97,6 @@ export function RegisterForm({}: RegisterFormProps) {
   // See: LoginForm.tsx
   // #GoodFirstIssue
 
-  // TODO: might be nice to have people confirm their password twice
-  // #GoodFirstIssue
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -134,11 +139,24 @@ export function RegisterForm({}: RegisterFormProps) {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="password" {...field} />
+                <Input type="password" {...field} />
               </FormControl>
               <FormDescription>
                 You'll probably share this with your team.
               </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="confirmPassword"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Confirm Password</FormLabel>
+              <FormControl>
+                <Input type="password" {...field} />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
