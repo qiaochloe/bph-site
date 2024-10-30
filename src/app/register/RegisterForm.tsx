@@ -21,31 +21,35 @@ import { interactionModeEnum } from "~/server/db/schema";
 import { insertTeam } from "./actions";
 import Link from "next/link";
 
-export const registerFormSchema = z.object({
-  // TODO: validate that username does not contain special characters
-  // #GoodFirstIssue
-  username: z
-    .string()
-    .min(8, { message: "Username must be at least 8 characters long" })
-    .max(50, { message: "Username must be at most 50 characters long" }),
-  displayName: z
-    .string()
-    .min(1, { message: "Display name is required" })
-    .max(50, { message: "Display name must be at most 50 characters long" }),
-  password: z
-    .string()
-    .min(8, { message: "Password must be at least 8 characters long" })
-    .max(50, { message: "Password must be at most 50 characters long" }),
-  confirmPassword: z
-    .string(),
-  interactionMode: z.enum(interactionModeEnum.enumValues),
-  // TODO: include additional team members
-  // Check if we can make this consistent with the db schema automatically
-});
+export const registerFormSchema = z
+  .object({
+    // TODO: validate that username does not contain special characters
+    // #GoodFirstIssue
+    username: z
+      .string()
+      .min(8, { message: "Username must be at least 8 characters long" })
+      .max(50, { message: "Username must be at most 50 characters long" }),
+    displayName: z
+      .string()
+      .min(1, { message: "Display name is required" })
+      .max(50, { message: "Display name must be at most 50 characters long" }),
+    password: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters long" })
+      .max(50, { message: "Password must be at most 50 characters long" }),
+    confirmPassword: z.string(),
+    interactionMode: z.enum(interactionModeEnum.enumValues),
+    // TODO: include additional team members
+    // Check if we can make this consistent with the db schema automatically
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
 
 type RegisterFormProps = {};
 
-export function RegisterForm({ }: RegisterFormProps) {
+export function RegisterForm({}: RegisterFormProps) {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
@@ -64,15 +68,12 @@ export function RegisterForm({ }: RegisterFormProps) {
       interactionMode: undefined,
     },
   });
-  const { watch } = form;
-
 
   const onSubmit = async (data: z.infer<typeof registerFormSchema>) => {
     const result = await insertTeam(
       data.username,
       data.displayName,
       data.password,
-      data.confirmPassword,
       data.interactionMode,
     );
 
@@ -87,12 +88,6 @@ export function RegisterForm({ }: RegisterFormProps) {
   // TODO: size of the form changes when the error message is shown
   // See: LoginForm.tsx
   // #GoodFirstIssue
-
-
-  // TODO: might be nice to have people confirm their password twice
-  // #GoodFirstIssue
-  const password = watch("password");
-  const confirmPassword = watch("confirmPassword");
 
   return (
     <Form {...form}>
@@ -136,7 +131,7 @@ export function RegisterForm({ }: RegisterFormProps) {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="password" {...field} />
+                <Input type="password" {...field} />
               </FormControl>
               <FormDescription>
                 You'll probably share this with your team.
@@ -152,12 +147,8 @@ export function RegisterForm({ }: RegisterFormProps) {
             <FormItem>
               <FormLabel>Confirm Password</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="Confirm Password" {...field} />
+                <Input type="password" {...field} />
               </FormControl>
-              <FormDescription>
-                Don't forget.
-              </FormDescription>
-              {password !== confirmPassword && <p className="text-red-500">Passwords do not match.</p>}
             </FormItem>
           )}
         />
