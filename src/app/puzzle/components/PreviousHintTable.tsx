@@ -15,15 +15,15 @@ export function PreviousHintTable({
   previousHints: (typeof hints.$inferSelect)[];
 }) {
   return (
-    <Table>
+    <Table className="table-fixed">
       {/* <TableHeader>Previous hints</TableHeader> */}
       <TableHead>Request</TableHead>
       <TableHead>Response</TableHead>
       <TableBody>
         {previousHints.map((hint) => (
           <TableRow key={hint.id}>
-            <TableCell>{hint.request}</TableCell>
-            <TableCell>{hint.response}</TableCell>
+            <TableCell className="break-words">{hint.request}</TableCell>
+            <TableCell className="break-words">{hint.response}</TableCell>
           </TableRow>
         ))}
       </TableBody>
