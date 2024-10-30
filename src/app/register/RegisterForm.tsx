@@ -6,6 +6,8 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useToast } from "~/hooks/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 import {
   Form,
   FormLabel,
@@ -69,6 +71,8 @@ export function RegisterForm({}: RegisterFormProps) {
     },
   });
 
+  const { toast } = useToast();
+
   const onSubmit = async (data: z.infer<typeof registerFormSchema>) => {
     const result = await insertTeam(
       data.username,
@@ -80,6 +84,10 @@ export function RegisterForm({}: RegisterFormProps) {
     if (result.error) {
       setError(result.error);
     } else {
+      toast({
+        title: "Welcome to Brown Puzzle Hunt, " + data.displayName + "!",
+        description: "Your team has been registered.",
+      });
       router.push("/login");
       setError(null);
     }

@@ -1,5 +1,6 @@
 import "~/styles/globals.css";
 import { TopNav } from "~/app/nav/TopNav";
+import { Toaster } from "@/components/ui/toaster";
 
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
@@ -17,6 +18,7 @@ export default function RootLayout({
       <body>
         <TopNav />
         <main>{children}</main>
+        <Toaster />
       </body>
     </html>
   );
