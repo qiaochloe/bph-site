@@ -12,9 +12,9 @@ export default async function Home() {
   const puzzleList = await db.query.puzzles.findMany();
 
   return (
-    <div className="flex min-h-screen w-full max-w-4xl mx-auto p-4">
+    <div className="mx-auto flex min-h-screen w-full max-w-4xl p-4">
       <div className="w-full">
-        <h1 className="text-2xl font-bold mb-4">Errata</h1>
+        <h1 className="mb-4 text-2xl font-bold">Errata</h1>
         <ErratumForm puzzleList={puzzleList} />
       </div>
     </div>
