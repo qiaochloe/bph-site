@@ -55,9 +55,9 @@ export function RegisterForm({}: RegisterFormProps) {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  // Prefetch the login page
+  // Prefetch the home page
   useEffect(() => {
-    router.prefetch("/login");
+    router.prefetch("/");
   }, [router]);
 
   const form = useForm<z.infer<typeof registerFormSchema>>({
@@ -88,7 +88,7 @@ export function RegisterForm({}: RegisterFormProps) {
         title: "Welcome to Brown Puzzle Hunt, " + data.displayName + "!",
         description: "Your team has been registered.",
       });
-      router.push("/login");
+      router.push("/");
       setError(null);
     }
   };
