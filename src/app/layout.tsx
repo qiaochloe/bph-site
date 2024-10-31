@@ -4,6 +4,8 @@ import { Toaster } from "@/components/ui/toaster";
 
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
+import { Providers } from "~/app/providers";
+
 export const metadata: Metadata = {
   title: "Brown Puzzle Hunt",
   description: "",
@@ -16,9 +18,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
-        <TopNav />
-        <main>{children}</main>
-        <Toaster />
+        <Providers>
+          <TopNav />
+          <main>{children}</main>
+          <Toaster />
+        </Providers>
       </body>
     </html>
   );

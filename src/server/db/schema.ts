@@ -103,17 +103,14 @@ export const hints = createTable("hint", {
 
   request: text("request").notNull(),
   requestTime: timestamp("request_time", { withTimezone: true }),
-
-  claimer: varchar("claimer", { length: 255 }),
+  claimer: varchar("claimer").references(() => teams.id),
   claimTime: timestamp("claim_time", { withTimezone: true }),
-
   response: text("response"),
   responseTime: timestamp("response_time", { withTimezone: true }),
-
   status: hintStatusEnum("status").notNull().default("no_response"),
 
   // Not included:
-  // refunded or obsolute statuses
+  // obsolute statuses
   // notify_emails, discord_id, is_followup
 });
 
@@ -146,5 +143,9 @@ export const hintRelations = relations(hints, ({ one }) => ({
   puzzle: one(puzzles, {
     fields: [hints.puzzleId],
     references: [puzzles.id],
+  }),
+  claimer: one(teams, {
+    fields: [hints.claimer],
+    references: [teams.id],
   }),
 }));
