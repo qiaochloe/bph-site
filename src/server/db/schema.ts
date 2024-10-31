@@ -119,9 +119,9 @@ export const hints = createTable("hint", {
 export const teamRelations = relations(teams, ({ many }) => ({
   guesses: many(guesses),
   // Hints requested by this team
-  requestedHints: many(hints, { relationName: "hints" }),
+  requestedHints: many(hints, { relationName: "requested_hints" }),
   // Hints claimed by this admin "team"
-  claimedHints: many(hints, { relationName: "claimer" }),
+  claimedHints: many(hints, { relationName: "claimed_hints" }),
 }));
 
 export const puzzleRelations = relations(puzzles, ({ many }) => ({
@@ -144,6 +144,7 @@ export const hintRelations = relations(hints, ({ one }) => ({
   team: one(teams, {
     fields: [hints.teamId],
     references: [teams.id],
+    relationName: "requested_hints",
   }),
   puzzle: one(puzzles, {
     fields: [hints.puzzleId],
@@ -152,5 +153,6 @@ export const hintRelations = relations(hints, ({ one }) => ({
   claimer: one(teams, {
     fields: [hints.claimer],
     references: [teams.id],
+    relationName: "claimed_hints",
   }),
 }));
