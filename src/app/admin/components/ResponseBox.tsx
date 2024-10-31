@@ -26,7 +26,7 @@ export function ResponseBox<TData>({
 
   if (row.getValue("claimer") == currHinter)
     return (
-      <div className="grid full gap-1.5">
+      <div className="full grid gap-1.5">
         <Label htmlFor={`hint-response-${row.getValue("id")}`}>Response</Label>
         <Textarea
           placeholder="No response yet"

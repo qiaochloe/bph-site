@@ -67,7 +67,9 @@ export const columns: ColumnDef<typeof hints.$inferSelect>[] = [
     header: () => <div className="w-32">Request Time</div>,
     cell: ({ row }) => {
       const time = row.getValue("requestTime");
-      return <div className="w-32 truncate font-medium">{formatTime(time)}</div>;
+      return (
+        <div className="w-32 truncate font-medium">{formatTime(time)}</div>
+      );
     },
   },
   {
