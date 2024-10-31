@@ -114,9 +114,14 @@ export const hints = createTable("hint", {
   // notify_emails, discord_id, is_followup
 });
 
+// TODO: Add indexes
+
 export const teamRelations = relations(teams, ({ many }) => ({
   guesses: many(guesses),
-  hints: many(hints),
+  // Hints requested by this team
+  requestedHints: many(hints, { relationName: "hints" }),
+  // Hints claimed by this admin "team"
+  claimedHints: many(hints, { relationName: "claimer" }),
 }));
 
 export const puzzleRelations = relations(puzzles, ({ many }) => ({
