@@ -4,6 +4,7 @@ import { db } from "@/db/index";
 import { teams, type interactionModeEnum } from "@/db/schema";
 import { hash } from "bcrypt";
 import { eq } from "drizzle-orm";
+import { login } from "../login/actions";
 
 export async function insertTeam(
   username: string,
@@ -19,18 +20,25 @@ export async function insertTeam(
     return { error: "Username already taken" };
   }
 
-  hash(password, 10, async (err, hash) => {
-    if (err) return { error: "Unexpected error occurred" };
+  try {
+    const hashedPassword = await new Promise<string>((resolve, reject) => {
+      hash(password, 10, (err, hash) => {
+        if (err) reject(err);
+        resolve(hash);
+      });
+    });
 
     await db.insert(teams).values({
       username,
       displayName,
-      password: hash,
+      password: hashedPassword,
       role: "user" as const,
       interactionMode,
       createTime: new Date(),
     });
-  });
 
-  return { error: null };
+    return login(username, password);
+  } catch (error) {
+    return { error: "Unexpected error occurred" };
+  }
 }
