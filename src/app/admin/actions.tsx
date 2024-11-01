@@ -34,11 +34,11 @@ export async function claimHint(hintId: number) {
   const session = await auth();
 
   if (!session?.user?.id) {
-    throw new Error("Not logged in");
+    throw new Error("Not logged in.");
   }
 
   if (session.user.role !== "admin") {
-    throw new Error("Not authorized");
+    throw new Error("Not authorized.");
   }
 
   const hint = await db.query.hints.findFirst({
@@ -46,11 +46,12 @@ export async function claimHint(hintId: number) {
   });
 
   if (!hint) {
-    throw new Error("Hint not found");
+    throw new Error("Hint not found.");
   }
 
   if (hint.claimer && hint.claimer !== session.user.id) {
-    throw new Error("Hint already claimed");
+    revalidatePath("/admin");
+    throw new Error("Hint claimed by " + hint.claimer + ".");
   }
 
   await db

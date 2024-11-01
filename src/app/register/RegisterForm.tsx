@@ -6,8 +6,7 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useToast } from "~/hooks/use-toast";
-import { ToastAction } from "@/components/ui/toast";
+import { toast } from "~/hooks/use-toast";
 import {
   Form,
   FormLabel,
@@ -70,8 +69,6 @@ export function RegisterForm({}: RegisterFormProps) {
       interactionMode: undefined,
     },
   });
-
-  const { toast } = useToast();
 
   const onSubmit = async (data: z.infer<typeof registerFormSchema>) => {
     const result = await insertTeam(
