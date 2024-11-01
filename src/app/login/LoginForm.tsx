@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useActionState, useRef, useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -17,17 +17,22 @@ import {
 
 import { login, logout } from "./actions";
 import Link from "next/link";
+import { useFormState } from "react-dom";
 
 export const loginFormSchema = z.object({
   username: z.string(),
   password: z.string(),
 });
 
+const initialState = {
+  error: "",
+};
+
 export function LoginForm() {
   // It might be more idiomatic to use the useFormState hook here
   // And in other places where we have a form
   // #BadFirstIssue
-  const [error, setError] = useState<string | null>(null);
+  const [state, formAction] = useFormState(login, initialState);
   const router = useRouter();
 
   const form = useForm<z.infer<typeof loginFormSchema>>({
@@ -37,15 +42,12 @@ export function LoginForm() {
       password: "",
     },
   });
+  const formRef = useRef<HTMLFormElement>(null);
 
-  const onSubmit = async (data: z.infer<typeof loginFormSchema>) => {
-    const result = await login(data.username, data.password);
-    if (result.error) {
-      setError(result.error);
-    } else {
+  const onSubmit = async () => {
+    if (!state.error) {
       // TODO: would be nice if we can update the page using hooks rather than refreshing
       router.refresh();
-      setError(null);
     }
   };
 
@@ -53,7 +55,17 @@ export function LoginForm() {
   // #GoodFirstIssue
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form
+        ref={formRef}
+        onSubmit={(event) => {
+          const formData = new FormData(formRef.current!);
+          form.handleSubmit(() => {
+            formAction(formData);
+            onSubmit();
+          })(event);
+        }}
+        className="space-y-8"
+      >
         <FormField
           control={form.control}
           name="username"
@@ -80,7 +92,7 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-        {error && <p className="text-red-500">{error}</p>}
+        {state.error && <p className="text-red-500">{state.error}</p>}
         <Button type="submit">Log In</Button>
         <div className="text-sm">
           New to the hunt?{" "}
