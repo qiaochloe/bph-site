@@ -16,11 +16,12 @@ import {
   FormMessage,
   FormDescription,
 } from "@/components/ui/form";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { interactionModeEnum } from "~/server/db/schema";
 import { insertTeam } from "./actions";
 import Link from "next/link";
+import { useFormState } from "react-dom";
 
 export const registerFormSchema = z
   .object({
@@ -50,10 +51,18 @@ export const registerFormSchema = z
 
 type RegisterFormProps = {};
 
+const initialState = {
+  error: "",
+};
+
 export function RegisterForm({}: RegisterFormProps) {
-  const [error, setError] = useState<string | null>(null);
+  const [state, formAction] = useFormState(insertTeam, initialState);
+  const [interactionMode, setInteractionMode] = useState("");
   const router = useRouter();
 
+  const handleInteraction = (value: string) => {
+    setInteractionMode(value);
+  };
   // Prefetch the home page
   useEffect(() => {
     router.prefetch("/");
@@ -70,23 +79,16 @@ export function RegisterForm({}: RegisterFormProps) {
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof registerFormSchema>) => {
-    const result = await insertTeam(
-      data.username,
-      data.displayName,
-      data.password,
-      data.interactionMode,
-    );
+  const formRef = useRef<HTMLFormElement>(null);
 
-    if (result.error) {
-      setError(result.error);
-    } else {
+  const onSubmit = async (data: z.infer<typeof registerFormSchema>) => {
+    // TODO: Figure out how to only trigger this redirect if registration is successful
+    if (!state.error) {
       toast({
         title: "Welcome to Brown Puzzle Hunt, " + data.displayName + "!",
         description: "Your team has been registered.",
       });
       router.push("/");
-      setError(null);
     }
   };
 
@@ -96,7 +98,18 @@ export function RegisterForm({}: RegisterFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form
+        ref={formRef}
+        onSubmit={(event) => {
+          const formData = new FormData(formRef.current!);
+          formData.append("interactionMode", interactionMode);
+          form.handleSubmit(async (data) => {
+            formAction(formData);
+            onSubmit(data);
+          })(event);
+        }}
+        className="space-y-8"
+      >
         <FormField
           control={form.control}
           name="username"
@@ -123,7 +136,7 @@ export function RegisterForm({}: RegisterFormProps) {
                 <Input placeholder="Josiah Carberry" {...field} />
               </FormControl>
               <FormDescription>
-                This is the public display name.
+                This name will be displayed publicly on the leaderboard.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -166,7 +179,10 @@ export function RegisterForm({}: RegisterFormProps) {
               <FormLabel>This team will be competing...</FormLabel>
               <FormControl>
                 <RadioGroup
-                  onValueChange={field.onChange}
+                  onValueChange={(value) => {
+                    field.onChange(value);
+                    handleInteraction(value);
+                  }}
                   defaultValue={field.value}
                   className="flex flex-col space-y-1"
                 >
@@ -188,7 +204,7 @@ export function RegisterForm({}: RegisterFormProps) {
             </FormItem>
           )}
         />
-        {error && <p className="text-red-500">{error}</p>}
+        {state.error && <p className="text-red-500">{state.error}</p>}
         <Button type="submit">Register</Button>
         <div className="text-sm">
           Already registered for the hunt?{" "}

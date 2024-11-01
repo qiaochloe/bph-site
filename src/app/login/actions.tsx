@@ -2,7 +2,9 @@
 import { signIn, signOut } from "@/auth";
 import { AuthError } from "next-auth";
 
-export async function login(username: string, password: string) {
+export async function login(prevState: any, formData: FormData) {
+  const username = formData.get("username");
+  const password = formData.get("password");
   try {
     await signIn("credentials", { username, password, redirect: false });
     return { error: null };

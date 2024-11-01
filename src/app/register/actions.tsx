@@ -1,17 +1,20 @@
 "use server";
 
 import { db } from "@/db/index";
-import { teams, type interactionModeEnum } from "@/db/schema";
+import { teams } from "@/db/schema";
 import { hash } from "bcrypt";
 import { eq } from "drizzle-orm";
 import { login } from "../login/actions";
 
-export async function insertTeam(
-  username: string,
-  displayName: string,
-  password: string,
-  interactionMode: (typeof interactionModeEnum.enumValues)[number],
-) {
+export async function insertTeam(prevState: any, formData: FormData) {
+  // Values are validated client side via zod, can check explicitly if deemed necessary
+  const username = formData.get("username")?.toString()!;
+  const displayName = formData.get("displayName")?.toString()!;
+  const password = formData.get("password")?.toString()!;
+  const interactionMode = formData.get("interactionMode")?.toString()!;
+  if (interactionMode !== "in-person" && interactionMode !== "remote") {
+    return { error: "Invalid interaction mode" };
+  }
   const duplicateUsername = await db.query.teams.findFirst({
     where: eq(teams.username, username),
   });
@@ -37,7 +40,7 @@ export async function insertTeam(
       createTime: new Date(),
     });
 
-    return login(username, password);
+    return login(prevState, formData);
   } catch (error) {
     return { error: "Unexpected error occurred" };
   }
