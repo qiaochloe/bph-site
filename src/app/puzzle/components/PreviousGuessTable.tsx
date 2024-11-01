@@ -16,7 +16,7 @@ export function PreviousGuessTable({
     <Table>
       <TableBody>
         {previousGuesses
-          .sort((a, b) => (a.submitTime > b.submitTime ? -1 : 1))
+          .sort((a, b) => b.submitTime.getTime() - a.submitTime.getTime())
           .map((guess) => (
             <TableRow key={guess.id}>
               <TableCell>{guess.guess}</TableCell>

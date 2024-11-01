@@ -90,6 +90,17 @@ export const guesses = createTable("guess", {
   // used_free_answer
 });
 
+export const errata = createTable("erratum", {
+  id: serial("id").primaryKey(),
+  puzzleId: varchar("puzzle_id")
+    .notNull()
+    .references(() => puzzles.id, { onDelete: "cascade" }),
+  timestamp: timestamp("timestamp", { withTimezone: true })
+    .notNull()
+    .$defaultFn(() => new Date()),
+  description: text("description").notNull(),
+});
+
 export const hints = createTable("hint", {
   id: serial("id").primaryKey(),
 
