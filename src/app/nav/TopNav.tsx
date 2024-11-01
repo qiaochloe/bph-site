@@ -6,38 +6,38 @@ export async function TopNav() {
   const session = await auth();
   return (
     <nav className="fixed flex w-full justify-between p-4">
-    <div className="flex w-full justify-between">
-      <div>
-        <Link href="/" className="hover:underline">
-          Home
-        </Link>
-        &emsp;
-        <Link href="/puzzle" className="hover:underline">
-          Puzzle
-        </Link>
-        &emsp;
-        <Link href="/teams" className="hover:underline">
-          Teams
-        </Link>
-      </div>
-      <div>
-        {session?.user?.role === "admin" && (
-          <>
-            <Link href="/admin" className="hover:underline">
-              Admin
-            </Link>
-            <>&emsp;</>
-          </>
-        )}
-        {session?.user?.id ? (
-          <LogoutButton />
-        ) : (
-          <Link href="/login" className="hover:underline">
-            Login
+      <div className="flex w-full justify-between">
+        <div>
+          <Link href="/" className="hover:underline">
+            Home
           </Link>
-        )}
+          &emsp;
+          <Link href="/puzzle" className="hover:underline">
+            Puzzle
+          </Link>
+          &emsp;
+          <Link href="/teams" className="hover:underline">
+            Teams
+          </Link>
+        </div>
+        <div>
+          {session?.user?.role === "admin" && (
+            <>
+              <Link href="/admin" className="hover:underline">
+                Admin
+              </Link>
+              <>&emsp;</>
+            </>
+          )}
+          {session?.user?.id ? (
+            <LogoutButton />
+          ) : (
+            <Link href="/login" className="hover:underline">
+              Login
+            </Link>
+          )}
+        </div>
       </div>
-    </div>
     </nav>
   );
 }
