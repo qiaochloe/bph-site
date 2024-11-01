@@ -103,23 +103,25 @@ export const hints = createTable("hint", {
 
   request: text("request").notNull(),
   requestTime: timestamp("request_time", { withTimezone: true }),
-
-  claimer: varchar("claimer", { length: 255 }),
+  claimer: varchar("claimer").references(() => teams.id),
   claimTime: timestamp("claim_time", { withTimezone: true }),
-
   response: text("response"),
   responseTime: timestamp("response_time", { withTimezone: true }),
-
   status: hintStatusEnum("status").notNull().default("no_response"),
 
   // Not included:
-  // refunded or obsolute statuses
+  // obsolute statuses
   // notify_emails, discord_id, is_followup
 });
 
+// TODO: Add indexes
+
 export const teamRelations = relations(teams, ({ many }) => ({
   guesses: many(guesses),
-  hints: many(hints),
+  // Hints requested by this team
+  requestedHints: many(hints, { relationName: "requested_hints" }),
+  // Hints claimed by this admin "team"
+  claimedHints: many(hints, { relationName: "claimed_hints" }),
 }));
 
 export const puzzleRelations = relations(puzzles, ({ many }) => ({
@@ -142,9 +144,15 @@ export const hintRelations = relations(hints, ({ one }) => ({
   team: one(teams, {
     fields: [hints.teamId],
     references: [teams.id],
+    relationName: "requested_hints",
   }),
   puzzle: one(puzzles, {
     fields: [hints.puzzleId],
     references: [puzzles.id],
+  }),
+  claimer: one(teams, {
+    fields: [hints.claimer],
+    references: [teams.id],
+    relationName: "claimed_hints",
   }),
 }));
