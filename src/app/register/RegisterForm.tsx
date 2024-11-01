@@ -96,7 +96,7 @@ export function RegisterForm({}: RegisterFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
         <FormField
           control={form.control}
           name="username"
@@ -123,7 +123,7 @@ export function RegisterForm({}: RegisterFormProps) {
                 <Input placeholder="Josiah Carberry" {...field} />
               </FormControl>
               <FormDescription>
-                This is the public display name.
+                This name will be displayed publicly on the leaderboard.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -188,14 +188,14 @@ export function RegisterForm({}: RegisterFormProps) {
             </FormItem>
           )}
         />
-        {error && <p className="text-red-500">{error}</p>}
         <Button type="submit">Register</Button>
-        <div className="text-sm">
+        <div className="py-2 text-sm">
           Already registered for the hunt?{" "}
           <Link href="/login" className="text-blue-500 hover:underline">
             Login
           </Link>
         </div>
+        {error && <p className="text-red-500">{error}</p>}
       </form>
     </Form>
   );

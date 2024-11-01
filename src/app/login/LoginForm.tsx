@@ -53,7 +53,7 @@ export function LoginForm() {
   // #GoodFirstIssue
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-64 space-y-4">
         <FormField
           control={form.control}
           name="username"
@@ -76,13 +76,12 @@ export function LoginForm() {
               <FormControl>
                 <Input type="password" placeholder="password" {...field} />
               </FormControl>
-              <FormMessage />
+              <FormMessage>{error}</FormMessage>
             </FormItem>
           )}
         />
-        {error && <p className="text-red-500">{error}</p>}
         <Button type="submit">Log In</Button>
-        <div className="text-sm">
+        <div className="py-2 text-sm">
           New to the hunt?{" "}
           <Link href="/register" className="text-blue-500 hover:underline">
             Register
