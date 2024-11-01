@@ -9,6 +9,7 @@ import { GuessForm } from "~/app/puzzle/components/GuessForm";
 import { HintForm } from "~/app/puzzle/components/HintForm";
 import { PreviousGuessTable } from "~/app/puzzle/components/PreviousGuessTable";
 import { PreviousHintTable } from "~/app/puzzle/components/PreviousHintTable";
+import { NUMBER_OF_GUESSES_PER_PUZZLE } from "~/hunt.config";
 
 // TODO: Dynamically get the puzzle ID from the URL
 // #BadFirstIssue
@@ -26,6 +27,10 @@ export default async function Home() {
     ),
   });
 
+  const hasCorrectGuess = previousGuesses.some((guess) => guess.isCorrect);
+  const numberOfGuessesLeft =
+    NUMBER_OF_GUESSES_PER_PUZZLE - previousGuesses.length;
+
   const previousHints = await db.query.hints.findMany({
     where: and(
       eq(hints.teamId, session.user.id),
@@ -33,13 +38,19 @@ export default async function Home() {
     ),
   });
 
-  const hasCorrectGuess = previousGuesses.some((guess) => guess.isCorrect);
-
   return (
     <div className="flex min-h-screen flex-col items-center">
       <h1 className="m-4">Puzzle!</h1>
       <p className="m-4">What is the answer to this puzzle?</p>
-      {!hasCorrectGuess && <GuessForm puzzleId={PUZZLE_ID} />}
+      {!hasCorrectGuess && numberOfGuessesLeft > 0 && (
+        <GuessForm
+          puzzleId={PUZZLE_ID}
+          numberOfGuessesLeft={numberOfGuessesLeft}
+        />
+      )}
+      {numberOfGuessesLeft === 0 && !hasCorrectGuess && (
+        <div>You have no guesses left. Please contact HQ for help.</div>
+      )}
 
       <h1 className="m-4">Previous Guesses</h1>
       <PreviousGuessTable previousGuesses={previousGuesses} />
@@ -47,7 +58,7 @@ export default async function Home() {
       <HintForm puzzleId={PUZZLE_ID} />
 
       <h1 className="m-4">Previous Hints</h1>
-      <div>
+      <div className="w-1/2">
         <PreviousHintTable previousHints={previousHints} />
       </div>
     </div>
