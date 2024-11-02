@@ -26,6 +26,7 @@ import { puzzles } from "@/db/schema";
 import { insertErratum } from "./actions";
 import { Label } from "@radix-ui/react-label";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "~/hooks/use-toast";
 
 export const erratumFormSchema = z.object({
   puzzleId: z.string().min(1, { message: "Puzzle is required" }),
@@ -53,6 +54,16 @@ export default function ErratumForm({
       setError(result.error);
     } else {
       setError(null);
+      toast({
+        description: "Erratum submitted for " + data.puzzleId + ".",
+        action: (
+          <Button
+            onClick={() => (window.location.href = `/puzzle/${data.puzzleId}`)}
+          >
+            View
+          </Button>
+        ),
+      });
       form.reset();
     }
   };
