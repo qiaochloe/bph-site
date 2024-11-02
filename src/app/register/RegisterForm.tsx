@@ -109,7 +109,7 @@ export function RegisterForm({}: RegisterFormProps) {
               <FormDescription>
                 This is the private username your team will use when logging in.
               </FormDescription>
-              <FormMessage />
+              <FormMessage>{error}</FormMessage>
             </FormItem>
           )}
         />
@@ -123,7 +123,7 @@ export function RegisterForm({}: RegisterFormProps) {
                 <Input placeholder="Josiah Carberry" {...field} />
               </FormControl>
               <FormDescription>
-                This name will be displayed publicly on the leaderboard.
+                This name will be displayed on the leaderboard.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -195,7 +195,6 @@ export function RegisterForm({}: RegisterFormProps) {
             Login
           </Link>
         </div>
-        {error && <p className="text-red-500">{error}</p>}
       </form>
     </Form>
   );
