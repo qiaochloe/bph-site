@@ -20,7 +20,7 @@ export default function RootLayout({
       <body>
         <Providers>
           <TopNav />
-          <main>{children}</main>
+          <main className="flex min-h-screen w-full pt-20">{children}</main>
           <Toaster />
         </Providers>
       </body>
