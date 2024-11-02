@@ -3,12 +3,12 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormMessage,
@@ -36,10 +36,10 @@ const formSchema = z.object({
 
 type FormProps = {
   puzzleId: string;
+  numberOfGuessesLeft: number;
 };
 
-export function GuessForm({ puzzleId }: FormProps) {
-  const router = useRouter();
+export function GuessForm({ puzzleId, numberOfGuessesLeft }: FormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -50,7 +50,6 @@ export function GuessForm({ puzzleId }: FormProps) {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     await insertGuess(puzzleId, data.guess);
     form.reset();
-    router.refresh();
   };
 
   return (
@@ -62,8 +61,12 @@ export function GuessForm({ puzzleId }: FormProps) {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="Guess" {...field} />
+                <Input {...field} />
               </FormControl>
+              <FormDescription>
+                {numberOfGuessesLeft}{" "}
+                {numberOfGuessesLeft === 1 ? "guess" : "guesses"} left
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
