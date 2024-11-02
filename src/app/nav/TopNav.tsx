@@ -5,7 +5,7 @@ import Link from "next/link";
 export async function TopNav() {
   const session = await auth();
   return (
-    <nav className="fixed z-50 flex w-full justify-between bg-slate-50 p-4 shadow-md">
+    <nav className="fixed z-50 flex w-full justify-between bg-slate-50 p-4">
       <div className="flex space-x-4">
         <Link href="/" className="hover:underline">
           Home
