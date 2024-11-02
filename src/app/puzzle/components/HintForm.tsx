@@ -27,7 +27,7 @@ type FormProps = {
   puzzleId: string;
 };
 
-export function HintForm({ puzzleId }: FormProps) {
+export default function HintForm({ puzzleId }: FormProps) {
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

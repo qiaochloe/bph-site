@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/table";
 import { guesses } from "~/server/db/schema";
 
-export function PreviousGuessTable({
+export default function PreviousGuessTable({
   previousGuesses,
 }: {
   previousGuesses: (typeof guesses.$inferSelect)[];
