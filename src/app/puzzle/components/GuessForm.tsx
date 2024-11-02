@@ -39,7 +39,7 @@ type FormProps = {
   numberOfGuessesLeft: number;
 };
 
-export function GuessForm({ puzzleId, numberOfGuessesLeft }: FormProps) {
+export default function GuessForm({ puzzleId, numberOfGuessesLeft }: FormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -54,7 +54,7 @@ export function GuessForm({ puzzleId, numberOfGuessesLeft }: FormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 min-w-36 w-1/3">
         <FormField
           control={form.control}
           name="guess"

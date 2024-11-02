@@ -138,6 +138,7 @@ export const teamRelations = relations(teams, ({ many }) => ({
 export const puzzleRelations = relations(puzzles, ({ many }) => ({
   guesses: many(guesses),
   hints: many(hints),
+  errata: many(errata),
 }));
 
 export const guessRelations = relations(guesses, ({ one }) => ({
@@ -165,5 +166,12 @@ export const hintRelations = relations(hints, ({ one }) => ({
     fields: [hints.claimer],
     references: [teams.id],
     relationName: "claimed_hints",
+  }),
+}));
+
+export const erratumRelations = relations(errata, ({ one }) => ({
+  puzzle: one(puzzles, {
+    fields: [errata.puzzleId],
+    references: [puzzles.id],
   }),
 }));
