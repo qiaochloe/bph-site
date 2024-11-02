@@ -38,8 +38,8 @@ export default async function Home() {
     );
 
   return (
-    <div className="flex min-h-screen flex-col items-center space-y-4">
-      <h1>Teams!</h1>
+    <div className="flex min-h-screen flex-col items-center space-y-4 py-10">
+      Teams!
       <div>
         <Table>
           <TableHeader>
