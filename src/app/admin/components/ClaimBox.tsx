@@ -26,14 +26,11 @@ export function ClaimBox<TData>({
               await claimHint(hintId);
             } catch (error: any) {
               toast({
+                variant: "destructive",
                 title: "Error Claiming Hint",
                 description: error.message,
               });
             }
-            // toast({
-            //   title: "Hint already claimed.",
-            //   description: "Better luck next time.",
-            // });
           }}
         >
           <p className="px-1">CLAIM</p>
