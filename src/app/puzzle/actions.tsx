@@ -29,7 +29,7 @@ export async function insertGuess(puzzleId: string, guess: string) {
 
   if (puzzle.guesses.length >= NUMBER_OF_GUESSES_PER_PUZZLE) {
     revalidatePath(`/puzzle/${puzzleId}`);
-    throw new Error("No guesses left");
+    return;
   }
 
   // TODO: Tell the user if they have already made a guess?

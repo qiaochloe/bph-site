@@ -61,7 +61,7 @@ export function GuessForm({ puzzleId, numberOfGuessesLeft }: FormProps) {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="Guess" {...field} />
+                <Input {...field} />
               </FormControl>
               <FormDescription>
                 {numberOfGuessesLeft}{" "}
