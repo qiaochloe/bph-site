@@ -20,7 +20,7 @@ export default function RootLayout({
       <body>
         <Providers>
           <TopNav />
-          <main>{children}</main>
+          <main className="pt-20">{children}</main>
           <Toaster />
         </Providers>
       </body>
