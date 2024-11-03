@@ -1,5 +1,5 @@
 import "~/styles/globals.css";
-import { TopNav } from "~/app/nav/TopNav";
+import { TopNav, TopNavSpacer } from "~/app/nav/TopNav";
 import { Toaster } from "@/components/ui/toaster";
 
 import { GeistSans } from "geist/font/sans";
@@ -20,7 +20,8 @@ export default function RootLayout({
       <body>
         <Providers>
           <TopNav />
-          <main>{children}</main>
+          <TopNavSpacer />
+          <main className="flex min-h-[calc(100vh-56px)]">{children}</main>
           <Toaster />
         </Providers>
       </body>

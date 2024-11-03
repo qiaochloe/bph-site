@@ -34,3 +34,6 @@ export async function TopNav() {
     </nav>
   );
 }
+export async function TopNavSpacer() {
+  return <div className="min-h-[calc(56px)]"></div>;
+}

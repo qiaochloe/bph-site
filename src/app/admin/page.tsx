@@ -14,7 +14,7 @@ export default async function Home() {
   );
 
   return (
-    <div className="container mx-auto py-20">
+    <div className="container mx-auto justify-center">
       <HintTable columns={columns} data={data} />
     </div>
   );
