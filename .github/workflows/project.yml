@@ -1,0 +1,46 @@
+name: Add New Issues to Personal Project
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  add_to_project:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Add issue to project
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const projectNumber = 1;
+            const username = 'qiaochloe';
+
+            // Get the project ID for a personal project
+            const project = await github.graphql(`
+              query($username: String!, $projectNumber: Int!) {
+                user(login: $username) {
+                  projectV2(number: $projectNumber) {
+                    id
+                  }
+                }
+              }
+            `, {
+              username,
+              projectNumber
+            });
+
+            // Add the issue to the project
+            await github.graphql(`
+              mutation($projectId: ID!, $issueId: ID!) {
+                addProjectV2ItemById(input: {projectId: $projectId, contentId: $issueId}) {
+                  item {
+                    id
+                  }
+                }
+              }
+            `, {
+              projectId: project.user.projectV2.id,
+              issueId: context.payload.issue.node_id
+            });
