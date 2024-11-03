@@ -9,7 +9,7 @@ export default function ErratumDialog({
 }) {
   if (errataList.length > 0) {
     return (
-      <Alert className="bg-slate-100">
+      <Alert className="bg-slate-100 my-2">
         <AlertTitle>Errata</AlertTitle>
         {errataList.map((e) => (
           <AlertDescription key={e.id} className="overflow-hidden break-words">

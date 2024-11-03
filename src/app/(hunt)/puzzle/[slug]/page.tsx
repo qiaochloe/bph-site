@@ -53,7 +53,7 @@ export default async function Page({
   });
 
   return (
-    <div className="flex grow flex-col items-center">
+    <div className="flex w-2/3 min-w-36 grow flex-col items-center">
       <div className="mb-4 w-2/3 min-w-36">
         <ErratumDialog errataList={errataList} />
       </div>
@@ -69,20 +69,22 @@ export default async function Page({
           />
         )}
         {numberOfGuessesLeft === 0 && !hasCorrectGuess && (
-          <div>You have no guesses left. Please contact HQ for help.</div>
+          <div className="mb-4 text-rose-600">
+            You have no guesses left. Please contact HQ for help. m
+          </div>
         )}
       </div>
 
-      <h1 className="mb-2">Previous Guesses</h1>
-      <div className="w-2/3 min-w-36">
+      <h2 className="mb-2">Previous Guesses</h2>
+      <div className="mb-4 w-2/3 min-w-36">
         <PreviousGuessTable previousGuesses={previousGuesses} />
       </div>
 
-      <div className="w-2/3 min-w-36">
+      <div className="mb-4 w-2/3 min-w-36">
         <HintForm puzzleId={slug} />
       </div>
 
-      <h1 className="mb-2">Hints</h1>
+      <h2 className="mb-2">Previous Hints</h2>
       <div className="w-2/3 min-w-36">
         <PreviousHintTable previousHints={previousHints} />
       </div>
