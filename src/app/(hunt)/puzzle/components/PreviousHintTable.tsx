@@ -17,8 +17,8 @@ export default function PreviousHintTable({
   return (
     <Table className="table-fixed">
       {/* <TableHeader>Previous hints</TableHeader> */}
-      <TableHead>Request</TableHead>
-      <TableHead>Response</TableHead>
+      <TableHead className="text-center">Request</TableHead>
+      <TableHead className="text-center">Response</TableHead>
       <TableBody>
         {previousHints.map((hint) => (
           <TableRow key={hint.id}>

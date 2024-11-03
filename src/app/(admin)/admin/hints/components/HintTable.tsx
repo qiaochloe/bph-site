@@ -14,7 +14,6 @@ import {
   getPaginationRowModel,
   getFilteredRowModel,
   useReactTable,
-  Row,
 } from "@tanstack/react-table";
 
 import {
@@ -26,9 +25,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { ClaimBox } from "./ClaimBox";
-import { ResponseBox } from "./ResponseBox";
-import { RequestBox } from "./RequestBox";
+import ClaimBox from "./ClaimBox";
+import ResponseBox from "./ResponseBox";
+import RequestBox from "./RequestBox";
 
 interface HintTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -175,7 +174,6 @@ export function HintTable<TData, TValue>({
                               Response Time:{" "}
                               {row.getValue("responseTime")?.toLocaleString()}
                             </p>
-                            <br />
                             <RequestBox row={row} />
                             <ResponseBox row={row} currHinter={userId} />
                           </div>

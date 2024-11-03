@@ -19,7 +19,7 @@ export default function PreviousGuessTable({
           .sort((a, b) => b.submitTime.getTime() - a.submitTime.getTime())
           .map((guess) => (
             <TableRow key={guess.id}>
-              <TableCell>{guess.guess}</TableCell>
+              <TableCell className="min-w-2/3">{guess.guess}</TableCell>
               <TableCell>
                 {guess.isCorrect ? (
                   <p className="text-emerald-600">CORRECT</p>
@@ -27,7 +27,9 @@ export default function PreviousGuessTable({
                   <p className="text-rose-600">INCORRECT</p>
                 )}
               </TableCell>
-              <TableCell>{guess.submitTime.toLocaleString()}</TableCell>
+              <TableCell className="overflow-hidden overflow-ellipsis whitespace-nowrap">
+                {guess.submitTime.toLocaleString()}
+              </TableCell>
             </TableRow>
           ))}
       </TableBody>

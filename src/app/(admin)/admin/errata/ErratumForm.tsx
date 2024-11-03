@@ -4,7 +4,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -86,7 +85,7 @@ export default function ErratumForm({
                   value={field.value}
                 >
                   <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Puzzle" />
+                    <SelectValue placeholder="Select" />
                   </SelectTrigger>
                   <SelectContent>
                     {puzzleList?.map((puzzle) => (

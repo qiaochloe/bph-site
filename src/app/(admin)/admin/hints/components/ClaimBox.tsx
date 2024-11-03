@@ -5,7 +5,7 @@ import { toast } from "~/hooks/use-toast";
 // TODO: Add refund hint functionality
 // TODO: Actually keep track of number of hints claimed
 
-export function ClaimBox<TData>({
+export default function ClaimBox<TData>({
   row,
   userId,
 }: {

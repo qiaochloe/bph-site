@@ -1,10 +1,10 @@
 import "~/styles/globals.css";
-import { TopNav, TopNavSpacer } from "~/app/nav/TopNav";
+import { Providers } from "~/app/nav/providers";
+import { HuntTopNav, HuntTopNavSpacer } from "../nav/HuntTopNav";
 import { Toaster } from "@/components/ui/toaster";
 
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
-import { Providers } from "~/app/providers";
 
 export const metadata: Metadata = {
   title: "Brown Puzzle Hunt",
@@ -19,8 +19,8 @@ export default function RootLayout({
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
         <Providers>
-          <TopNav />
-          <TopNavSpacer />
+          <HuntTopNav />
+          <HuntTopNavSpacer />
           <main className="mx-5 mb-5 flex min-h-[calc(100vh-80px-5rem)]">
             {children}
           </main>

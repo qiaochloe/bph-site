@@ -4,11 +4,11 @@ import { eq, and } from "drizzle-orm";
 import { db } from "~/server/db";
 import { guesses, hints, errata } from "~/server/db/schema";
 
-import PreviousGuessTable from "~/app/puzzle/components/PreviousGuessTable";
-import PreviousHintTable from "~/app/puzzle/components/PreviousHintTable";
+import PreviousGuessTable from "../components/PreviousGuessTable";
+import PreviousHintTable from "../components/PreviousHintTable";
 import ErratumDialog from "../components/ErratumDialog";
-import HintForm from "~/app/puzzle/components/HintForm";
-import GuessForm from "~/app/puzzle/components/GuessForm";
+import HintForm from "../components/HintForm";
+import GuessForm from "../components/GuessForm";
 
 import { NUMBER_OF_GUESSES_PER_PUZZLE } from "~/hunt.config";
 
@@ -53,25 +53,37 @@ export default async function Page({
   });
 
   return (
-    <div className="flex min-h-screen flex-col items-center">
-      <ErratumDialog errataList={errataList} />
+    <div className="flex grow flex-col items-center">
+      <div className="mb-4 w-2/3 min-w-36">
+        <ErratumDialog errataList={errataList} />
+      </div>
 
-      <h1 className="m-4">Puzzle!</h1>
-      <p className="m-4">What is the answer to this puzzle?</p>
-      {!hasCorrectGuess && numberOfGuessesLeft > 0 && (
-        <GuessForm puzzleId={slug} numberOfGuessesLeft={numberOfGuessesLeft} />
-      )}
-      {numberOfGuessesLeft === 0 && !hasCorrectGuess && (
-        <div>You have no guesses left. Please contact HQ for help.</div>
-      )}
+      <h1 className="mb-2">Puzzle!</h1>
+      <p className="mb-4">What is the answer to this puzzle?</p>
 
-      <h1 className="m-4">Previous Guesses</h1>
-      <PreviousGuessTable previousGuesses={previousGuesses} />
+      <div className="w-2/3 min-w-36">
+        {!hasCorrectGuess && numberOfGuessesLeft > 0 && (
+          <GuessForm
+            puzzleId={slug}
+            numberOfGuessesLeft={numberOfGuessesLeft}
+          />
+        )}
+        {numberOfGuessesLeft === 0 && !hasCorrectGuess && (
+          <div>You have no guesses left. Please contact HQ for help.</div>
+        )}
+      </div>
 
-      <HintForm puzzleId={slug} />
+      <h1 className="mb-2">Previous Guesses</h1>
+      <div className="w-2/3 min-w-36">
+        <PreviousGuessTable previousGuesses={previousGuesses} />
+      </div>
 
-      <h1 className="m-4">Previous Hints</h1>
-      <div className="w-1/2">
+      <div className="w-2/3 min-w-36">
+        <HintForm puzzleId={slug} />
+      </div>
+
+      <h1 className="mb-2">Hints</h1>
+      <div className="w-2/3 min-w-36">
         <PreviousHintTable previousHints={previousHints} />
       </div>
     </div>

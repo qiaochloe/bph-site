@@ -2,7 +2,7 @@ import { auth } from "@/auth";
 import { LogoutButton } from "./LogoutButton";
 import Link from "next/link";
 
-export async function TopNav() {
+export async function HuntTopNav() {
   const session = await auth();
   return (
     <nav className="fixed z-50 flex w-full justify-between bg-slate-50 p-4">
@@ -34,6 +34,6 @@ export async function TopNav() {
     </nav>
   );
 }
-export async function TopNavSpacer() {
+export async function HuntTopNavSpacer() {
   return <div className="min-h-[80px]"></div>;
 }

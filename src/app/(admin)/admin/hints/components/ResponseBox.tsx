@@ -1,10 +1,10 @@
 import { Row } from "@tanstack/react-table";
-import { respondToHint } from "../actions";
-import { Textarea } from "~/components/ui/textarea";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
+import { AutosizeTextarea } from "~/components/ui/autosize-textarea";
+import { respondToHint } from "../actions";
 
-export function ResponseBox<TData>({
+export default function ResponseBox<TData>({
   row,
   currHinter,
 }: {
@@ -15,7 +15,8 @@ export function ResponseBox<TData>({
     return (
       <div className="grid w-full gap-1.5">
         <Label htmlFor={`hint-response-${row.getValue("id")}`}>Response</Label>
-        <Textarea
+        <AutosizeTextarea
+          maxHeight={500}
           value={row.getValue("response")}
           id={`hint-response-${row.getValue("id")}`}
           readOnly
@@ -28,12 +29,14 @@ export function ResponseBox<TData>({
     return (
       <div className="full grid gap-1.5">
         <Label htmlFor={`hint-response-${row.getValue("id")}`}>Response</Label>
-        <Textarea
+        <AutosizeTextarea
+          maxHeight={500}
+          className="resize-none"
           placeholder="No response yet"
           id={`hint-response-${row.getValue("id")}`}
         />
         <Button
-          className="w-fit"
+          className="mt-4 w-fit"
           onClick={() => {
             const textarea = document.getElementById(
               `hint-response-${row.getValue("id")}`,
