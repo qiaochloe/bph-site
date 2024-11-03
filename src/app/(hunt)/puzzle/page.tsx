@@ -9,8 +9,8 @@ import { db } from "@/db/index";
 export default async function Home() {
   const session = await auth();
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center">
-      <p>This is the puzzle page.</p>
+    <div className="flex grow flex-col justify-center items-center">
+      <h1 className="mb-2">Puzzles!</h1>
       {new Date() < HUNT_START_TIME ? (
         <p>The hunt has not started yet.</p>
       ) : !session?.user?.id ? (
@@ -18,7 +18,7 @@ export default async function Home() {
           <Link href="/login" className="text-blue-500 hover:underline">
             Login
           </Link>{" "}
-          to access puzzles.
+          to access puzzles
         </div>
       ) : (
         <>

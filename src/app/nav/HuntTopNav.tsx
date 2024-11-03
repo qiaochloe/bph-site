@@ -5,28 +5,23 @@ import Link from "next/link";
 export async function HuntTopNav() {
   const session = await auth();
   return (
-    <nav className="flex w-full items-center justify-between p-4">
-      <div>
+    <nav className="fixed z-50 flex w-full justify-between bg-slate-50 p-4">
+      <div className="flex space-x-4">
         <Link href="/" className="hover:underline">
           Home
         </Link>
-        &emsp;
         <Link href="/puzzle" className="hover:underline">
           Puzzle
         </Link>
-        &emsp;
         <Link href="/teams" className="hover:underline">
           Teams
         </Link>
       </div>
-      <div>
+      <div className="flex space-x-4">
         {session?.user?.role === "admin" && (
-          <>
-            <Link href="/admin" className="hover:underline">
-              Admin
-            </Link>
-            <>&emsp;</>
-          </>
+          <Link href="/admin" className="hover:underline">
+            Admin
+          </Link>
         )}
         {session?.user?.id ? (
           <LogoutButton />
@@ -38,4 +33,7 @@ export async function HuntTopNav() {
       </div>
     </nav>
   );
+}
+export async function HuntTopNavSpacer() {
+  return <div className="min-h-[80px]"></div>;
 }

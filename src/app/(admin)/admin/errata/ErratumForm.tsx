@@ -85,7 +85,7 @@ export default function ErratumForm({
                   value={field.value}
                 >
                   <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Puzzle" />
+                    <SelectValue placeholder="Select" />
                   </SelectTrigger>
                   <SelectContent>
                     {puzzleList?.map((puzzle) => (

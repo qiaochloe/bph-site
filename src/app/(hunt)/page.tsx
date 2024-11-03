@@ -6,10 +6,10 @@ export default async function Home() {
   const session = await auth();
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center">
+    <div className="flex grow flex-col items-center justify-center">
       <h1>Welcome!</h1>
       {!session?.user?.id && (
-        <p>
+        <p className="mt-2">
           New to the hunt?{" "}
           <Link href="/register" className="text-blue-500 hover:underline">
             Register

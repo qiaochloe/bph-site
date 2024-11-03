@@ -9,10 +9,10 @@ export default async function Home() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center">
-      <p>Welcome to the admin page!</p>
+    <div className="flex grow flex-col items-center justify-center">
+      <h1 className="mb-2">Admin!</h1>
       <p>
-        There is{" "}
+        See{" "}
         <Link href="admin/hints" className="text-blue-500">
           hinting
         </Link>{" "}
@@ -20,7 +20,6 @@ export default async function Home() {
         <Link href="admin/errata" className="text-blue-500">
           errata
         </Link>
-        .
       </p>
     </div>
   );

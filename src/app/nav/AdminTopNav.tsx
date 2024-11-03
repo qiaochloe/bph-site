@@ -5,25 +5,24 @@ import Link from "next/link";
 export async function AdminTopNav() {
   const session = await auth();
   return (
-    <nav className="flex w-full items-center justify-between p-4">
-      <div>
+    <nav className="fixed z-50 flex w-full justify-between bg-slate-50 p-4">
+      <div className="flex space-x-4">
         <Link href="/admin" className="hover:underline">
           Home
         </Link>
-        &emsp;
         <Link href="/admin/hints" className="hover:underline">
           Hinting
         </Link>
-        &emsp;
         <Link href="/admin/errata" className="hover:underline">
           Errata
         </Link>
       </div>
-      <div>
-        <Link href="/" className="hover:underline">
+      <div className="flex space-x-4">
+        {session?.user?.role === "admin" && (
+          <Link href="/" className="hover:underline">
             Hunt
-        </Link>
-        <>&emsp;</>
+          </Link>
+        )}
         {session?.user?.id ? (
           <LogoutButton />
         ) : (
@@ -34,4 +33,7 @@ export async function AdminTopNav() {
       </div>
     </nav>
   );
+}
+export async function AdminTopNavSpacer() {
+  return <div className="min-h-[80px]"></div>;
 }

@@ -98,7 +98,7 @@ export function HintTable<TData, TValue>({
           </Button>
         </div>
       </div>
-      <div className="flex-grow overflow-auto rounded-md border">
+      <div className="flex overflow-auto rounded-md border">
         <div className="overflow-y-auto">
           {" "}
           <Table>

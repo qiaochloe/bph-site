@@ -38,8 +38,8 @@ export default async function Home() {
     );
 
   return (
-    <div className="flex min-h-screen flex-col items-center">
-      Teams!
+    <div className="flex grow flex-col items-center">
+      <h1 className="mb-2">Teams!</h1>
       <div>
         <Table>
           <TableHeader>

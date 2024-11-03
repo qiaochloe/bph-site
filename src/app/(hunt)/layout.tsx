@@ -1,6 +1,6 @@
 import "~/styles/globals.css";
 import { Providers } from "~/app/nav/providers";
-import { HuntTopNav } from "../nav/HuntTopNav";
+import { HuntTopNav, HuntTopNavSpacer } from "../nav/HuntTopNav";
 import { Toaster } from "@/components/ui/toaster";
 
 import { GeistSans } from "geist/font/sans";
@@ -20,7 +20,10 @@ export default function RootLayout({
       <body>
         <Providers>
           <HuntTopNav />
-          <main>{children}</main>
+          <HuntTopNavSpacer />
+          <main className="mx-5 mb-5 flex min-h-[calc(100vh-80px-5rem)]">
+            {children}
+          </main>
           <Toaster />
         </Providers>
       </body>
