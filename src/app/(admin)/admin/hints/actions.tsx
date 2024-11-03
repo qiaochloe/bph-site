@@ -6,12 +6,6 @@ import { db } from "@/db/index";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
-/*
-IMPORTANT TODO: Make sure to handle synchronization issues between
-multiple people trying to claim the same hint at the same time
-#BadFirstIssue
-*/
-
 export async function respondToHint(hintId: number, response: string) {
   const session = await auth();
   if (session?.user?.role !== "admin") {
