@@ -1,6 +1,5 @@
 import { auth } from "@/auth";
 import { db } from "@/db/index";
-import { puzzles } from "@/db/schema";
 import ErratumForm from "./ErratumForm";
 
 export default async function Home() {

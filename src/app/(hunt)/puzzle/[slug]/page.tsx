@@ -4,11 +4,11 @@ import { eq, and } from "drizzle-orm";
 import { db } from "~/server/db";
 import { guesses, hints, errata } from "~/server/db/schema";
 
-import PreviousGuessTable from "~/app/puzzle/components/PreviousGuessTable";
-import PreviousHintTable from "~/app/puzzle/components/PreviousHintTable";
+import PreviousGuessTable from "../components/PreviousGuessTable";
+import PreviousHintTable from "../components/PreviousHintTable";
 import ErratumDialog from "../components/ErratumDialog";
-import HintForm from "~/app/puzzle/components/HintForm";
-import GuessForm from "~/app/puzzle/components/GuessForm";
+import HintForm from "../components/HintForm";
+import GuessForm from "../components/GuessForm";
 
 import { NUMBER_OF_GUESSES_PER_PUZZLE } from "~/hunt.config";
 
