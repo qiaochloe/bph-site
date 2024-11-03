@@ -1,5 +1,8 @@
 "use client";
 
+import React from "react";
+import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
+
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -52,7 +55,7 @@ export default function HintForm({ puzzleId }: FormProps) {
             <FormItem>
               <FormLabel>Hint Request</FormLabel>
               <FormControl>
-                <Textarea placeholder="" className="resize-none" {...field} />
+                <AutosizeTextarea maxHeight={500} className="resize-none" {...field} />
               </FormControl>
               <FormDescription>
                 Please be specific about what you need help with.

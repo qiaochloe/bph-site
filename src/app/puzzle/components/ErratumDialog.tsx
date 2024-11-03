@@ -9,8 +9,8 @@ export default function ErratumDialog({
 }) {
   if (errataList.length > 0) {
     return (
-      <div className="w-1/2 p-4">
-        <Alert>
+        <Alert className="bg-slate-100"
+        >
           <AlertTitle>Errata</AlertTitle>
           {errataList.map((e) => (
             <AlertDescription
@@ -23,8 +23,8 @@ export default function ErratumDialog({
             </AlertDescription>
           ))}
         </Alert>
-      </div>
     );
   }
+
   return;
 }

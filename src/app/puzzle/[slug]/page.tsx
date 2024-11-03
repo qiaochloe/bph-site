@@ -53,25 +53,38 @@ export default async function Page({
   });
 
   return (
-    <div className="flex min-h-screen flex-col items-center">
-      <ErratumDialog errataList={errataList} />
+    <div className="flex min-h-screen flex-col items-center p-4">
+
+      <div className="w-2/3 min-w-36">
+        <ErratumDialog errataList={errataList} />
+      </div>
 
       <h1 className="m-4">Puzzle!</h1>
       <p className="m-4">What is the answer to this puzzle?</p>
-      {!hasCorrectGuess && numberOfGuessesLeft > 0 && (
-        <GuessForm puzzleId={slug} numberOfGuessesLeft={numberOfGuessesLeft} />
-      )}
-      {numberOfGuessesLeft === 0 && !hasCorrectGuess && (
-        <div>You have no guesses left. Please contact HQ for help.</div>
-      )}
+
+      <div className="w-2/3 min-w-36">
+        {!hasCorrectGuess && numberOfGuessesLeft > 0 && (
+          <GuessForm
+            puzzleId={slug}
+            numberOfGuessesLeft={numberOfGuessesLeft}
+          />
+        )}
+        {numberOfGuessesLeft === 0 && !hasCorrectGuess && (
+          <div>You have no guesses left. Please contact HQ for help.</div>
+        )}
+      </div>
 
       <h1 className="m-4">Previous Guesses</h1>
-      <PreviousGuessTable previousGuesses={previousGuesses} />
+      <div className="w-2/3 min-w-36 p-4">
+        <PreviousGuessTable previousGuesses={previousGuesses} />
+      </div>
 
-      <HintForm puzzleId={slug} />
+      <div className="w-2/3 min-w-36 p-4">
+        <HintForm puzzleId={slug} />
+      </div>
 
       <h1 className="m-4">Previous Hints</h1>
-      <div className="w-1/2">
+      <div className="w-2/3 min-w-36 p-4">
         <PreviousHintTable previousHints={previousHints} />
       </div>
     </div>

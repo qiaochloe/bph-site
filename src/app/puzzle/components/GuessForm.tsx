@@ -59,13 +59,13 @@ export default function GuessForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="w-1/3 min-w-36 space-y-8"
+        className="flex justify-center space-x-4"
       >
         <FormField
           control={form.control}
           name="guess"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="w-2/3">
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -77,7 +77,9 @@ export default function GuessForm({
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit" className="m-0">
+          Submit
+        </Button>
       </form>
     </Form>
   );
