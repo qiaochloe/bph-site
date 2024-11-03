@@ -21,7 +21,7 @@ export default function RootLayout({
         <Providers>
           <TopNav />
           <TopNavSpacer />
-          <main className="flex min-h-[calc(100vh-56px)]">{children}</main>
+          <main className="flex min-h-[calc(100vh-80px-5rem)] mx-5 mb-5">{children}</main>
           <Toaster />
         </Providers>
       </body>

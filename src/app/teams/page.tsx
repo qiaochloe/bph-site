@@ -38,7 +38,7 @@ export default async function Home() {
     );
 
   return (
-    <div className="flex grow flex-col items-center justify-center space-y-4">
+    <div className="flex grow flex-col items-center space-y-2">
       <h1>Teams!</h1>
       <div>
         <Table>

@@ -14,7 +14,7 @@ export default async function Home() {
   );
 
   return (
-    <div className="container mx-auto justify-center">
+    <div className="container mx-auto">
       <HintTable columns={columns} data={data} />
     </div>
   );
