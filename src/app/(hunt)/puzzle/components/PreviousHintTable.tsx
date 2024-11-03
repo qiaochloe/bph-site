@@ -3,6 +3,7 @@ import {
   TableBody,
   TableCell,
   TableHead,
+  TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { hints } from "~/server/db/schema";
@@ -16,9 +17,12 @@ export default function PreviousHintTable({
 }) {
   return (
     <Table className="table-fixed">
-      {/* <TableHeader>Previous hints</TableHeader> */}
-      <TableHead className="text-center">Request</TableHead>
-      <TableHead className="text-center">Response</TableHead>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="text-center">Request</TableHead>
+          <TableHead className="text-center">Response</TableHead>
+        </TableRow>
+      </TableHeader>
       <TableBody>
         {previousHints.map((hint) => (
           <TableRow key={hint.id}>
