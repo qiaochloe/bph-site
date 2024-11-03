@@ -98,50 +98,49 @@ export function HintTable<TData, TValue>({
           </Button>
         </div>
       </div>
-      <div className="flex overflow-auto rounded-md border">
-        <div className="overflow-y-auto">
-          {" "}
-          <Table>
-            <TableHeader className="sticky top-0 z-10 bg-white">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={`header-${headerGroup.id}`}>
-                  {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                    </TableHead>
-                  ))}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <Fragment key={`row-${row.id}`}>
-                    <TableRow
-                      key={row.id}
-                      data-state={row.getIsSelected() && "selected"}
-                      className="cursor-pointer"
-                      onClick={() => toggleRow(row.id)}
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                    {expandedRows[row.id] && (
-                      <TableRow>
-                        <TableCell colSpan={columns.length}>
-                          <div className="bg-gray-50 p-4">
-                            {/* 
+      <div className="overflow-auto rounded-md border">
+        {" "}
+        <Table>
+          <TableHeader className="sticky top-0 z-10 bg-white">
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={`header-${headerGroup.id}`}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <Fragment key={`row-${row.id}`}>
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                    className="cursor-pointer"
+                    onClick={() => toggleRow(row.id)}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                  {expandedRows[row.id] && (
+                    <TableRow>
+                      <TableCell colSpan={columns.length}>
+                        <div className="bg-gray-50 p-4">
+                          {/* 
                               TODO: Make this more compact by creating two columns
                               #GoodFirstIssue
                             */}
@@ -159,42 +158,41 @@ export function HintTable<TData, TValue>({
                             {/* TODO: link to team 
                               #GoodFirstIssue
                             */}
-                            <p>Team: {row.getValue("teamId")}</p>
-                            <ClaimBox row={row} userId={userId} />
-                            <br />
-                            <p>
-                              Request Time:{" "}
-                              {row.getValue("requestTime")?.toLocaleString()}
-                            </p>
-                            <p>
-                              Claim Time:{" "}
-                              {row.getValue("claimTime")?.toLocaleString()}
-                            </p>
-                            <p>
-                              Response Time:{" "}
-                              {row.getValue("responseTime")?.toLocaleString()}
-                            </p>
-                            <RequestBox row={row} />
-                            <ResponseBox row={row} currHinter={userId} />
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </Fragment>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    No results.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
+                          <p>Team: {row.getValue("teamId")}</p>
+                          <ClaimBox row={row} userId={userId} />
+                          <br />
+                          <p>
+                            Request Time:{" "}
+                            {row.getValue("requestTime")?.toLocaleString()}
+                          </p>
+                          <p>
+                            Claim Time:{" "}
+                            {row.getValue("claimTime")?.toLocaleString()}
+                          </p>
+                          <p>
+                            Response Time:{" "}
+                            {row.getValue("responseTime")?.toLocaleString()}
+                          </p>
+                          <RequestBox row={row} />
+                          <ResponseBox row={row} currHinter={userId} />
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </Fragment>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
       </div>
     </div>
   );

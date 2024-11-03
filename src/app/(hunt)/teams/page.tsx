@@ -38,38 +38,36 @@ export default async function Home() {
     );
 
   return (
-    <div className="flex grow flex-col items-center">
-      <h1 className="mb-2">Teams!</h1>
-      <div>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>#</TableHead>
-              <TableHead className="w-[10em]">Team Name</TableHead>
-              <TableHead className="w-[10em] text-center">
-                Total Solved
-              </TableHead>
-              <TableHead>Finish Time</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {teamRows.map((teamRow, index) => (
+    <div className="container m-auto w-2/3">
+        <h1 className="mb-2 text-center">Teams!</h1>
+        <div className="break-words">
+          <Table>
+            <TableHeader>
               <TableRow>
-                <TableCell>{index + 1}</TableCell>
-                <TableCell>{teamRow.displayName}</TableCell>
-                <TableCell className="text-center">
-                  {teamRow.correctGuesses ?? 0}
-                </TableCell>
-                <TableCell>
-                  {teamRow.finishTime
-                    ? teamRow.finishTime.toLocaleString()
-                    : ""}
-                </TableCell>
+                <TableHead>#</TableHead>
+                <TableHead>Team Name</TableHead>
+                <TableHead className="text-center">Total Solved</TableHead>
+                <TableHead className="text-center">Finish Time</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {teamRows.map((teamRow, index) => (
+                <TableRow>
+                  <TableCell>{index + 1}</TableCell>
+                  <TableCell className="">{teamRow.displayName}</TableCell>
+                  <TableCell className="text-center">
+                    {teamRow.correctGuesses ?? 0}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {teamRow.finishTime
+                      ? teamRow.finishTime.toLocaleString()
+                      : ""}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
-    </div>
   );
 }
