@@ -144,18 +144,18 @@ export function HintTable<TData, TValue>({
                               TODO: Make this more compact by creating two columns
                               #GoodFirstIssue
                             */}
-                            <h3 className="font-bold">Additional Details:</h3>
-                            <p>ID: {row.getValue("id")}</p>
-                            <p>
-                              Puzzle:{" "}
-                              <Link
-                                href={`/puzzle/${row.getValue("puzzleId")}`}
-                                className="text-blue-600 hover:underline"
-                              >
-                                {row.getValue("puzzleId")}
-                              </Link>
-                            </p>
-                            {/* TODO: link to team 
+                          <h3 className="font-bold">Additional Details:</h3>
+                          <p>ID: {row.getValue("id")}</p>
+                          <p>
+                            Puzzle:{" "}
+                            <Link
+                              href={`/puzzle/${row.getValue("puzzleId")}`}
+                              className="text-blue-600 hover:underline"
+                            >
+                              {row.getValue("puzzleId")}
+                            </Link>
+                          </p>
+                          {/* TODO: link to team 
                               #GoodFirstIssue
                             */}
                           <p>Team: {row.getValue("teamId")}</p>
