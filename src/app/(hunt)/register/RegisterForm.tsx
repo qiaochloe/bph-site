@@ -29,7 +29,10 @@ export const registerFormSchema = z
     username: z
       .string()
       .min(8, { message: "Username must be at least 8 characters long" })
-      .max(50, { message: "Username must be at most 50 characters long" }),
+      .max(50, { message: "Username must be at most 50 characters long" })
+      .regex(/^\w+$/, {
+        message: "Username must not contain special characters",
+      }),
     displayName: z
       .string()
       .min(1, { message: "Display name is required" })

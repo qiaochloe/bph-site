@@ -12,7 +12,7 @@ export async function generateStaticParams() {
 }
 
 export function PuzzleBody() {
-  return <p>This is a dynamic route.</p>
+  return <p>This is a dynamic route.</p>;
 }
 
 export default async function Page({
@@ -22,7 +22,5 @@ export default async function Page({
 }) {
   const { slug } = await params;
 
-  return (
-    <DefaultPuzzlePage puzzleId={slug} puzzleBody={PuzzleBody()} />
-  )
+  return <DefaultPuzzlePage puzzleId={slug} puzzleBody={PuzzleBody()} />;
 }

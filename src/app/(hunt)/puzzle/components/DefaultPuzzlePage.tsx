@@ -21,7 +21,6 @@ export default async function DefaultPuzzlePage({
   puzzleId: string;
   puzzleBody: React.ReactNode;
 }) {
-
   const session = await auth();
   if (!session?.user?.id) {
     return <div>You are not authorized to view this puzzle.</div>;
@@ -34,8 +33,8 @@ export default async function DefaultPuzzlePage({
   ).sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
 
   const puzzle = await db.query.puzzles.findFirst({
-    where: eq(puzzles.id, puzzleId)
-  })
+    where: eq(puzzles.id, puzzleId),
+  });
 
   if (!puzzle) {
     return <div>Puzzle does not exist in database.</div>;
@@ -49,7 +48,8 @@ export default async function DefaultPuzzlePage({
   });
 
   const hasCorrectGuess = previousGuesses.some((guess) => guess.isCorrect);
-  const numberOfGuessesLeft = NUMBER_OF_GUESSES_PER_PUZZLE - previousGuesses.length;
+  const numberOfGuessesLeft =
+    NUMBER_OF_GUESSES_PER_PUZZLE - previousGuesses.length;
 
   const previousHints = await db.query.hints.findMany({
     where: and(eq(hints.teamId, session.user.id), eq(hints.puzzleId, puzzleId)),
@@ -57,23 +57,25 @@ export default async function DefaultPuzzlePage({
 
   return (
     <div className="flex w-2/3 min-w-36 grow flex-col items-center">
-      <div className="mb-4 w-2/3 min-w-36">
+      <div className="w-2/3 min-w-36">
         <ErratumDialog errataList={errataList} />
       </div>
 
-      <h1 className="mb-2">{puzzle.name}</h1>
+      <h1 className="mb-4">{puzzle.name}</h1>
       {puzzleBody}
 
-      <div className="w-2/3 min-w-36">
+      <div className="mt-4 w-2/3 min-w-36">
         {!hasCorrectGuess && numberOfGuessesLeft > 0 && (
-          <GuessForm
-            puzzleId={puzzleId}
-            numberOfGuessesLeft={numberOfGuessesLeft}
-          />
+          <div className="mt-2">
+            <GuessForm
+              puzzleId={puzzleId}
+              numberOfGuessesLeft={numberOfGuessesLeft}
+            />
+          </div>
         )}
         {numberOfGuessesLeft === 0 && !hasCorrectGuess && (
-          <div className="mb-4 text-rose-600">
-            You have no guesses left. Please contact HQ for help. m
+          <div className="mb-4 text-rose-600 text-center">
+            You have no guesses left. Please contact HQ for help.
           </div>
         )}
       </div>

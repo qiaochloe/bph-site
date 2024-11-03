@@ -9,13 +9,14 @@ export default function ErratumDialog({
 }) {
   if (errataList.length > 0) {
     return (
-      <Alert className="bg-slate-100 my-2">
-        <AlertTitle>Errata</AlertTitle>
-        {errataList.map((e) => (
+      <Alert className="mb-6 mt-2 bg-slate-100">
+        {errataList.map((e, index) => (
           <AlertDescription key={e.id} className="overflow-hidden break-words">
-            <br />
-            <strong>{formatTime(e.timestamp)}</strong>:
-            <p className="whitespace-normal">{e.description}</p>
+            {index != 0 && <br />}
+            <p className="whitespace-normal">
+              <strong>Erratum {formatTime(e.timestamp)}</strong>:{" "}
+              {e.description}
+            </p>
           </AlertDescription>
         ))}
       </Alert>
