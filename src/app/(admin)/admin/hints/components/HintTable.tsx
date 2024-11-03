@@ -151,7 +151,7 @@ export function HintTable<TData, TValue>({
                               Puzzle:{" "}
                               <Link
                                 href={`/puzzle/${row.getValue("puzzleId")}`}
-                                className="text-blue-600 underline hover:text-blue-800"
+                                className="text-blue-600 hover:underline"
                               >
                                 {row.getValue("puzzleId")}
                               </Link>

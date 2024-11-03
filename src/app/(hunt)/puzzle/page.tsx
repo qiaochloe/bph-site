@@ -15,36 +15,30 @@ export default async function Home() {
         <p>The hunt has not started yet.</p>
       ) : !session?.user?.id ? (
         <div>
-          <Link href="/login" className="text-blue-500 hover:underline">
+          <Link href="/login" className="text-blue-600 hover:underline">
             Login
           </Link>{" "}
           to access puzzles
         </div>
       ) : (
-        <>
-          <p>Available puzzles:</p>
-          <ul>
-            {(
-              await db.query.puzzles.findMany({
-                columns: {
-                  id: true,
-                  name: true,
-                },
-              })
-            )
-              .sort((a, b) => a.name.localeCompare(b.name))
-              .map((puzzle) => (
-                <li key={puzzle.id}>
-                  <Link
-                    className="hover:underline"
-                    href={`/puzzle/${puzzle.id}`}
-                  >
-                    {puzzle.name}
-                  </Link>
-                </li>
-              ))}
-          </ul>
-        </>
+        <ul>
+          {(
+            await db.query.puzzles.findMany({
+              columns: {
+                id: true,
+                name: true,
+              },
+            })
+          )
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .map((puzzle) => (
+              <li key={puzzle.id}>
+                <Link className="hover:underline" href={`/puzzle/${puzzle.id}`}>
+                  {puzzle.name}
+                </Link>
+              </li>
+            ))}
+        </ul>
       )}
     </div>
   );
