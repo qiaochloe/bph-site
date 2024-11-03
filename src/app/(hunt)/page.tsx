@@ -11,7 +11,7 @@ export default async function Home() {
       {!session?.user?.id && (
         <p className="mt-2">
           New to the hunt?{" "}
-          <Link href="/register" className="text-blue-500 hover:underline">
+          <Link href="/register" className="text-blue-600 hover:underline">
             Register
           </Link>
         </p>

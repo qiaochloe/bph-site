@@ -13,11 +13,11 @@ export default async function Home() {
       <h1 className="mb-2">Admin!</h1>
       <p>
         See{" "}
-        <Link href="admin/hints" className="text-blue-500">
+        <Link href="admin/hints" className="text-blue-600 hover:underline">
           hinting
         </Link>{" "}
         and{" "}
-        <Link href="admin/errata" className="text-blue-500">
+        <Link href="admin/errata" className="text-blue-600 hover:underline">
           errata
         </Link>
       </p>

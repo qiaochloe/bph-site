@@ -194,7 +194,7 @@ export function RegisterForm({}: RegisterFormProps) {
         <Button type="submit">Register</Button>
         <div className="py-2 text-sm">
           Already registered for the hunt?{" "}
-          <Link href="/login" className="text-blue-500 hover:underline">
+          <Link href="/login" className="text-blue-600 hover:underline">
             Login
           </Link>
         </div>

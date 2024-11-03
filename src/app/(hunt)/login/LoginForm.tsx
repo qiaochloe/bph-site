@@ -83,7 +83,7 @@ export function LoginForm() {
         <Button type="submit">Log In</Button>
         <div className="py-2 text-sm">
           New to the hunt?{" "}
-          <Link href="/register" className="text-blue-500 hover:underline">
+          <Link href="/register" className="text-blue-600 hover:underline">
             Register
           </Link>
         </div>
