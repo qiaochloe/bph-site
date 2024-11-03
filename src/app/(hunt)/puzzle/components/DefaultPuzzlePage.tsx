@@ -74,7 +74,7 @@ export default async function DefaultPuzzlePage({
           </div>
         )}
         {numberOfGuessesLeft === 0 && !hasCorrectGuess && (
-          <div className="mb-4 text-rose-600 text-center">
+          <div className="mb-4 text-center text-rose-600">
             You have no guesses left. Please contact HQ for help.
           </div>
         )}
