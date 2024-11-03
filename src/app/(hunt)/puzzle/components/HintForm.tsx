@@ -55,7 +55,11 @@ export default function HintForm({ puzzleId }: FormProps) {
             <FormItem>
               <FormLabel>Hint Request</FormLabel>
               <FormControl>
-                <AutosizeTextarea maxHeight={500} className="resize-none" {...field} />
+                <AutosizeTextarea
+                  maxHeight={500}
+                  className="resize-none"
+                  {...field}
+                />
               </FormControl>
               <FormDescription>
                 Please be specific about what you need help with.

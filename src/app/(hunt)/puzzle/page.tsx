@@ -9,7 +9,7 @@ import { db } from "@/db/index";
 export default async function Home() {
   const session = await auth();
   return (
-    <div className="flex grow flex-col justify-center items-center">
+    <div className="flex grow flex-col items-center justify-center">
       <h1 className="mb-2">Puzzles!</h1>
       {new Date() < HUNT_START_TIME ? (
         <p>The hunt has not started yet.</p>

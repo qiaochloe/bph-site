@@ -9,20 +9,16 @@ export default function ErratumDialog({
 }) {
   if (errataList.length > 0) {
     return (
-        <Alert className="bg-slate-100"
-        >
-          <AlertTitle>Errata</AlertTitle>
-          {errataList.map((e) => (
-            <AlertDescription
-              key={e.id}
-              className="overflow-hidden break-words"
-            >
-              <br />
-              <strong>{formatTime(e.timestamp)}</strong>:
-              <p className="whitespace-normal">{e.description}</p>
-            </AlertDescription>
-          ))}
-        </Alert>
+      <Alert className="bg-slate-100">
+        <AlertTitle>Errata</AlertTitle>
+        {errataList.map((e) => (
+          <AlertDescription key={e.id} className="overflow-hidden break-words">
+            <br />
+            <strong>{formatTime(e.timestamp)}</strong>:
+            <p className="whitespace-normal">{e.description}</p>
+          </AlertDescription>
+        ))}
+      </Alert>
     );
   }
 
