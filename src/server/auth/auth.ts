@@ -76,7 +76,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
           // Check if team exists in the database
 
           const user = await db.query.teams.findFirst({
-            where: eq(teams.username, username),
+            where: eq(teams.username, username.toLowerCase()),
           });
 
           if (user) {
