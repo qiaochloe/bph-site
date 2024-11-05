@@ -23,7 +23,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { insertHint } from "../actions";
 
 const formSchema = z.object({
-  hintRequest: z.string(),
+  hintRequest: z.string().min(1, {
+    message: "Hint must contain at least one character",
+  }),
 });
 
 type FormProps = {
