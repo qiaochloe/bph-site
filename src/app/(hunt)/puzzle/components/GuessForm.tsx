@@ -46,6 +46,7 @@ export default function GuessForm({
 }: FormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    mode: "onSubmit",
     defaultValues: {
       guess: "",
     },
@@ -54,11 +55,10 @@ export default function GuessForm({
   const [error, setError] = useState<string | null>(null);
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    setError(null);
     const result = await insertGuess(puzzleId, data.guess);
     if (result && result.error) {
       setError(result.error);
-    } else {
-      setError(null);
     }
     form.reset();
   };
@@ -77,8 +77,10 @@ export default function GuessForm({
               <FormControl>
                 <Input
                   {...field}
-                  onChange={(value) => {
-                    field.onChange(value);
+                  onChange={(e) => {
+                    form.setValue("guess", e.target.value, {
+                      shouldValidate: false,
+                    });
                     setError(null);
                   }}
                 />
