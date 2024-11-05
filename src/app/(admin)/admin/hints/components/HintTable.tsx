@@ -66,6 +66,7 @@ export function HintTable<TData, TValue>({
         pageSize: 10,
       },
       columnVisibility: {
+        puzzleId: false,
         responseTime: false,
         claimTime: false,
       },
@@ -141,10 +142,6 @@ export function HintTable<TData, TValue>({
                       <TableRow>
                         <TableCell colSpan={columns.length}>
                           <div className="bg-gray-50 p-4">
-                            {/* 
-                              TODO: Make this more compact by creating two columns
-                              #GoodFirstIssue
-                            */}
                             <h3 className="font-bold">Additional Details:</h3>
                             <p>ID: {row.getValue("id")}</p>
                             <p>
@@ -153,12 +150,9 @@ export function HintTable<TData, TValue>({
                                 href={`/puzzle/${row.getValue("puzzleId")}`}
                                 className="text-blue-600 hover:underline"
                               >
-                                {row.getValue("puzzleId")}
+                                {row.getValue("puzzleName")}
                               </Link>
                             </p>
-                            {/* TODO: link to team 
-                              #GoodFirstIssue
-                            */}
                             <p>Team: {row.getValue("teamId")}</p>
                             <ClaimBox row={row} userId={userId} />
                             <br />

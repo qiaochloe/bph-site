@@ -4,8 +4,6 @@ import { ColumnDef } from "@tanstack/react-table";
 import { hints } from "~/server/db/schema";
 
 /* TODO: 
-  Convert team ID to team name
-  Convert puzzle ID to puzzle name
   Shorten request time to just the time (if it is today) and the date (if it is not today)
   Exclude the year from the date
   Display claimer as initials
@@ -25,8 +23,13 @@ export function formatTime(time: unknown) {
   });
 }
 
+export type HintWithRelations = typeof hints.$inferSelect & {
+  team: { displayName: string };
+  puzzle: { name: string };
+};
+
 // Define the columns for the table using TanStack
-export const columns: ColumnDef<typeof hints.$inferSelect>[] = [
+export const columns: ColumnDef<HintWithRelations>[] = [
   {
     accessorKey: "id",
     header: () => <div className="w-16">Id</div>,
@@ -35,18 +38,14 @@ export const columns: ColumnDef<typeof hints.$inferSelect>[] = [
     ),
   },
   {
-    accessorKey: "puzzleId",
-    header: () => <div className="w-24">Puzzle</div>,
-    cell: ({ row }) => (
-      <div className="w-16 truncate">{row.getValue("puzzleId")}</div>
-    ),
+    accessorKey: "puzzleName",
+    header: () => <div className="w-64">Puzzle</div>,
+    accessorFn: (row) => row.puzzle.name,
   },
   {
-    accessorKey: "teamId",
+    accessorKey: "teamDisplayName",
     header: () => <div className="w-24">Team</div>,
-    cell: ({ row }) => (
-      <div className="w-24 truncate">{row.getValue("teamId")}</div>
-    ),
+    accessorFn: (row) => row.team!.displayName,
   },
   {
     accessorKey: "request",
@@ -80,6 +79,10 @@ export const columns: ColumnDef<typeof hints.$inferSelect>[] = [
     ),
   },
   // In HintTable, we set the initial state to hide them
+  {
+    header: () => null,
+    accessorKey: "puzzleId",
+  },
   {
     header: () => null,
     accessorKey: "claimTime",
