@@ -17,6 +17,7 @@ import {
 
 import { login, logout } from "./actions";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 export const loginFormSchema = z.object({
   username: z.string(),
@@ -24,9 +25,7 @@ export const loginFormSchema = z.object({
 });
 
 export function LoginForm() {
-  // It might be more idiomatic to use the useFormState hook here
-  // And in other places where we have a form
-  // #BadFirstIssue
+  const session = useSession();
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
@@ -43,7 +42,13 @@ export function LoginForm() {
     if (result.error) {
       setError(result.error);
     } else {
-      router.refresh();
+      console.log(session.data?.user?.role);
+      if (session.data?.user?.role === "admin") {
+        router.push("/admin");
+      } else {
+        router.refresh();
+      }
+      router.push("/admin");
       setError(null);
     }
   };
