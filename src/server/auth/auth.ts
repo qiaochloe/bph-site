@@ -72,9 +72,6 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
           const { username, password } =
             await signInSchema.parseAsync(credentials);
 
-          // TODO: Make sure to check that the name is unique
-          // Check if team exists in the database
-
           const user = await db.query.teams.findFirst({
             where: eq(teams.username, username.toLowerCase()),
           });
