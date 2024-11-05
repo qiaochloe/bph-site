@@ -9,9 +9,14 @@ export default async function Home() {
     return <p>You are not authorized to access this page.</p>;
   }
 
-  const data = (await db.query.hints.findMany()).sort(
-    (a, b) => b.requestTime!.getTime() - a.requestTime!.getTime(),
-  );
+  const data = (
+    await db.query.hints.findMany({
+      with: {
+        team: { columns: { displayName: true } },
+        puzzle: { columns: { name: true } },
+      },
+    })
+  ).sort((a, b) => b.requestTime!.getTime() - a.requestTime!.getTime());
 
   return (
     <div className="container mx-auto">

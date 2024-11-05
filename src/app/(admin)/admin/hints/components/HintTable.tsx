@@ -66,6 +66,7 @@ export function HintTable<TData, TValue>({
         pageSize: 10,
       },
       columnVisibility: {
+        puzzleId: false,
         responseTime: false,
         claimTime: false,
       },
@@ -149,7 +150,7 @@ export function HintTable<TData, TValue>({
                                 href={`/puzzle/${row.getValue("puzzleId")}`}
                                 className="text-blue-600 hover:underline"
                               >
-                                {row.getValue("puzzleId")}
+                                {row.getValue("puzzleName")}
                               </Link>
                             </p>
                             <p>Team: {row.getValue("teamId")}</p>
