@@ -4,8 +4,6 @@ import { ColumnDef } from "@tanstack/react-table";
 import { hints } from "~/server/db/schema";
 
 /* TODO: 
-  Convert team ID to team name
-  Convert puzzle ID to puzzle name
   Shorten request time to just the time (if it is today) and the date (if it is not today)
   Exclude the year from the date
   Display claimer as initials
@@ -42,7 +40,7 @@ export const columns: ColumnDef<HintWithRelations>[] = [
   {
     accessorKey: "puzzleName",
     header: () => <div className="w-64">Puzzle</div>,
-    accessorFn: (row) => row.puzzle!.name,
+    accessorFn: (row) => row.puzzle.name,
   },
   {
     accessorKey: "teamDisplayName",
@@ -81,6 +79,10 @@ export const columns: ColumnDef<HintWithRelations>[] = [
     ),
   },
   // In HintTable, we set the initial state to hide them
+  {
+    header: () => null,
+    accessorKey: "puzzleId"
+  },
   {
     header: () => null,
     accessorKey: "claimTime",
