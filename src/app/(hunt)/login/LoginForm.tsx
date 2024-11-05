@@ -43,14 +43,11 @@ export function LoginForm() {
     if (result.error) {
       setError(result.error);
     } else {
-      // TODO: would be nice if we can update the page using hooks rather than refreshing
       router.refresh();
       setError(null);
     }
   };
 
-  // TODO: size of the form changes when the error message is shown
-  // #GoodFirstIssue
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-64 space-y-4">

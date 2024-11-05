@@ -12,6 +12,8 @@ export async function insertTeam(
   password: string,
   interactionMode: (typeof interactionModeEnum.enumValues)[number],
 ) {
+  username = username.toLowerCase();
+
   const duplicateUsername = await db.query.teams.findFirst({
     where: eq(teams.username, username),
   });

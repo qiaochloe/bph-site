@@ -142,10 +142,6 @@ export function HintTable<TData, TValue>({
                       <TableRow>
                         <TableCell colSpan={columns.length}>
                           <div className="bg-gray-50 p-4">
-                            {/* 
-                              TODO: Make this more compact by creating two columns
-                              #GoodFirstIssue
-                            */}
                             <h3 className="font-bold">Additional Details:</h3>
                             <p>ID: {row.getValue("id")}</p>
                             <p>
@@ -157,10 +153,7 @@ export function HintTable<TData, TValue>({
                                 {row.getValue("puzzleName")}
                               </Link>
                             </p>
-                            {/* TODO: link to team 
-                              #GoodFirstIssue
-                            */}
-                            <p>Team: {row.getValue("teamDisplayName")}</p>
+                            <p>Team: {row.getValue("teamId")}</p>
                             <ClaimBox row={row} userId={userId} />
                             <br />
                             <p>

@@ -24,8 +24,6 @@ import Link from "next/link";
 
 export const registerFormSchema = z
   .object({
-    // TODO: validate that username does not contain special characters
-    // #GoodFirstIssue
     username: z
       .string()
       .min(8, { message: "Username must be at least 8 characters long" })
@@ -92,10 +90,6 @@ export function RegisterForm({}: RegisterFormProps) {
       setError(null);
     }
   };
-
-  // TODO: size of the form changes when the error message is shown
-  // See: LoginForm.tsx
-  // #GoodFirstIssue
 
   return (
     <Form {...form}>

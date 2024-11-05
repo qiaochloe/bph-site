@@ -67,8 +67,6 @@ export default function ErratumForm({
     }
   };
 
-  // TODO: size of the form changes when the error message is shown
-  // #GoodFirstIssue
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
