@@ -44,6 +44,7 @@ export function LoginForm() {
       setError(result.error);
     } else {
       // TODO: would be nice if we can update the page using hooks rather than refreshing
+      router.push("/admin");
       router.refresh();
       setError(null);
     }
