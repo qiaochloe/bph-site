@@ -34,7 +34,7 @@ export async function insertGuess(puzzleId: string, guess: string) {
 
   // TODO: Tell the user if they have already made a guess?
   if (puzzle.guesses.find((g) => g.guess === guess)) {
-    return;
+    return { error: "Already guessed!" };
   }
 
   await db.insert(guesses).values({

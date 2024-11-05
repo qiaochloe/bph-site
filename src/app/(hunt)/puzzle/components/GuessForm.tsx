@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -50,8 +51,15 @@ export default function GuessForm({
     },
   });
 
+  const [error, setError] = useState<string | null>(null);
+
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    await insertGuess(puzzleId, data.guess);
+    const result = await insertGuess(puzzleId, data.guess);
+    if (result && result.error) {
+      setError(result.error);
+    } else {
+      setError(null);
+    }
     form.reset();
   };
 
@@ -67,13 +75,19 @@ export default function GuessForm({
           render={({ field }) => (
             <FormItem className="w-2/3">
               <FormControl>
-                <Input {...field} />
+                <Input
+                  {...field}
+                  onChange={(value) => {
+                    field.onChange(value);
+                    setError(null);
+                  }}
+                />
               </FormControl>
               <FormDescription>
                 {numberOfGuessesLeft}{" "}
                 {numberOfGuessesLeft === 1 ? "guess" : "guesses"} left
               </FormDescription>
-              <FormMessage />
+              <FormMessage>{error}</FormMessage>
             </FormItem>
           )}
         />
