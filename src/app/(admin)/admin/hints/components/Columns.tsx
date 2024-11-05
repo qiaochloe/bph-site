@@ -81,7 +81,7 @@ export const columns: ColumnDef<HintWithRelations>[] = [
   // In HintTable, we set the initial state to hide them
   {
     header: () => null,
-    accessorKey: "puzzleId"
+    accessorKey: "puzzleId",
   },
   {
     header: () => null,
