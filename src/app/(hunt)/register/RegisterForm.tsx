@@ -107,7 +107,14 @@ export function RegisterForm({}: RegisterFormProps) {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="jcarberr" {...field} />
+                <Input
+                  placeholder="jcarberr"
+                  {...field}
+                  onChange={(value) => {
+                    field.onChange(value);
+                    setError(null);
+                  }}
+                />
               </FormControl>
               <FormDescription>
                 This is the private username your team will use when logging in.
