@@ -25,8 +25,13 @@ export function formatTime(time: unknown) {
   });
 }
 
+export type HintWithRelations = typeof hints.$inferSelect & {
+  team: { displayName: string };
+  puzzle: { name: string };
+};
+
 // Define the columns for the table using TanStack
-export const columns: ColumnDef<typeof hints.$inferSelect>[] = [
+export const columns: ColumnDef<HintWithRelations>[] = [
   {
     accessorKey: "id",
     header: () => <div className="w-16">Id</div>,
@@ -35,18 +40,14 @@ export const columns: ColumnDef<typeof hints.$inferSelect>[] = [
     ),
   },
   {
-    accessorKey: "puzzleId",
-    header: () => <div className="w-24">Puzzle</div>,
-    cell: ({ row }) => (
-      <div className="w-16 truncate">{row.getValue("puzzleId")}</div>
-    ),
+    accessorKey: "puzzleName",
+    header: () => <div className="w-64">Puzzle</div>,
+    accessorFn: (row) => row.puzzle!.name,
   },
   {
-    accessorKey: "teamId",
+    accessorKey: "teamDisplayName",
     header: () => <div className="w-24">Team</div>,
-    cell: ({ row }) => (
-      <div className="w-24 truncate">{row.getValue("teamId")}</div>
-    ),
+    accessorFn: (row) => row.team!.displayName,
   },
   {
     accessorKey: "request",
