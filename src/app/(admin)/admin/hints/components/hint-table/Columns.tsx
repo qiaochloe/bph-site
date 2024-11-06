@@ -1,7 +1,9 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
+import Link from "next/link";
 import { hints } from "~/server/db/schema";
+import ClaimBox from "./ClaimBox";
 
 /* TODO: 
   Shorten request time to just the time (if it is today) and the date (if it is not today)
@@ -34,31 +36,28 @@ export const columns: ColumnDef<HintWithRelations>[] = [
     accessorKey: "id",
     header: () => <div className="w-16">Id</div>,
     cell: ({ row }) => (
-      <div className="w-16 truncate">{row.getValue("id")}</div>
+      <div className="w-16 truncate text-blue-600 hover:underline">
+        <Link href={`/admin/hints/${row.getValue("id")}`}>
+          {row.getValue("id")}
+        </Link>
+      </div>
     ),
   },
   {
     accessorKey: "puzzleName",
-    header: () => <div className="w-64">Puzzle</div>,
+    header: () => <div className="w-32">Puzzle</div>,
     accessorFn: (row) => row.puzzle.name,
   },
   {
     accessorKey: "teamDisplayName",
-    header: () => <div className="w-24">Team</div>,
+    header: () => <div className="w-32">Team</div>,
     accessorFn: (row) => row.team!.displayName,
   },
   {
     accessorKey: "request",
-    header: () => <div className="w-64">Request</div>,
+    header: () => <div className="w-[42em]">Request</div>,
     cell: ({ row }) => (
-      <div className="w-64 truncate">{row.getValue("request")}</div>
-    ),
-  },
-  {
-    accessorKey: "response",
-    header: () => <div className="w-64">Response</div>,
-    cell: ({ row }) => (
-      <div className="w-64 truncate">{row.getValue("response")}</div>
+      <div className="w-[42em] truncate">{row.getValue("request")}</div>
     ),
   },
   {
@@ -73,22 +72,15 @@ export const columns: ColumnDef<HintWithRelations>[] = [
   },
   {
     accessorKey: "claimer",
-    header: () => <div className="w-24">Claimed By</div>,
+    header: () => <div className="w-32">Claimed By</div>,
     cell: ({ row }) => (
-      <div className="w-24 truncate">{row.getValue("claimer")}</div>
+      <div className="w-24 truncate">
+        <ClaimBox row={row} />
+      </div>
     ),
   },
-  // In HintTable, we set the initial state to hide them
   {
-    header: () => null,
-    accessorKey: "puzzleId",
-  },
-  {
-    header: () => null,
-    accessorKey: "claimTime",
-  },
-  {
-    header: () => null,
     accessorKey: "responseTime",
+    header: () => null,
   },
 ];

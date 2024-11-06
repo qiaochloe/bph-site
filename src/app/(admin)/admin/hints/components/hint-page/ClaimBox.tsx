@@ -2,7 +2,7 @@
 import { claimHint, unclaimHint } from "../../actions";
 import { toast } from "~/hooks/use-toast";
 
-export default function ClaimBox<TData>({
+export default function ClaimBox({
   id,
   claimer,
   response,
