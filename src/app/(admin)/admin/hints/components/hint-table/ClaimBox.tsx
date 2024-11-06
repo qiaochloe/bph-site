@@ -30,7 +30,7 @@ export default function ClaimBox<TData>({ row }: { row: Row<TData> }) {
           }
         }}
       >
-        <p className="px-1">CLAIM</p>
+        <p className="claimButton px-1">CLAIM</p>
       </button>
     );
   } else if (claimer === userId && row.getValue("responseTime") === null) {
@@ -39,7 +39,7 @@ export default function ClaimBox<TData>({ row }: { row: Row<TData> }) {
         className="rounded-md border border-red-600 text-red-600"
         onClick={async () => await unclaimHint(hintId)}
       >
-        <p className="px-1">UNCLAIM</p>
+        <p className="claimButton px-1">UNCLAIM</p>
       </button>
     );
   } else {

@@ -3,7 +3,9 @@ import Link from "next/link";
 import { Fragment, useState } from "react";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
+import { Row } from "@tanstack/react-table";
 
 import {
   ColumnDef,
@@ -58,6 +60,12 @@ export function HintTable<TData, TValue>({
     },
   });
 
+  const router = useRouter();
+  const linkToHint = (row: Row<TData>) => {
+    router.push(`/admin/hints/${row.getValue("id")}`);
+    router.refresh();
+  };
+
   if (!userId) return null;
 
   return (
@@ -108,6 +116,23 @@ export function HintTable<TData, TValue>({
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
                   <TableRow
+                    onClick={(event) => {
+                      if (
+                        event.target instanceof HTMLElement &&
+                        event.target.classList.contains("claimButton") &&
+                        row.getValue("claimer") === session.user?.id
+                      )
+                        return;
+                      if (event.metaKey || event.ctrlKey) {
+                        const win = window.open(
+                          `/admin/hints/${row.getValue("id")}`,
+                          "_blank",
+                        );
+                        win?.focus();
+                      } else {
+                        linkToHint(row);
+                      }
+                    }}
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
                     className="cursor-pointer"
