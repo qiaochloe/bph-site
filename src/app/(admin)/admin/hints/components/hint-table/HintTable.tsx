@@ -1,11 +1,9 @@
 "use client";
-import Link from "next/link";
-import { Fragment, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
-import { Row } from "@tanstack/react-table";
 
 import {
   ColumnDef,
@@ -35,10 +33,12 @@ export function HintTable<TData, TValue>({
   columns,
   data,
 }: HintTableProps<TData, TValue>) {
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const router = useRouter();
   const { data: session } = useSession();
   const userId = session?.user?.id;
-  const size = 10;
+
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const pageSize = 10;
 
   const table = useReactTable({
     data,
@@ -53,20 +53,14 @@ export function HintTable<TData, TValue>({
     initialState: {
       pagination: {
         pageIndex: 0,
-        pageSize: size,
+        pageSize: pageSize,
       },
       columnVisibility: {
         responseTime: false,
       },
     },
-    pageCount: Math.ceil(data.length / size),
+    pageCount: Math.ceil(data.length / pageSize),
   });
-
-  const router = useRouter();
-  const linkToHint = (row: Row<TData>) => {
-    router.push(`/admin/hints/${row.getValue("id")}`);
-    router.refresh();
-  };
 
   if (!userId) return null;
 
@@ -121,18 +115,19 @@ export function HintTable<TData, TValue>({
                     onClick={(event) => {
                       if (
                         event.target instanceof HTMLElement &&
-                        event.target.classList.contains("claimButton") &&
-                        row.getValue("claimer") === session.user?.id
+                        event.target.classList.contains("claimButton")
                       )
                         return;
                       if (event.metaKey || event.ctrlKey) {
-                        const win = window.open(
+                        // Open in new tab
+                        window.open(
                           `/admin/hints/${row.getValue("id")}`,
                           "_blank",
                         );
-                        win?.focus();
                       } else {
-                        linkToHint(row);
+                        // Move to hint page
+                        router.push(`/admin/hints/${row.getValue("id")}`);
+                        router.refresh();
                       }
                     }}
                     key={row.id}

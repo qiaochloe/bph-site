@@ -2,7 +2,6 @@ import { Row } from "@tanstack/react-table";
 import { claimHint, unclaimHint } from "../../actions";
 import { toast } from "~/hooks/use-toast";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 
 // TODO: Add refund hint functionality
 // TODO: Actually keep track of number of hints claimed
