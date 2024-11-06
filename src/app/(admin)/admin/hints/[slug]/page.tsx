@@ -76,7 +76,7 @@ export default async function Page({
         <h1>Answer a Hint</h1>
         <ClaimBox
           id={hint.id}
-          claimer={hint.claimer!.displayName}
+          claimer={hint.claimer}
           response={hint.response}
           userId={session.user.id}
         />

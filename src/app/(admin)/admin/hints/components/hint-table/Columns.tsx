@@ -25,11 +25,11 @@ export function formatTime(time: unknown) {
   });
 }
 
-export type HintClaimer = { id: string; displayName: string };
+export type HintClaimer = { id: string; displayName: string } | null;
 
 export type HintWithRelations = typeof hints.$inferSelect & {
   team: { displayName: string };
-  claimer: HintClaimer | null;
+  claimer: HintClaimer;
   puzzle: { name: string };
 };
 
