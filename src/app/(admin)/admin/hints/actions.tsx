@@ -21,7 +21,7 @@ export async function respondToHint(hintId: number, response: string) {
     })
     .where(eq(hints.id, hintId));
 
-  revalidatePath("/admin");
+  revalidatePath("/admin/");
 }
 
 export async function claimHint(hintId: number) {
@@ -44,7 +44,7 @@ export async function claimHint(hintId: number) {
   }
 
   if (hint.claimer && hint.claimer !== session.user.id) {
-    revalidatePath("/admin");
+    revalidatePath("/admin/");
     throw new Error("Hint claimed by " + hint.claimer + ".");
   }
 
@@ -56,7 +56,7 @@ export async function claimHint(hintId: number) {
     })
     .where(eq(hints.id, hintId));
 
-  revalidatePath("/admin");
+  revalidatePath("/admin/");
 }
 
 export async function unclaimHint(hintId: number) {
@@ -70,5 +70,5 @@ export async function unclaimHint(hintId: number) {
     .set({ claimer: null, claimTime: null })
     .where(eq(hints.id, hintId));
 
-  revalidatePath("/admin");
+  revalidatePath("/admin/");
 }

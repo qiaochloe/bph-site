@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import { db } from "@/db/index";
-import { columns } from "./components/Columns";
-import { HintTable } from "./components/HintTable";
+import { columns } from "./components/hint-table/Columns";
+import { HintTable } from "./components/hint-table/HintTable";
 
 export default async function Home() {
   const session = await auth();

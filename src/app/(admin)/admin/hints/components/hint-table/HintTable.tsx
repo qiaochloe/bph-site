@@ -1,8 +1,7 @@
 "use client";
-
+import Link from "next/link";
 import { Fragment, useState } from "react";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -25,10 +24,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import ClaimBox from "./ClaimBox";
-import ResponseBox from "./ResponseBox";
-import RequestBox from "./RequestBox";
-
 interface HintTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -38,17 +33,9 @@ export function HintTable<TData, TValue>({
   columns,
   data,
 }: HintTableProps<TData, TValue>) {
-  const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const { data: session } = useSession();
   const userId = session?.user?.id;
-
-  const toggleRow = (rowId: string) => {
-    setExpandedRows((prev) => ({
-      ...prev,
-      [rowId]: !prev[rowId],
-    }));
-  };
 
   const table = useReactTable({
     data,
@@ -66,9 +53,7 @@ export function HintTable<TData, TValue>({
         pageSize: 10,
       },
       columnVisibility: {
-        puzzleId: false,
         responseTime: false,
-        claimTime: false,
       },
     },
   });
@@ -122,59 +107,20 @@ export function HintTable<TData, TValue>({
             <TableBody>
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
-                  <Fragment key={`row-${row.id}`}>
-                    <TableRow
-                      key={row.id}
-                      data-state={row.getIsSelected() && "selected"}
-                      className="cursor-pointer"
-                      onClick={() => toggleRow(row.id)}
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                    {expandedRows[row.id] && (
-                      <TableRow>
-                        <TableCell colSpan={columns.length}>
-                          <div className="bg-gray-50 p-4">
-                            <h3 className="font-bold">Additional Details:</h3>
-                            <p>ID: {row.getValue("id")}</p>
-                            <p>
-                              Puzzle:{" "}
-                              <Link
-                                href={`/puzzle/${row.getValue("puzzleId")}`}
-                                className="text-blue-600 hover:underline"
-                              >
-                                {row.getValue("puzzleName")}
-                              </Link>
-                            </p>
-                            <p>Team: {row.getValue("teamId")}</p>
-                            <ClaimBox row={row} userId={userId} />
-                            <br />
-                            <p>
-                              Request Time:{" "}
-                              {row.getValue("requestTime")?.toLocaleString()}
-                            </p>
-                            <p>
-                              Claim Time:{" "}
-                              {row.getValue("claimTime")?.toLocaleString()}
-                            </p>
-                            <p>
-                              Response Time:{" "}
-                              {row.getValue("responseTime")?.toLocaleString()}
-                            </p>
-                            <RequestBox row={row} />
-                            <ResponseBox row={row} currHinter={userId} />
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </Fragment>
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                    className="cursor-pointer"
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
                 ))
               ) : (
                 <TableRow>
