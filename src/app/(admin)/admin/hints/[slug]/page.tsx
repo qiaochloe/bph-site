@@ -42,6 +42,7 @@ export default async function Page({
     where: eq(hints.id, hintId),
     with: {
       team: { columns: { displayName: true } },
+      claimer: { columns: { id: true, displayName: true } },
       puzzle: { columns: { name: true } },
     },
   });
@@ -75,7 +76,7 @@ export default async function Page({
         <h1>Answer a Hint</h1>
         <ClaimBox
           id={hint.id}
-          claimer={hint.claimer}
+          claimer={hint.claimer!.displayName}
           response={hint.response}
           userId={session.user.id}
         />
