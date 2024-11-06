@@ -1,5 +1,5 @@
 import { Row } from "@tanstack/react-table";
-import { claimHint, unclaimHint } from "../actions";
+import { claimHint, unclaimHint } from "../../actions";
 import { toast } from "~/hooks/use-toast";
 
 // TODO: Add refund hint functionality
@@ -27,7 +27,7 @@ export default function ClaimBox<TData>({
             } catch (error: any) {
               toast({
                 variant: "destructive",
-                title: "Error Claiming Hint",
+                title: "Error claiming hint",
                 description: error.message,
               });
             }
@@ -43,7 +43,7 @@ export default function ClaimBox<TData>({
         Claimed by:{" "}
         <button
           className="rounded-md border border-red-600 text-red-600"
-          onClick={() => unclaimHint(hintId)}
+          onClick={async () => await unclaimHint(hintId)}
         >
           <p className="px-1">UNCLAIM</p>
         </button>

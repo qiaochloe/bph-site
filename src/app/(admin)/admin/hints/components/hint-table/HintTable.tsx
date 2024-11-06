@@ -38,6 +38,7 @@ export function HintTable<TData, TValue>({
   columns,
   data,
 }: HintTableProps<TData, TValue>) {
+
   const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const { data: session } = useSession();

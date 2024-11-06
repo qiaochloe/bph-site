@@ -2,7 +2,7 @@ import { Row } from "@tanstack/react-table";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
 import { AutosizeTextarea } from "~/components/ui/autosize-textarea";
-import { respondToHint } from "../actions";
+import { respondToHint } from "../../actions";
 
 export default function ResponseBox<TData>({
   row,
