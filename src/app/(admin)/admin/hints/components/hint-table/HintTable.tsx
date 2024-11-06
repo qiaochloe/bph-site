@@ -38,6 +38,7 @@ export function HintTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const { data: session } = useSession();
   const userId = session?.user?.id;
+  const size = 10;
 
   const table = useReactTable({
     data,
@@ -52,12 +53,13 @@ export function HintTable<TData, TValue>({
     initialState: {
       pagination: {
         pageIndex: 0,
-        pageSize: 10,
+        pageSize: size,
       },
       columnVisibility: {
         responseTime: false,
       },
     },
+    pageCount: Math.ceil(data.length / size),
   });
 
   const router = useRouter();
