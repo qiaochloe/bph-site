@@ -13,7 +13,6 @@ export default function ClaimBox({
   response: string | null;
   userId: string;
 }) {
-
   const handleClaim = async () => {
     try {
       await claimHint(id);
@@ -49,8 +48,7 @@ export default function ClaimBox({
         </button>
       </div>
     );
-  }
-  else if (claimer === userId && response === null) {
+  } else if (claimer === userId && response === null) {
     return (
       <div className="p-4">
         <button
@@ -61,8 +59,7 @@ export default function ClaimBox({
         </button>
       </div>
     );
-  }
-  else {
+  } else {
     return <div className="p-4">Claimed by: {claimer}</div>;
   }
 }

@@ -3,7 +3,13 @@
 import { useRouter } from "next/navigation";
 import { toast } from "~/hooks/use-toast";
 
-export default function Toast({title, description} : {title: string, description: string}) {
+export default function Toast({
+  title,
+  description,
+}: {
+  title: string;
+  description: string;
+}) {
   const router = useRouter();
 
   toast({
