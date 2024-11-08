@@ -15,7 +15,6 @@ export default function ClaimBox({
   response: string | null;
   userId: string;
 }) {
-
   const [isClaimed, setIsClaimed] = useState(!!claimer);
   const [isOwnClaim, setIsOwnClaim] = useState(
     claimer?.id === userId && response === null,
