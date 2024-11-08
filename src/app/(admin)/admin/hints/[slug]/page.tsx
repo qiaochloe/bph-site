@@ -113,7 +113,7 @@ export default async function Page({
               </p>
               <RequestBox hint={hint} />
               {(hint.response ||
-                (hint.claimer && hint.claimer === session.user.id)) && (
+                (hint.claimer && hint.claimer.id === session.user.id)) && (
                 <ResponseBox hint={hint} />
               )}
             </div>

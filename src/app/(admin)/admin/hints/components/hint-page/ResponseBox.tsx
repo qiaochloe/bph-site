@@ -25,7 +25,7 @@ export function ResponseBox({ hint }: { hint: typeof hints.$inferSelect }) {
     );
   }
 
-  if (hint.claimer == currHinter)
+  if (hint.claimer?.id == currHinter)
     return (
       <div className="full grid gap-1.5">
         <Label htmlFor={`hint-response-${hint.id}`}>Response</Label>
