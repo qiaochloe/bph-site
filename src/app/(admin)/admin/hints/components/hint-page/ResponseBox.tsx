@@ -2,12 +2,12 @@
 
 import { AutosizeTextarea } from "~/components/ui/autosize-textarea";
 import { Label } from "~/components/ui/label";
-import { hints } from "~/server/db/schema";
 import { Button } from "~/components/ui/button";
 import { respondToHint } from "../../actions";
 import { useSession } from "next-auth/react";
+import { HintWithRelations } from "../hint-table/Columns";
 
-export function ResponseBox({ hint }: { hint: typeof hints.$inferSelect }) {
+export function ResponseBox({ hint }: { hint: HintWithRelations }) {
   const { data: session } = useSession();
   const currHinter = session?.user?.id;
 
