@@ -1,6 +1,7 @@
 "use client";
 import { claimHint, unclaimHint } from "../../actions";
 import { toast } from "~/hooks/use-toast";
+import { HintClaimer } from "../hint-table/Columns";
 
 export default function ClaimBox({
   id,
@@ -9,7 +10,7 @@ export default function ClaimBox({
   userId,
 }: {
   id: number;
-  claimer: string | null;
+  claimer: HintClaimer;
   response: string | null;
   userId: string;
 }) {
@@ -48,7 +49,7 @@ export default function ClaimBox({
         </button>
       </div>
     );
-  } else if (claimer === userId && response === null) {
+  } else if (claimer.id === userId && response === null) {
     return (
       <div className="p-4">
         <button
@@ -60,6 +61,6 @@ export default function ClaimBox({
       </div>
     );
   } else {
-    return <div className="p-4">Claimed by: {claimer}</div>;
+    return <div className="p-4">Claimed by: {claimer.displayName}</div>;
   }
 }

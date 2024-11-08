@@ -13,6 +13,7 @@ export default async function Home() {
     await db.query.hints.findMany({
       with: {
         team: { columns: { displayName: true } },
+        claimer: { columns: { id: true, displayName: true } },
         puzzle: { columns: { name: true } },
       },
     })

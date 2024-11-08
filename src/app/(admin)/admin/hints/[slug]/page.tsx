@@ -42,6 +42,7 @@ export default async function Page({
     where: eq(hints.id, hintId),
     with: {
       team: { columns: { displayName: true } },
+      claimer: { columns: { id: true, displayName: true } },
       puzzle: { columns: { name: true } },
     },
   });
