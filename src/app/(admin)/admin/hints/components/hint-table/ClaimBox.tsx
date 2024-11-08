@@ -2,6 +2,7 @@ import { Row } from "@tanstack/react-table";
 import { claimHint, unclaimHint } from "../../actions";
 import { toast } from "~/hooks/use-toast";
 import { useSession } from "next-auth/react";
+import { useState } from "react";
 import { HintClaimer, HintWithRelations } from "./Columns";
 
 // TODO: Add refund hint functionality
@@ -18,35 +19,48 @@ export default function ClaimBox<TData>({
   const hintId = row.getValue("id") as number;
   const claimer: HintClaimer = row.getValue("claimer");
 
-  if (!claimer) {
+  const [isClaimed, setIsClaimed] = useState(!!claimer);
+  const [isOwnClaim, setIsOwnClaim] = useState(
+    claimer?.id === userId && row.getValue("responseTime") === null,
+  );
+
+  if (!isClaimed) {
     return (
       <button
         className="rounded-md border border-emerald-600 text-emerald-600"
         onClick={async () => {
-          try {
-            await claimHint(hintId);
-          } catch (error: any) {
+          setIsOwnClaim(true);
+          setIsClaimed(true);
+          const { claimer } = await claimHint(hintId);
+          if (claimer) {
+            setIsOwnClaim(false);
             toast({
               variant: "destructive",
-              title: "Error claiming hint",
-              description: error.message,
+              title: "Error claming hint",
+              description: `Hint claimed by ${claimer}.`,
             });
+          } else {
+            window.open(`/admin/hints/${row.getValue("id")}`, "_blank");
           }
         }}
       >
         <p className="claimButton px-1">CLAIM</p>
       </button>
     );
-  } else if (claimer.id === userId && row.getValue("responseTime") === null) {
+  } else if (isOwnClaim) {
     return (
       <button
         className="rounded-md border border-red-600 text-red-600"
-        onClick={async () => await unclaimHint(hintId)}
+        onClick={async () => {
+          setIsOwnClaim(false);
+          setIsClaimed(false);
+          await unclaimHint(hintId);
+        }}
       >
-        <p className="unclaimButton px-1">UNCLAIM</p>
+        <p className="claimButton px-1">UNCLAIM</p>
       </button>
     );
   } else {
-    return <p>{claimer.displayName as string}</p>;
+    return <p>{claimer?.displayName as string}</p>;
   }
 }
