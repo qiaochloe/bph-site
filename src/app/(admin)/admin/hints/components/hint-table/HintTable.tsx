@@ -1,5 +1,4 @@
 "use client";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
@@ -33,7 +32,6 @@ export function HintTable<TData, TValue>({
   columns,
   data,
 }: HintTableProps<TData, TValue>) {
-  const router = useRouter();
   const { data: session } = useSession();
   const userId = session?.user?.id;
 
@@ -115,19 +113,16 @@ export function HintTable<TData, TValue>({
                     onClick={(event) => {
                       if (
                         event.target instanceof HTMLElement &&
-                        event.target.classList.contains("claimButton")
+                        event.target.classList.contains("unclaimButton")
                       )
                         return;
+                      const win = window.open(
+                        `/admin/hints/${row.getValue("id")}`,
+                        "_blank",
+                      );
                       if (event.metaKey || event.ctrlKey) {
-                        // Open in new tab
-                        window.open(
-                          `/admin/hints/${row.getValue("id")}`,
-                          "_blank",
-                        );
-                      } else {
-                        // Move to hint page
-                        router.push(`/admin/hints/${row.getValue("id")}`);
-                        router.refresh();
+                        // Open tab unfocused in background
+                        win?.focus();
                       }
                     }}
                     key={row.id}

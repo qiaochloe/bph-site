@@ -43,7 +43,7 @@ export default function ClaimBox<TData>({
         className="rounded-md border border-red-600 text-red-600"
         onClick={async () => await unclaimHint(hintId)}
       >
-        <p className="claimButton px-1">UNCLAIM</p>
+        <p className="unclaimButton px-1">UNCLAIM</p>
       </button>
     );
   } else {
