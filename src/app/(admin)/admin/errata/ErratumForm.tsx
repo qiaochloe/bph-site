@@ -65,7 +65,6 @@ export default function ErratumForm({
         description: data.description,
         timestamp: new Date(),
       };
-      console.log(newErrata);
       errataList.push(newErrata);
       setPuzzleErrata(
         errataList.filter((errata) => errata.puzzleId === data.puzzleId),
@@ -86,7 +85,7 @@ export default function ErratumForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
           name="puzzleId"
