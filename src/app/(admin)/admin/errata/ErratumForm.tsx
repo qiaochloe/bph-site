@@ -4,6 +4,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import ErratumDialog from "~/app/(hunt)/puzzle/components/ErratumDialog";
 import {
   Form,
   FormControl,
@@ -21,7 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { puzzles } from "@/db/schema";
+import { puzzles, errata } from "@/db/schema";
 import { insertErratum } from "./actions";
 import { Label } from "@radix-ui/react-label";
 import { Textarea } from "@/components/ui/textarea";
@@ -34,10 +35,15 @@ export const erratumFormSchema = z.object({
 
 export default function ErratumForm({
   puzzleList,
+  errataList,
 }: {
   puzzleList: (typeof puzzles.$inferSelect)[];
+  errataList: (typeof errata.$inferSelect)[];
 }) {
   const [error, setError] = useState<string | null>(null);
+  const [puzzleErrata, setPuzzleErrata] = useState<
+    (typeof errata.$inferSelect)[]
+  >([]);
 
   const form = useForm<z.infer<typeof erratumFormSchema>>({
     resolver: zodResolver(erratumFormSchema),
@@ -53,6 +59,17 @@ export default function ErratumForm({
       setError(result.error);
     } else {
       setError(null);
+      const newErrata = {
+        puzzleId: data.puzzleId,
+        id: errataList.length,
+        description: data.description,
+        timestamp: new Date(),
+      };
+      console.log(newErrata);
+      errataList.push(newErrata);
+      setPuzzleErrata(
+        errataList.filter((errata) => errata.puzzleId === data.puzzleId),
+      );
       toast({
         description: "Erratum submitted for " + data.puzzleId + ".",
         action: (
@@ -79,7 +96,12 @@ export default function ErratumForm({
               <FormControl>
                 <Select
                   {...field}
-                  onValueChange={field.onChange}
+                  onValueChange={(e) => {
+                    field.onChange(e);
+                    setPuzzleErrata(
+                      errataList.filter((errata) => errata.puzzleId === e),
+                    );
+                  }}
                   value={field.value}
                 >
                   <SelectTrigger className="w-[180px]">
@@ -98,6 +120,7 @@ export default function ErratumForm({
             </FormItem>
           )}
         />
+        <ErratumDialog errataList={puzzleErrata} />
         <FormField
           control={form.control}
           name="description"
