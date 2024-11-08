@@ -46,6 +46,7 @@ export function LoginForm() {
         router.push("/admin");
       } else {
         router.push("/");
+        router.refresh();
       }
       setError(null);
     }
