@@ -6,8 +6,9 @@ import { hints } from "~/server/db/schema";
 import { Button } from "~/components/ui/button";
 import { respondToHint } from "../../actions";
 import { useSession } from "next-auth/react";
+import { HintWithRelations } from "../hint-table/Columns";
 
-export function ResponseBox({ hint }: { hint: typeof hints.$inferSelect }) {
+export function ResponseBox({ hint }: { hint: HintWithRelations }) {
   const { data: session } = useSession();
   const currHinter = session?.user?.id;
 
@@ -25,7 +26,7 @@ export function ResponseBox({ hint }: { hint: typeof hints.$inferSelect }) {
     );
   }
 
-  if (hint.claimer == currHinter)
+  if (hint.claimer && hint.claimer.id == currHinter)
     return (
       <div className="full grid gap-1.5">
         <Label htmlFor={`hint-response-${hint.id}`}>Response</Label>
