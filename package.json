@@ -31,8 +31,9 @@
     "@trpc/client": "^11.0.0-rc.446",
     "@trpc/react-query": "^11.0.0-rc.446",
     "@trpc/server": "^11.0.0-rc.446",
+    "@types/bcryptjs": "^2.4.6",
     "@vercel/postgres": "^0.10.0",
-    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.33.0",
@@ -52,7 +53,6 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/bcrypt": "^5.0.2",
     "@types/eslint": "^8.56.10",
     "@types/node": "^20.14.10",
     "@types/react": "^18.3.3",
