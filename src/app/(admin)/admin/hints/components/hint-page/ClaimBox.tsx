@@ -2,6 +2,7 @@
 import { claimHint, unclaimHint } from "../../actions";
 import { toast } from "~/hooks/use-toast";
 import { HintClaimer } from "../hint-table/Columns";
+import { useState } from "react";
 
 export default function ClaimBox({
   id,
@@ -14,31 +15,32 @@ export default function ClaimBox({
   response: string | null;
   userId: string;
 }) {
+  const [isClaimed, setIsClaimed] = useState(!!claimer);
+  const [isOwnClaim, setIsOwnClaim] = useState(
+    claimer?.id === userId && response === null,
+  );
+
   const handleClaim = async () => {
-    try {
-      await claimHint(id);
-    } catch (error: any) {
+    setIsOwnClaim(true);
+    setIsClaimed(true);
+    const { claimer } = await claimHint(id);
+    if (claimer) {
+      setIsOwnClaim(false);
       toast({
         variant: "destructive",
-        title: "Error claiming hint",
-        description: error.message,
+        title: "Error claming hint",
+        description: `Hint claimed by ${claimer}.`,
       });
     }
   };
 
   const handleUnclaim = async () => {
-    try {
-      await unclaimHint(id);
-    } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Error unclaiming hint",
-        description: error.message,
-      });
-    }
+    setIsOwnClaim(false);
+    setIsClaimed(false);
+    await unclaimHint(id);
   };
 
-  if (!claimer) {
+  if (!isClaimed) {
     return (
       <div className="p-4">
         <button
@@ -49,7 +51,7 @@ export default function ClaimBox({
         </button>
       </div>
     );
-  } else if (claimer.id === userId && response === null) {
+  } else if (isOwnClaim) {
     return (
       <div className="p-4">
         <button
@@ -61,6 +63,6 @@ export default function ClaimBox({
       </div>
     );
   } else {
-    return <div className="p-4">Claimed by: {claimer.displayName}</div>;
+    return <div className="p-4">Claimed by: {claimer?.displayName}</div>;
   }
 }

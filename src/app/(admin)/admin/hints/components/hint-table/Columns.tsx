@@ -39,11 +39,7 @@ export const columns: ColumnDef<HintWithRelations>[] = [
     accessorKey: "id",
     header: () => <div className="w-16">Id</div>,
     cell: ({ row }) => (
-      <div className="w-16 truncate text-blue-600 hover:underline">
-        <Link href={`/admin/hints/${row.getValue("id")}`}>
-          {row.getValue("id")}
-        </Link>
-      </div>
+      <div className="w-16 truncate">{row.getValue("id")}</div>
     ),
   },
   {

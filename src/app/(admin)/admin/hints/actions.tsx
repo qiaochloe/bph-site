@@ -5,6 +5,7 @@ import { hints } from "@/db/schema";
 import { db } from "@/db/index";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { teams } from "@/db/schema";
 
 export async function respondToHint(hintId: number, response: string) {
   const session = await auth();
@@ -45,7 +46,10 @@ export async function claimHint(hintId: number) {
 
   if (hint.claimer && hint.claimer !== session.user.id) {
     revalidatePath("/admin/");
-    throw new Error("Hint claimed by " + hint.claimer + ".");
+    const user = await db.query.teams.findFirst({
+      where: eq(teams.id, hint.claimer),
+    });
+    return { claimer: user?.displayName };
   }
 
   await db
@@ -57,6 +61,7 @@ export async function claimHint(hintId: number) {
     .where(eq(hints.id, hintId));
 
   revalidatePath("/admin/");
+  return { claimer: null };
 }
 
 export async function unclaimHint(hintId: number) {
