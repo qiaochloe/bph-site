@@ -27,7 +27,7 @@ export function getTotalHints(teamId: string) {
 }
 
 /** Calculates the total number of hints available to a team */
-export async function numberOfHintsRemaining(teamId: string) {
+export async function getNumberOfHintsRemaining(teamId: string) {
   const totalHints = getTotalHints(teamId);
 
   const query = await db
