@@ -54,7 +54,12 @@ export default async function Home() {
                   <TableCell>
                     {nextPuzzlesMap[puzzle.id] &&
                       nextPuzzlesMap[puzzle.id]?.map((puzzle) => (
-                        <Link href={`/puzzle/${puzzle.id}`} className="hover:underline">{puzzle.name}</Link>
+                        <Link
+                          href={`/puzzle/${puzzle.id}`}
+                          className="hover:underline"
+                        >
+                          {puzzle.name}
+                        </Link>
                       ))}
                   </TableCell>
                 </TableRow>
