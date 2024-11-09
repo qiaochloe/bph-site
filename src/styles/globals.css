@@ -7,6 +7,9 @@
     --radius: 0.5rem;
   }
   h1 {
-    @apply text-2xl font-bold; /* Adjust these values as needed */
+    @apply text-2xl font-bold;
+  }
+  h2 {
+    @apply text-xl font-bold;
   }
 }
