@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "next build",
-    "dev": "next dev --turbo",
+    "dev": "NODE_ENV=production next dev --turbo",
     "start": "next start",
     "lint": "next lint",
     "db:generate": "drizzle-kit generate",
@@ -68,6 +68,10 @@
     "prettier-plugin-tailwindcss": "^0.6.5",
     "tailwindcss": "^3.4.3",
     "typescript": "^5.5.3"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-dom": "*"
   },
   "ct3aMetadata": {
     "initVersion": "7.37.0"
