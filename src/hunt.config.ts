@@ -13,6 +13,12 @@ export const HUNT_START_TIME = new Date("2024-11-09T05:59:00Z");
 export const HUNT_END_TIME = new Date("2024-11-20T05:56:35Z");
 export const NUMBER_OF_GUESSES_PER_PUZZLE = 20;
 
+/* HINTING SYSTEM
+ * Teams currently get a hint requeset every three hours since the start of the hunt.
+ * Teams cannot have more than one outstanding request at a time.
+ */
+
+/** Calculates the total number of hints given to a team */
 export function getTotalHints(teamId: string) {
   const currentTime = new Date();
   const timeDifference = currentTime.getTime() - HUNT_START_TIME.getTime(); // In milliseconds
@@ -20,6 +26,7 @@ export function getTotalHints(teamId: string) {
   return Math.floor(timeDifference / rate);
 }
 
+/** Calculates the total number of hints available to a team */
 export async function numberOfHintsRemaining(teamId: string) {
   const totalHints = getTotalHints(teamId);
 
