@@ -1,5 +1,7 @@
 import { insertUnlock } from "./app/(hunt)/puzzle/actions";
+import { eq } from "drizzle-orm";
 import { db } from "./server/db";
+import { teams } from "./server/db/schema";
 
 /** REGISTRATION AND HUNT START */
 
@@ -59,4 +61,19 @@ export async function unlockPuzzleAfterSolve(teamId: string, puzzleId: string) {
   */
 
   return null;
+}
+
+/** Checks whether a team has completed the hunt. This is called every time
+ * a team submits a correct guess for a puzzle.
+ */
+export async function checkFinishHunt(teamId: string, puzzleId: string) {
+  const lastPuzzle = (await db.query.puzzles.findMany())
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .at(-1);
+
+  if (lastPuzzle && puzzleId === lastPuzzle.id) {
+    db.update(teams)
+      .set({ finishTime: new Date() })
+      .where(eq(teams.id, teamId));
+  }
 }
