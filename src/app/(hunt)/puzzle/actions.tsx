@@ -4,7 +4,7 @@ import { db } from "@/db/index";
 import { puzzles, guesses, hints } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { auth } from "@/auth";
-import { NUMBER_OF_GUESSES_PER_PUZZLE } from "~/hunt.config";
+import { checkFinishHunt, NUMBER_OF_GUESSES_PER_PUZZLE } from "~/hunt.config";
 import { revalidatePath } from "next/dist/server/web/spec-extension/revalidate";
 
 // TODO: Handle errors in the GuessForm component
@@ -45,6 +45,10 @@ export async function insertGuess(puzzleId: string, guess: string) {
   });
 
   revalidatePath(`/puzzle/${puzzleId}`);
+
+  if (puzzle.answer === guess) {
+    checkFinishHunt(session.user.id, puzzleId);
+  }
 }
 
 export async function insertHint(puzzleId: string, hint: string) {
