@@ -40,14 +40,12 @@ export const teams = createTable("team", {
     .notNull()
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-
   username: varchar("username", { length: 255 }).notNull(), // For login
   displayName: varchar("display_name", { length: 255 }).notNull(), // For display
   password: varchar("password", { length: 255 }).notNull(),
   role: roleEnum("role").notNull().default("user"),
   interactionMode: interactionModeEnum("interaction_type").notNull(),
   finishTime: timestamp("finish_time", { withTimezone: true }),
-
   // Time of creation of team
   createTime: timestamp("create_time", { withTimezone: true }),
   // When this team should start the hunt for early-testing purposes
@@ -65,7 +63,6 @@ export const puzzles = createTable("puzzle", {
   // Human-readable name that can be changed at any time
   name: varchar("name", { length: 255 }).notNull(),
   answer: varchar("answer", { length: 255 }).notNull(),
-
   // Not included:
   // body_template, round, order, is_meta, emoji
   // unlock_hours, unlock_global, unlock_local
@@ -73,21 +70,32 @@ export const puzzles = createTable("puzzle", {
 
 export const guesses = createTable("guess", {
   id: serial("id").primaryKey(),
-
   puzzleId: varchar("puzzle_id")
     .notNull()
     .references(() => puzzles.id, { onDelete: "cascade" }),
-
   teamId: varchar("team_id")
     .notNull()
     .references(() => teams.id, { onDelete: "cascade" }),
-
   guess: varchar("guess", { length: 255 }).notNull(),
   isCorrect: boolean("is_correct").notNull(),
   submitTime: timestamp("submit_time", { withTimezone: true }).notNull(),
-
   // Not included:
   // used_free_answer
+});
+
+export const unlocks = createTable("unlock", {
+  id: serial("id").primaryKey(),
+  puzzleId: varchar("puzzle_id")
+    .notNull()
+    .references(() => puzzles.id, { onDelete: "cascade" }),
+  teamId: varchar("team_id")
+    .notNull()
+    .references(() => teams.id, { onDelete: "cascade" }),
+  unlockTime: timestamp("unlock_time", { withTimezone: true }),
+  // Storing the solve time is probably more efficient for querying
+  // But it's also generally a bad idea to have the same information
+  // in two different places.
+  // solveTime: timestamp("solve_time", { withTimezone: true }).notNull(),
 });
 
 export const errata = createTable("erratum", {
@@ -103,15 +111,12 @@ export const errata = createTable("erratum", {
 
 export const hints = createTable("hint", {
   id: serial("id").primaryKey(),
-
   puzzleId: varchar("puzzle_id")
     .notNull()
     .references(() => puzzles.id, { onDelete: "cascade" }),
-
   teamId: varchar("team_id")
     .notNull()
     .references(() => teams.id, { onDelete: "cascade" }),
-
   request: text("request").notNull(),
   requestTime: timestamp("request_time", { withTimezone: true }),
   claimer: varchar("claimer").references(() => teams.id),
@@ -119,7 +124,6 @@ export const hints = createTable("hint", {
   response: text("response"),
   responseTime: timestamp("response_time", { withTimezone: true }),
   status: hintStatusEnum("status").notNull().default("no_response"),
-
   // Not included:
   // obsolute statuses
   // notify_emails, discord_id, is_followup
@@ -133,12 +137,14 @@ export const teamRelations = relations(teams, ({ many }) => ({
   requestedHints: many(hints, { relationName: "requested_hints" }),
   // Hints claimed by this admin "team"
   claimedHints: many(hints, { relationName: "claimed_hints" }),
+  unlocks: many(unlocks),
 }));
 
 export const puzzleRelations = relations(puzzles, ({ many }) => ({
   guesses: many(guesses),
   hints: many(hints),
   errata: many(errata),
+  unlocks: many(unlocks),
 }));
 
 export const guessRelations = relations(guesses, ({ one }) => ({
@@ -148,6 +154,17 @@ export const guessRelations = relations(guesses, ({ one }) => ({
   }),
   puzzle: one(puzzles, {
     fields: [guesses.puzzleId],
+    references: [puzzles.id],
+  }),
+}));
+
+export const unlockRelations = relations(unlocks, ({ one }) => ({
+  team: one(teams, {
+    fields: [unlocks.teamId],
+    references: [teams.id],
+  }),
+  puzzle: one(puzzles, {
+    fields: [unlocks.puzzleId],
     references: [puzzles.id],
   }),
 }));

@@ -21,25 +21,20 @@ export default async function DefaultPuzzlePage({
   puzzleId: string;
   puzzleBody: React.ReactNode;
 }) {
-  const session = await auth();
+  // Get user id
+  const session = await auth()!;
   if (!session?.user?.id) {
-    return <div>You are not authorized to view this puzzle.</div>;
+    throw new Error("Not authorized");
   }
 
+  // Get errata
   const errataList = (
     await db.query.errata.findMany({
       where: eq(errata.puzzleId, puzzleId),
     })
   ).sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
 
-  const puzzle = await db.query.puzzles.findFirst({
-    where: eq(puzzles.id, puzzleId),
-  });
-
-  if (!puzzle) {
-    return <div>Puzzle does not exist in database.</div>;
-  }
-
+  // Get previous guesses
   const previousGuesses = await db.query.guesses.findMany({
     where: and(
       eq(guesses.teamId, session.user.id),
@@ -51,9 +46,18 @@ export default async function DefaultPuzzlePage({
   const numberOfGuessesLeft =
     NUMBER_OF_GUESSES_PER_PUZZLE - previousGuesses.length;
 
+  // Get previous hints
   const previousHints = await db.query.hints.findMany({
     where: and(eq(hints.teamId, session.user.id), eq(hints.puzzleId, puzzleId)),
   });
+
+  // Get puzzle name
+  const puzzle = await db.query.puzzles.findFirst({
+    where: eq(puzzles.id, puzzleId),
+  })!;
+  if (!puzzle) {
+    throw new Error("Puzzle does not exist in database");
+  }
 
   return (
     <div className="flex w-2/3 min-w-36 grow flex-col items-center">
