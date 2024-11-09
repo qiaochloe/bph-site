@@ -52,10 +52,7 @@ export async function insertGuess(puzzleId: string, guess: string) {
 
   if (puzzle.answer === guess) {
     await unlockPuzzleAfterSolve(session.user.id, puzzleId);
-  }
-
-  if (puzzle.answer === guess) {
-    checkFinishHunt(session.user.id, puzzleId);
+    await checkFinishHunt(session.user.id, puzzleId);
   }
 }
 
