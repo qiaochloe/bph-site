@@ -16,6 +16,9 @@ export async function AdminTopNav() {
         <Link href="/admin/errata" className="hover:underline">
           Errata
         </Link>
+        <Link href="/admin/teams" className="hover:underline">
+          Teams
+        </Link>
       </div>
       <div className="flex space-x-4">
         {session?.user?.role === "admin" && (
