@@ -2,7 +2,7 @@
 
 import { db } from "@/db/index";
 import { puzzles, guesses, hints } from "@/db/schema";
-import { eq, and } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { auth } from "@/auth";
 import { checkFinishHunt, NUMBER_OF_GUESSES_PER_PUZZLE } from "~/hunt.config";
 import { revalidatePath } from "next/dist/server/web/spec-extension/revalidate";
@@ -47,7 +47,7 @@ export async function insertGuess(puzzleId: string, guess: string) {
   revalidatePath(`/puzzle/${puzzleId}`);
 
   if (puzzle.answer === guess) {
-    checkFinishHunt(session.user.id, puzzleId);
+    await checkFinishHunt(session.user.id, puzzleId);
   }
 }
 

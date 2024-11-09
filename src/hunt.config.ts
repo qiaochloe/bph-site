@@ -1,6 +1,6 @@
-import { eq } from "drizzle-orm";
-import { db } from "./server/db";
-import { teams } from "./server/db/schema";
+import { and, count, eq } from "drizzle-orm";
+import { db } from "@/db/index";
+import { teams, guesses, puzzles } from "@/db/schema";
 
 /** REGISTRATION AND HUNT START */
 
@@ -18,12 +18,18 @@ export const NUMBER_OF_GUESSES_PER_PUZZLE = 20;
  * a team submits a correct guess for a puzzle.
  */
 export async function checkFinishHunt(teamId: string, puzzleId: string) {
-  const lastPuzzle = (await db.query.puzzles.findMany())
-    .sort((a, b) => a.name.localeCompare(b.name))
-    .at(-1);
+  let query = await db.select({ count: count() }).from(puzzles);
+  const numberOfPuzzles = query[0] ? query[0].count : 0;
 
-  if (lastPuzzle && puzzleId === lastPuzzle.id) {
-    db.update(teams)
+  query = await db
+    .select({ count: count() })
+    .from(guesses)
+    .where(and(eq(guesses.teamId, teamId), guesses.isCorrect));
+  const numberOfSolves = query[0] ? query[0].count : 0;
+
+  if (numberOfPuzzles === numberOfSolves) {
+    await db
+      .update(teams)
       .set({ finishTime: new Date() })
       .where(eq(teams.id, teamId));
   }
