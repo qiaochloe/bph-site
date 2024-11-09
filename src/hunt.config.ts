@@ -9,7 +9,7 @@ import { hints } from "@/db/schema";
 
 export const REGISTRATION_START_TIME = new Date("2024-10-24T05:56:35Z");
 export const REGISTRATION_END_TIME = new Date("2024-11-20T05:56:35Z");
-export const HUNT_START_TIME = new Date("2024-10-24T05:59:00Z");
+export const HUNT_START_TIME = new Date("2024-11-09T05:59:00Z");
 export const HUNT_END_TIME = new Date("2024-11-20T05:56:35Z");
 export const NUMBER_OF_GUESSES_PER_PUZZLE = 20;
 

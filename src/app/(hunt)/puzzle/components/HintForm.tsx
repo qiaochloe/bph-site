@@ -71,17 +71,26 @@ export default function HintForm({
                 <AutosizeTextarea
                   maxHeight={500}
                   className="resize-none"
-                  disabled={!!unansweredHint}
+                  disabled={!!unansweredHint || hintsRemaining < 1}
                   {...field}
                 />
               </FormControl>
               <FormDescription>
-                {hintsRemaining} {hintsRemaining === 1 ? "hint" : "hints"}{" "}
-                remaining.{" "}
+                {hintsRemaining === 0 ? (
+                  "No hints remaining. "
+                ) : (
+                  <>
+                    {hintsRemaining} {hintsRemaining === 1 ? "hint" : "hints"}{" "}
+                    remaining.{" "}
+                  </>
+                )}
                 {unansweredHint && (
                   <>
                     You have an outstanding hint on the puzzle{" "}
-                    <Link href={`/puzzle/${unansweredHint.puzzleId}`} className="text-blue-500">
+                    <Link
+                      href={`/puzzle/${unansweredHint.puzzleId}`}
+                      className="text-blue-500"
+                    >
                       {unansweredHint.puzzleName}
                     </Link>
                     .
@@ -92,7 +101,7 @@ export default function HintForm({
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={!!unansweredHint}>
+        <Button type="submit" disabled={!!unansweredHint || hintsRemaining < 1}>
           Submit
         </Button>
       </form>
