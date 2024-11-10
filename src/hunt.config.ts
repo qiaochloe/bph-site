@@ -1,5 +1,3 @@
-import { db } from "@/db/index";
-
 // NOTE: Account for daylight savings time
 // All times are in ISO
 // https://greenwichmeantime.com/articles/clocks/iso/
