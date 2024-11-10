@@ -10,6 +10,9 @@ export async function AdminTopNav() {
         <Link href="/admin" className="hover:underline">
           Home
         </Link>
+        <Link href="/admin/puzzles" className="hover:underline">
+          Puzzles
+        </Link>
         <Link href="/admin/hints" className="hover:underline">
           Hinting
         </Link>
@@ -21,18 +24,10 @@ export async function AdminTopNav() {
         </Link>
       </div>
       <div className="flex space-x-4">
-        {session?.user?.role === "admin" && (
-          <Link href="/" className="hover:underline">
-            Hunt
-          </Link>
-        )}
-        {session?.user?.id ? (
-          <LogoutButton />
-        ) : (
-          <Link href="/login" className="hover:underline">
-            Login
-          </Link>
-        )}
+        <Link href="/" className="hover:underline">
+          Hunt
+        </Link>
+        <LogoutButton />
       </div>
     </nav>
   );
