@@ -85,7 +85,7 @@ export async function checkFinishHunt(teamId: string, puzzleId: string) {
 }
 
 /* HINTING SYSTEM
- * Teams currently get a hint requeset every three hours since the start of the hunt.
+ * Teams currently get a hint request every three hours since the start of the hunt.
  * Teams cannot have more than one outstanding request at a time.
  */
 
@@ -109,3 +109,71 @@ export async function getNumberOfHintsRemaining(teamId: string) {
 
   return totalHints - usedHints;
 }
+
+/** PUZZLE UNLOCK SYSTEM
+ * WARNING: make sure that everything here is a valid puzzle ID.
+ * You should really avoid changing anything here after the hunt starts
+ */
+
+const firstPuzzle = (await db.query.puzzles.findMany()).sort((a, b) =>
+  a.name.localeCompare(b.name),
+)[0];
+
+/** Puzzles available at the beginning of the hunt that will never need to be unlocked by the team.
+ * This is currently set to the first puzzle in the database alphabetically.
+ */
+export const INITIAL_PUZZLES: string[] = firstPuzzle ? [firstPuzzle.id] : [];
+
+/** Returns a map for the next puzzles unlocked after a puzzle is solved.
+ * This is currently set to a sequential unlock, sorted alphabetically by puzzle name.
+ */
+export async function getNextPuzzleMap() {
+  /* Example: list unlock */
+  const puzzles = (
+    await db.query.puzzles.findMany({ columns: { id: true, name: true } })
+  ).sort((a, b) => a.name.localeCompare(b.name));
+
+  const nextPuzzleMap: Record<string, { id: string; name: string }[] | null> =
+    puzzles.reduce(
+      (map, puzzle, index) => {
+        const nextPuzzle = puzzles[index + 1];
+        if (nextPuzzle) {
+          map[puzzle.id] = [nextPuzzle];
+        }
+        return map;
+      },
+      {} as Record<string, { id: string; name: string }[] | null>,
+    );
+
+  return nextPuzzleMap;
+
+  /* Example: adjacency list unlock
+
+  const PUZZLE_UNLOCK_MAP: { [key: string]: string[] } = {
+    puzzle1: ["puzzle1", "puzzle2", "hello"],
+    puzzle2: ["hello", "sorry"],
+    hello: ["sorry", "puzzle2", "puzzle1"],
+    sorry: ["sorry", "puzzle2", "puzzle1"],
+  };
+
+  if (PUZZLE_UNLOCK_MAP[puzzleId]) {
+    await insertUnlock(teamId, PUZZLE_UNLOCK_MAP[puzzleId]);
+  }
+  */
+}
+
+/**
+ * Runs every time a team solves a puzzle.
+ */
+// export async function unlockPuzzleAfterSolve(teamId: string, puzzleId: string) {
+//   const nextPuzzles = (await getNextPuzzleMap())[puzzleId];
+
+//   if (!nextPuzzles) {
+//     return null;
+//   }
+
+//   await insertUnlock(
+//     teamId,
+//     nextPuzzles.map((puzzle) => puzzle.id),
+//   );
+// }
