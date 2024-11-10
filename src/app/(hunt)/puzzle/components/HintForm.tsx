@@ -8,7 +8,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -18,9 +17,8 @@ import {
   FormMessage,
   FormLabel,
 } from "@/components/ui/form";
-
-import { Textarea } from "@/components/ui/textarea";
 import { insertHint } from "../actions";
+import Link from "next/link";
 
 const formSchema = z.object({
   hintRequest: z.string().min(1, {
@@ -30,9 +28,15 @@ const formSchema = z.object({
 
 type FormProps = {
   puzzleId: string;
+  hintsRemaining: number;
+  unansweredHint: { puzzleId: string; puzzleName: string } | null;
 };
 
-export default function HintForm({ puzzleId }: FormProps) {
+export default function HintForm({
+  puzzleId,
+  hintsRemaining,
+  unansweredHint,
+}: FormProps) {
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -56,21 +60,50 @@ export default function HintForm({ puzzleId }: FormProps) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Hint Request</FormLabel>
+              <FormDescription>
+                Please provide as much detail as possible to help us understand
+                where you're at and where you're stuck! Specific clues, steps,
+                and hypotheses are all helpful. If you're working with any
+                spreadsheets, diagrams, or external resources, you can include
+                links.
+              </FormDescription>
               <FormControl>
                 <AutosizeTextarea
                   maxHeight={500}
                   className="resize-none"
+                  disabled={!!unansweredHint || hintsRemaining < 1}
                   {...field}
                 />
               </FormControl>
               <FormDescription>
-                Please be specific about what you need help with.
+                {hintsRemaining === 0 ? (
+                  "No hints remaining. "
+                ) : (
+                  <>
+                    {hintsRemaining} {hintsRemaining === 1 ? "hint" : "hints"}{" "}
+                    remaining.{" "}
+                  </>
+                )}
+                {unansweredHint && (
+                  <>
+                    You have an outstanding hint on the puzzle{" "}
+                    <Link
+                      href={`/puzzle/${unansweredHint.puzzleId}`}
+                      className="text-blue-500"
+                    >
+                      {unansweredHint.puzzleName}
+                    </Link>
+                    .
+                  </>
+                )}
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit" disabled={!!unansweredHint || hintsRemaining < 1}>
+          Submit
+        </Button>
       </form>
     </Form>
   );
