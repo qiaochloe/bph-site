@@ -39,7 +39,7 @@ export function LoginForm() {
 
   const onSubmit = async (data: z.infer<typeof loginFormSchema>) => {
     const result = await login(data.username, data.password);
-    if (result.error) {
+    if (result.error !== null) {
       setError(result.error);
     } else {
       if (session.data?.user?.role === "admin") {

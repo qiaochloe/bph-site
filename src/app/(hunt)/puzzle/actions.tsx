@@ -2,9 +2,10 @@
 import { revalidatePath } from "next/dist/server/web/spec-extension/revalidate";
 import { db } from "@/db/index";
 import { puzzles, guesses, hints, unlocks } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { and, isNull, eq } from "drizzle-orm";
 import { auth } from "@/auth";
 import {
+  getNumberOfHintsRemaining,
   unlockPuzzleAfterSolve,
   checkFinishHunt,
   NUMBER_OF_GUESSES_PER_PUZZLE,
@@ -63,13 +64,24 @@ export async function insertHint(puzzleId: string, hint: string) {
     throw new Error("Not logged in");
   }
 
-  await db.insert(hints).values({
-    teamId: session.user.id,
-    puzzleId,
-    request: hint,
-    requestTime: new Date(),
-    status: "no_response",
-  });
+  const hasHint = (await getNumberOfHintsRemaining(session.user.id)) > 0;
+  const hasUnansweredHint = (await db.query.hints.findFirst({
+    columns: { id: true },
+    where: and(eq(hints.teamId, session.user.id), isNull(hints.response)),
+  }))
+    ? true
+    : false;
+
+  // Check the the team has a hint
+  if (hasHint && !hasUnansweredHint) {
+    await db.insert(hints).values({
+      teamId: session.user.id,
+      puzzleId,
+      request: hint,
+      requestTime: new Date(),
+      status: "no_response",
+    });
+  }
 }
 
 // TODO: this function is very slow

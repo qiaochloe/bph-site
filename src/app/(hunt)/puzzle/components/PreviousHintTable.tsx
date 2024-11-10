@@ -6,12 +6,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { hints } from "~/server/db/schema";
+
+type TableProps = {
+  id: number;
+  request: string;
+  response: string | null;
+}[];
 
 export default function PreviousHintTable({
   previousHints,
 }: {
-  previousHints: (typeof hints.$inferSelect)[];
+  previousHints: TableProps;
 }) {
   return (
     <Table className="table-fixed">
