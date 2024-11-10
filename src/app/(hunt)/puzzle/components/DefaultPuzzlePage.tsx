@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { eq, and } from "drizzle-orm";
+import { eq, and, isNull } from "drizzle-orm";
 
 import { db } from "~/server/db";
 import { guesses, hints, errata, puzzles } from "~/server/db/schema";
@@ -9,7 +9,7 @@ import PreviousHintTable from "../components/PreviousHintTable";
 import ErratumDialog from "../components/ErratumDialog";
 import HintForm from "../components/HintForm";
 import GuessForm from "../components/GuessForm";
-import { NUMBER_OF_GUESSES_PER_PUZZLE } from "~/hunt.config";
+import { getTotalHints, NUMBER_OF_GUESSES_PER_PUZZLE } from "~/hunt.config";
 
 // TODO: database queries can definitely be more efficient
 // See drizzle
@@ -53,7 +53,19 @@ export default async function DefaultPuzzlePage({
 
   const previousHints = await db.query.hints.findMany({
     where: and(eq(hints.teamId, session.user.id), eq(hints.puzzleId, puzzleId)),
+    columns: { id: true, request: true, response: true },
   });
+
+  const hintsRemaining = getTotalHints(session.user.id) - previousHints.length;
+
+  const query = await db.query.hints.findFirst({
+    columns: {},
+    where: and(eq(hints.teamId, session.user.id), isNull(hints.response)),
+    with: { puzzle: { columns: { id: true, name: true } } },
+  });
+  const unansweredHint = query
+    ? { puzzleId: query.puzzle.id, puzzleName: query.puzzle.name }
+    : null;
 
   return (
     <div className="flex w-2/3 min-w-36 grow flex-col items-center">
@@ -86,7 +98,11 @@ export default async function DefaultPuzzlePage({
       </div>
 
       <div className="mb-4 w-2/3 min-w-36">
-        <HintForm puzzleId={puzzleId} />
+        <HintForm
+          puzzleId={puzzleId}
+          hintsRemaining={hintsRemaining}
+          unansweredHint={unansweredHint}
+        />
       </div>
 
       <h2 className="mb-2">Previous Hints</h2>
