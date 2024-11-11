@@ -13,9 +13,14 @@ export default async function Home() {
       <h1 className="mb-2">Admin!</h1>
       <p>
         See{" "}
+        <Link href="admin/puzzles" className="text-blue-600 hover:underline">
+          puzzles
+        </Link>
+        {", "}
         <Link href="admin/hints" className="text-blue-600 hover:underline">
           hinting
-        </Link>{" "}
+        </Link>
+        {", "}
         and{" "}
         <Link href="admin/errata" className="text-blue-600 hover:underline">
           errata
