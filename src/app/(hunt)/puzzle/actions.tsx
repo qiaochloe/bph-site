@@ -5,6 +5,7 @@ import { puzzles, guesses, hints } from "@/db/schema";
 import { and, isNull, eq } from "drizzle-orm";
 import { auth } from "@/auth";
 import {
+  checkFinishHunt,
   getNumberOfHintsRemaining,
   NUMBER_OF_GUESSES_PER_PUZZLE,
 } from "~/hunt.config";
@@ -48,6 +49,10 @@ export async function insertGuess(puzzleId: string, guess: string) {
   });
 
   revalidatePath(`/puzzle/${puzzleId}`);
+
+  if (puzzle.answer === guess) {
+    await checkFinishHunt(session.user.id, puzzleId);
+  }
 }
 
 export async function insertHint(puzzleId: string, hint: string) {
