@@ -20,15 +20,6 @@ export const NUMBER_OF_GUESSES_PER_PUZZLE = 20;
  * You should really avoid changing anything here after the hunt starts
  */
 
-const firstPuzzle = (await db.query.puzzles.findMany()).sort((a, b) =>
-  a.name.localeCompare(b.name),
-)[0];
-
-/** Puzzles available at the beginning of the hunt that will never need to be unlocked by the team.
- * This is currently set to the first puzzle in the database alphabetically.
- */
-export const INITIAL_PUZZLES: string[] = firstPuzzle ? [firstPuzzle.id] : [];
-
 /** Handles puzzle unlocks after a puzzle is solved.
  * This is currently set to a sequential unlock, sorted alphabetically by puzzle name.
  */
@@ -118,7 +109,7 @@ export async function getNumberOfHintsRemaining(teamId: string) {
 /** Puzzles available at the beginning of the hunt that will never need to be unlocked by the team.
  * This is currently set to the first puzzle in the database alphabetically.
  */
-export const INTIIAL_PUZZLES = async () => {
+export const INITIAL_PUZZLES = async () => {
   const firstPuzzle = (await db.query.puzzles.findMany()).sort((a, b) =>
     a.name.localeCompare(b.name),
   )[0];
