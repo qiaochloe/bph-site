@@ -17,6 +17,6 @@ export default function Toast({
     description: description,
   });
 
-  router.push("/admin/teams");
+  router.push("/teams");
   return null;
 }
