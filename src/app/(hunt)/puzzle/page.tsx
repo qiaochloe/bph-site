@@ -35,7 +35,7 @@ export default async function Home() {
   // Get all puzzles available to the team
   let initialPuzzles = await db.query.puzzles.findMany({
     columns: { id: true, name: true, answer: true },
-    where: inArray(puzzles.id, INITIAL_PUZZLES),
+    where: inArray(puzzles.id, await INITIAL_PUZZLES()),
   });
 
   let unlockedPuzzles = await db.query.unlocks.findMany({
