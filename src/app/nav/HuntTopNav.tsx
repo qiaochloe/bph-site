@@ -1,6 +1,6 @@
-import { auth } from "@/auth";
-import { LogoutButton } from "./LogoutButton";
 import Link from "next/link";
+import { auth } from "~/server/auth/auth";
+import { LogoutButton } from "./LogoutButton";
 
 export async function HuntTopNav() {
   const session = await auth();
@@ -24,7 +24,10 @@ export async function HuntTopNav() {
           </Link>
         )}
         {session?.user?.id ? (
-          <LogoutButton />
+          <>
+            <p>{session.user.displayName}</p>
+            <LogoutButton />
+          </>
         ) : (
           <Link href="/login" className="hover:underline">
             Login

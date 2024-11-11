@@ -45,9 +45,9 @@ export function LoginForm() {
       if (session.data?.user?.role === "admin") {
         router.push("/admin");
       } else {
+        router.push("/");
         router.refresh();
       }
-      router.push("/admin");
       setError(null);
     }
   };

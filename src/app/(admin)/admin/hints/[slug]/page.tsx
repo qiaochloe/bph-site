@@ -13,7 +13,6 @@ import { ResponseBox } from "../components/hint-page/ResponseBox";
 import ClaimBox from "../components/hint-page/ClaimBox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Toast from "../components/hint-page/Toast";
-import { redirect } from "next/navigation";
 
 export default async function Page({
   params,
