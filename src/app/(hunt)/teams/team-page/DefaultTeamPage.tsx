@@ -1,23 +1,44 @@
-"use client";
-
+import { auth } from "~/server/auth/auth";
+import { db } from "@/db/index";
+import { teams } from "@/db/schema";
+import { eq } from "drizzle-orm";
+import Toast from "../team-page/Toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TeamInfoForm } from "../team-page/TeamInfoForm";
 import { PasswordResetForm } from "../team-page/PasswordResetForm";
-type TeamInfoPageProps = {
-  displayName: string;
-  username: string;
-  teamId: string;
-};
 
-export function TeamInfoPage({
-  displayName,
+export default async function DefaultTeamPage({
   username,
-  teamId,
-}: TeamInfoPageProps) {
+}: {
+  username: string;
+}) {
+  // Authentication
+  const session = await auth();
+  if (!session?.user?.id) {
+    return <p>Not authenticated.</p>;
+  }
+
+  // Check if slug is a valid username
+  const team = await db.query.teams.findFirst({
+    where: eq(teams.username, username),
+  });
+
+  if (
+    !team ||
+    (team.id != session.user.id && !(session.user.role === "admin"))
+  ) {
+    return (
+      <Toast
+        title={"Team not found"}
+        description={`No team with username ${username} was found.`}
+      />
+    );
+  }
+
   return (
     <div className="flex w-2/3 min-w-36 grow flex-col">
       <div className="flex flex-col items-center py-8">
-        <h1>Team Name: {displayName}</h1>
+        <h1>Team Name: {team.displayName}</h1>
         <h2>Team username: {username}</h2>
       </div>
       <div className="flex flex-col items-center">
@@ -32,7 +53,7 @@ export function TeamInfoPage({
           </TabsList>
           <TabsContent value="teamInfo">
             <div className="bg-zinc-100 p-4 text-zinc-700">
-              <TeamInfoForm teamId={teamId} />
+              <TeamInfoForm teamId={team.id} />
             </div>
           </TabsContent>
           <TabsContent value="members">
@@ -42,7 +63,7 @@ export function TeamInfoPage({
           </TabsContent>
           <TabsContent value="password">
             <div className="p-4">
-              <PasswordResetForm teamId={teamId} />
+              <PasswordResetForm teamId={team.id} />
             </div>
           </TabsContent>
         </Tabs>
