@@ -92,7 +92,7 @@ export default function HintForm({
                       You have an outstanding hint on the puzzle{" "}
                       <Link
                         href={`/puzzle/${unansweredHint.puzzleId}`}
-                        className="text-blue-500"
+                        className="text-blue-500 hover:underline"
                       >
                         {unansweredHint.puzzleName}
                       </Link>
