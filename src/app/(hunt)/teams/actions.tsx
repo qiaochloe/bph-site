@@ -33,6 +33,13 @@ export async function updateTeam(
     };
   }
 
+  const session = await auth();
+  if (session?.user?.id !== id && session?.user?.role !== "admin") {
+    return {
+      error: "No team matching the given ID was found",
+    };
+  }
+
   if (teamProperties.username) user.username = teamProperties.username;
   if (teamProperties.displayName) user.displayName = teamProperties.displayName;
   if (teamProperties.password) {
@@ -47,7 +54,6 @@ export async function updateTeam(
   if (teamProperties.interactionMode)
     user.interactionMode = teamProperties.interactionMode;
   if (teamProperties.role) {
-    const session = await auth();
     if (session?.user?.role === "admin") user.role = teamProperties.role;
   }
   await db.update(teams).set(user).where(eq(teams.id, id));
