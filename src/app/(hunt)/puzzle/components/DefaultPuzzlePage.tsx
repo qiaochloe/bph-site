@@ -10,6 +10,7 @@ import ErratumDialog from "../components/ErratumDialog";
 import HintForm from "../components/HintForm";
 import GuessForm from "../components/GuessForm";
 import { getTotalHints, NUMBER_OF_GUESSES_PER_PUZZLE } from "~/hunt.config";
+import GuessStatisticsInfo from "~/app/(admin)/admin/puzzles/components/GuessStatisticsInfo";
 
 // TODO: database queries can definitely be more efficient
 // See drizzle
@@ -79,6 +80,9 @@ export default async function DefaultPuzzlePage({
 
       <h1 className="mb-4">{puzzle.name}</h1>
       {puzzleBody}
+      {session.user.role === "admin" && (
+        <GuessStatisticsInfo puzzleId={puzzleId} />
+      )}
 
       <div className="mt-4 w-2/3 min-w-36">
         {!hasCorrectGuess && numberOfGuessesLeft > 0 && (
