@@ -1,7 +1,7 @@
 import { insertUnlock } from "./app/(hunt)/puzzle/actions";
+import { db } from "./server/db";
+import { teams, puzzles, guesses, hints } from "./server/db/schema";
 import { and, count, eq } from "drizzle-orm";
-import { db } from "@/db/index";
-import { teams, guesses, puzzles, hints } from "@/db/schema";
 
 /** REGISTRATION AND HUNT START */
 
@@ -170,3 +170,8 @@ export async function getNextPuzzleMap() {
 //     nextPuzzles.map((puzzle) => puzzle.id),
 //   );
 // }
+//
+
+/** Checks whether a team has completed the hunt. This is called every time
+ * a team submits a correct guess for a puzzle.
+ */
