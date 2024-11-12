@@ -21,13 +21,19 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { updateTeam } from "../actions";
 import { roleEnum } from "~/server/db/schema";
-export const updateTeamInfoFormSchema = z.object({
-  displayName: z
-    .string()
-    .min(1, { message: "Display name is required" })
-    .max(50, { message: "Display name must be at most 50 characters long" }),
-  role: z.enum(roleEnum.enumValues).optional(),
-});
+export const updateTeamInfoFormSchema = z
+  .object({
+    displayName: z
+      .string()
+      .min(1, { message: "Display name is required" })
+      .max(50, { message: "Display name must be at most 50 characters long" })
+      .or(z.string().max(0)),
+    role: z.enum(roleEnum.enumValues).optional(),
+  })
+  .refine((input) => {
+    if (input.role !== undefined) return true;
+    return input.displayName !== undefined;
+  });
 type TeamInfoFormProps = { teamId: string };
 
 export function TeamInfoForm({ teamId }: TeamInfoFormProps) {
@@ -59,10 +65,7 @@ export function TeamInfoForm({ teamId }: TeamInfoFormProps) {
     } else {
       toast({
         title: "Update successful",
-        description:
-          "Your display name has successfully been changed to " +
-          data.displayName +
-          ".",
+        description: "Your team info has successfully been updated.",
       });
       setError(null);
     }
