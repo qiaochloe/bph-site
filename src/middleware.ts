@@ -41,9 +41,10 @@ export default auth(async (req) => {
     if (!puzzleId) {
       throw Error("Unexpected error");
     }
+    const initialPuzzles = await INITIAL_PUZZLES();
     if (
-      INITIAL_PUZZLES &&
-      !INITIAL_PUZZLES.includes(puzzleId) &&
+      initialPuzzles &&
+      !initialPuzzles.includes(puzzleId) &&
       !(await db.query.unlocks.findFirst({
         where: and(
           eq(unlocks.teamId, req.auth.user.id),
