@@ -10,14 +10,7 @@ import ErratumDialog from "../components/ErratumDialog";
 import HintForm from "../components/HintForm";
 import GuessForm from "../components/GuessForm";
 import { getTotalHints, NUMBER_OF_GUESSES_PER_PUZZLE } from "~/hunt.config";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "~/components/ui/button";
 
 // TODO: database queries can definitely be more efficient
