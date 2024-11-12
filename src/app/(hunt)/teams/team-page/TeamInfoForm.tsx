@@ -27,14 +27,21 @@ export const updateTeamInfoFormSchema = z
       .string()
       .min(1, { message: "Display name is required" })
       .max(50, { message: "Display name must be at most 50 characters long" })
-      .or(z.string().max(0)),
-    interactionMode: z.enum(interactionModeEnum.enumValues),
+      .or(z.literal("")),
+    interactionMode: z.enum(interactionModeEnum.enumValues).optional(),
     role: z.enum(roleEnum.enumValues).optional(),
   })
-  .refine((input) => {
-    if (input.role !== undefined) return true;
-    return input.displayName !== undefined;
-  });
+  .refine(
+    (input) => {
+      if (input.role !== undefined || input.interactionMode !== undefined)
+        return true;
+      return input.displayName.length > 0;
+    },
+    {
+      message: "At least one field is required",
+      path: ["displayName"],
+    },
+  );
 type TeamInfoFormProps = { teamId: string };
 
 export function TeamInfoForm({ teamId }: TeamInfoFormProps) {
