@@ -39,7 +39,9 @@ export default async function DefaultTeamPage({
     <div className="flex w-2/3 min-w-36 grow flex-col">
       <div className="flex flex-col items-center py-8">
         <h1>Welcome, {team.displayName}!</h1>
-        <h2>{username}</h2>
+        <h2>
+          {username} • {team.interactionMode}
+        </h2>
       </div>
       <div className="flex flex-col items-center">
         <Tabs
