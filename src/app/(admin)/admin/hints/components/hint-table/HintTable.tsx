@@ -1,5 +1,5 @@
 "use client";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
@@ -38,7 +38,6 @@ export function HintTable<TData, TValue>({
   const userId = session?.user?.id;
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const pathname = usePathname();
   const pageSize = 10;
 
   const table = useReactTable({
@@ -49,11 +48,6 @@ export function HintTable<TData, TValue>({
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     state: {
-      columnVisibility: pathname.startsWith("/admin/teams")
-        ? {
-            teamDisplayName: false,
-          }
-        : {},
       columnFilters,
     },
     initialState: {
