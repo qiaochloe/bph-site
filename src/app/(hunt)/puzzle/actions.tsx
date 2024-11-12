@@ -41,11 +41,27 @@ export async function insertGuess(puzzleId: string, guess: string) {
     return { error: "Already guessed!" };
   }
 
+  const correct = puzzle.answer === guess;
+
+  if (correct) {
+    const query = await db.query.hints.findFirst({
+      where: and(
+        eq(hints.puzzleId, puzzleId),
+        and(eq(hints.teamId, session.user.id), isNull(hints.response)),
+      ),
+    });
+    if (query) {
+      query.response = " ";
+      query.claimer = session.user.id;
+      await db.update(hints).set(query).where(eq(hints.id, query.id));
+    }
+  }
+
   await db.insert(guesses).values({
     teamId: session.user.id,
     puzzleId,
     guess,
-    isCorrect: puzzle.answer === guess,
+    isCorrect: correct,
     submitTime: new Date(),
   });
 
