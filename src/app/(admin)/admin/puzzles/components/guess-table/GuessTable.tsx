@@ -92,67 +92,65 @@ export function GuessTable<TData, TValue>({
           </Button>
         </div>
       </div>
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader className="sticky top-0 z-10 bg-white">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={`header-${headerGroup.id}`}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead
-                    key={header.id}
-                    onClick={() =>
-                      header.column.toggleSorting(
-                        header.column.getIsSorted() === "asc",
-                      )
-                    }
-                    className={
-                      header.index === 0
-                        ? "w-[100px] hover:underline"
-                        : "hover:underline"
-                    }
-                    role="button"
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  className="cursor-pointer"
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
+      <div className="flex overflow-auto rounded-md border">
+        <div className="w-full overflow-y-auto">
+          <Table>
+            <TableHeader className="sticky top-0 z-10 bg-white">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={`header-${headerGroup.id}`}>
+                  {headerGroup.headers.map((header) => (
+                    <TableHead
+                      key={header.id}
+                      onClick={() =>
+                        header.column.toggleSorting(
+                          header.column.getIsSorted() === "asc",
+                        )
+                      }
+                      className="hover:underline"
+                      role="button"
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                    </TableHead>
                   ))}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                    className="cursor-pointer"
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    No results.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </div>
   );

@@ -24,20 +24,24 @@ export const columns: ColumnDef<
 >[] = [
   {
     accessorKey: "teamDisplayName",
-    header: () => <div>Team</div>,
+    header: () => <div className="w-48">Team</div>,
     accessorFn: (row) => row.team!.displayName,
   },
   {
     accessorKey: "guess",
-    header: () => <div>Guess</div>,
-    cell: ({ row }) => <div className="truncate">{row.getValue("guess")}</div>,
+    header: () => <div className="w-48">Guess</div>,
+    cell: ({ row }) => (
+      <div className="w-48 truncate">{row.getValue("guess")}</div>
+    ),
   },
   {
     accessorKey: "submitTime",
-    header: () => <div>Guess Time</div>,
+    header: () => <div className="w-32">Guess Time</div>,
     cell: ({ row }) => {
       const time = row.getValue("submitTime");
-      return <div className="truncate font-medium">{formatTime(time)}</div>;
+      return (
+        <div className="w-32 truncate font-medium">{formatTime(time)}</div>
+      );
     },
   },
 ];
