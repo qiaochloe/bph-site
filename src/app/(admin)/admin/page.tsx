@@ -17,12 +17,12 @@ export default async function Home() {
           puzzles
         </Link>
         {", "}
-        <Link href="admin/teams" className="text-blue-600 hover:underline">
-          teams
-        </Link>
-        {", "}
         <Link href="admin/hints" className="text-blue-600 hover:underline">
           hinting
+        </Link>
+        {", "}
+        <Link href="admin/teams" className="text-blue-600 hover:underline">
+          teams
         </Link>
         {", "}
         and{" "}

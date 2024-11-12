@@ -20,7 +20,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { updateTeam } from "../actions";
-import { roleEnum } from "~/server/db/schema";
+import { roleEnum, interactionModeEnum } from "~/server/db/schema";
 export const updateTeamInfoFormSchema = z
   .object({
     displayName: z
@@ -28,6 +28,7 @@ export const updateTeamInfoFormSchema = z
       .min(1, { message: "Display name is required" })
       .max(50, { message: "Display name must be at most 50 characters long" })
       .or(z.string().max(0)),
+    interactionMode: z.enum(interactionModeEnum.enumValues),
     role: z.enum(roleEnum.enumValues).optional(),
   })
   .refine((input) => {
@@ -50,6 +51,7 @@ export function TeamInfoForm({ teamId }: TeamInfoFormProps) {
     resolver: zodResolver(updateTeamInfoFormSchema),
     defaultValues: {
       displayName: "",
+      interactionMode: undefined,
       role: undefined,
     },
   });
@@ -57,6 +59,7 @@ export function TeamInfoForm({ teamId }: TeamInfoFormProps) {
   const onSubmit = async (data: z.infer<typeof updateTeamInfoFormSchema>) => {
     const result = await updateTeam(teamId, {
       displayName: data.displayName,
+      interactionMode: data.interactionMode,
       role: data.role,
     });
 
@@ -68,6 +71,7 @@ export function TeamInfoForm({ teamId }: TeamInfoFormProps) {
         description: "Your team info has successfully been updated.",
       });
       setError(null);
+      router.refresh();
     }
   };
 
@@ -90,6 +94,36 @@ export function TeamInfoForm({ teamId }: TeamInfoFormProps) {
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="interactionMode"
+          render={({ field }) => (
+            <FormItem className="space-y-3">
+              <FormLabel>This team will be competing...</FormLabel>
+              <FormControl>
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  className="flex flex-col space-y-1"
+                >
+                  <FormItem className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="in-person" />
+                    </FormControl>
+                    <FormLabel className="font-normal">In-person</FormLabel>
+                  </FormItem>
+                  <FormItem className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="remote" />
+                    </FormControl>
+                    <FormLabel className="font-normal">Remote</FormLabel>
+                  </FormItem>
+                </RadioGroup>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         {session?.user?.role === "admin" && (
           <FormField
             control={form.control}
@@ -108,7 +142,7 @@ export function TeamInfoForm({ teamId }: TeamInfoFormProps) {
                         <RadioGroupItem value="user" />
                       </FormControl>
                       <FormLabel className="font-normal">
-                        Regular User
+                        Regular user
                       </FormLabel>
                     </FormItem>
                     <FormItem className="flex items-center space-x-3 space-y-0">

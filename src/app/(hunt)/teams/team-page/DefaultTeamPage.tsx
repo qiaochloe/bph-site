@@ -38,8 +38,8 @@ export default async function DefaultTeamPage({
   return (
     <div className="flex w-2/3 min-w-36 grow flex-col">
       <div className="flex flex-col items-center py-8">
-        <h1>Team Name: {team.displayName}</h1>
-        <h2>Team username: {username}</h2>
+        <h1>Welcome, {team.displayName}!</h1>
+        <h2>{username}</h2>
       </div>
       <div className="flex flex-col items-center">
         <Tabs
@@ -58,7 +58,7 @@ export default async function DefaultTeamPage({
           </TabsContent>
           <TabsContent value="members">
             <div className="p-4">
-              <p>Under Construction.</p>
+              <p>Under construction.</p>
             </div>
           </TabsContent>
           <TabsContent value="password">
