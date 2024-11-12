@@ -101,13 +101,17 @@ export default async function DefaultPuzzlePage({
         <PreviousGuessTable previousGuesses={previousGuesses} />
       </div>
 
-      <div className="mb-4 w-2/3 min-w-36">
-        <HintForm
-          puzzleId={puzzleId}
-          hintsRemaining={hintsRemaining}
-          unansweredHint={unansweredHint}
-        />
-      </div>
+      {!hasCorrectGuess ? (
+        <div className="mb-4 w-2/3 min-w-36">
+          <HintForm
+            puzzleId={puzzleId}
+            hintsRemaining={hintsRemaining}
+            unansweredHint={unansweredHint}
+          />
+        </div>
+      ) : (
+        <></>
+      )}
 
       <h2 className="mb-2">Previous Hints</h2>
       <div className="w-2/3 min-w-36">
