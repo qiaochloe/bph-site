@@ -15,20 +15,25 @@ import {
   FormMessage,
   FormDescription,
 } from "@/components/ui/form";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { updateTeam } from "../actions";
+import { roleEnum } from "~/server/db/schema";
 export const updateTeamInfoFormSchema = z.object({
   displayName: z
     .string()
     .min(1, { message: "Display name is required" })
     .max(50, { message: "Display name must be at most 50 characters long" }),
+  role: z.enum(roleEnum.enumValues).optional(),
 });
 type TeamInfoFormProps = { teamId: string };
 
 export function TeamInfoForm({ teamId }: TeamInfoFormProps) {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const { data: session } = useSession();
 
   // Prefetch the home page
   useEffect(() => {
@@ -39,12 +44,14 @@ export function TeamInfoForm({ teamId }: TeamInfoFormProps) {
     resolver: zodResolver(updateTeamInfoFormSchema),
     defaultValues: {
       displayName: "",
+      role: undefined,
     },
   });
 
   const onSubmit = async (data: z.infer<typeof updateTeamInfoFormSchema>) => {
     const result = await updateTeam(teamId, {
       displayName: data.displayName,
+      role: data.role,
     });
 
     if (result.error) {
@@ -80,7 +87,41 @@ export function TeamInfoForm({ teamId }: TeamInfoFormProps) {
             </FormItem>
           )}
         />
-        <Button type="submit">Update display name</Button>
+        {session?.user?.role === "admin" && (
+          <FormField
+            control={form.control}
+            name="role"
+            render={({ field }) => (
+              <FormItem className="space-y-3">
+                <FormLabel>This user should be a...</FormLabel>
+                <FormControl>
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    className="flex flex-col space-y-1"
+                  >
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="user" />
+                      </FormControl>
+                      <FormLabel className="font-normal">
+                        Regular User
+                      </FormLabel>
+                    </FormItem>
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="admin" />
+                      </FormControl>
+                      <FormLabel className="font-normal">Admin</FormLabel>
+                    </FormItem>
+                  </RadioGroup>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
+        <Button type="submit">Update team info</Button>
       </form>
     </Form>
   );

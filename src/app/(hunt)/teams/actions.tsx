@@ -1,14 +1,16 @@
 "use server";
-import { teams, type interactionModeEnum } from "@/db/schema";
+import { teams, type interactionModeEnum, type roleEnum } from "@/db/schema";
 import { db } from "~/server/db";
 import { eq } from "drizzle-orm";
 import { hash } from "bcryptjs";
+import { auth } from "~/server/auth/auth";
 
 export type TeamProperties = {
   username?: string;
   displayName?: string;
   password?: string;
   interactionMode?: (typeof interactionModeEnum.enumValues)[number];
+  role?: (typeof roleEnum.enumValues)[number];
 };
 
 export async function updateTeam(
@@ -44,6 +46,10 @@ export async function updateTeam(
   }
   if (teamProperties.interactionMode)
     user.interactionMode = teamProperties.interactionMode;
+  if (teamProperties.role) {
+    const session = await auth();
+    if (session?.user?.role === "admin") user.role = teamProperties.role;
+  }
   await db.update(teams).set(user).where(eq(teams.id, id));
   try {
     return { error: null };
