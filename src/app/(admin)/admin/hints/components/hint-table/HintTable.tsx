@@ -95,7 +95,7 @@ export function HintTable<TData, TValue>({
         </div>
       </div>
       <div className="flex overflow-auto rounded-md border">
-        <div className="overflow-y-auto">
+        <div className="w-full overflow-y-auto">
           {" "}
           <Table>
             <TableHeader className="sticky top-0 z-10 bg-white">
