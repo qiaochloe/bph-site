@@ -10,6 +10,15 @@ import ErratumDialog from "../components/ErratumDialog";
 import HintForm from "../components/HintForm";
 import GuessForm from "../components/GuessForm";
 import { getTotalHints, NUMBER_OF_GUESSES_PER_PUZZLE } from "~/hunt.config";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "~/components/ui/button";
 
 // TODO: database queries can definitely be more efficient
 // See drizzle
@@ -101,20 +110,30 @@ export default async function DefaultPuzzlePage({
         <PreviousGuessTable previousGuesses={previousGuesses} />
       </div>
 
-      {hasCorrectGuess || (
-        <div className="mb-4 w-2/3 min-w-36">
-          <HintForm
-            puzzleId={puzzleId}
-            hintsRemaining={hintsRemaining}
-            unansweredHint={unansweredHint}
-          />
-        </div>
-      )}
-
       <h2 className="mb-2">Previous Hints</h2>
       <div className="w-2/3 min-w-36">
         <PreviousHintTable previousHints={previousHints} />
       </div>
+      {hasCorrectGuess || (
+        <div>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button className="z-90 fixed bottom-4 right-4">
+                <p className="m-2">Request a hint</p>
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <div className="mb-4 min-w-36">
+                <HintForm
+                  puzzleId={puzzleId}
+                  hintsRemaining={hintsRemaining}
+                  unansweredHint={unansweredHint}
+                />
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
+      )}
     </div>
   );
 }
