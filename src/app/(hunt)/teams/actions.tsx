@@ -2,7 +2,7 @@
 import { teams, type interactionModeEnum } from "@/db/schema";
 import { db } from "~/server/db";
 import { eq } from "drizzle-orm";
-import { hash } from "bcrypt";
+import { hash } from "bcryptjs";
 
 export type TeamProperties = {
   username?: string;
