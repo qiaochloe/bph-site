@@ -169,6 +169,7 @@ export async function getNextPuzzleMap() {
 //     teamId,
 //     nextPuzzles.map((puzzle) => puzzle.id),
 //   );
+// }
 //
 
 /** Checks whether a team has completed the hunt. This is called every time

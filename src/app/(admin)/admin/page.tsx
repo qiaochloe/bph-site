@@ -21,6 +21,10 @@ export default async function Home() {
           hinting
         </Link>
         {", "}
+        <Link href="admin/teams" className="text-blue-600 hover:underline">
+          teams
+        </Link>
+        {", "}
         and{" "}
         <Link href="admin/errata" className="text-blue-600 hover:underline">
           errata

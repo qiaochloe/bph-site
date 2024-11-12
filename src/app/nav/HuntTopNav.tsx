@@ -25,7 +25,12 @@ export async function HuntTopNav() {
         )}
         {session?.user?.id ? (
           <>
-            <p>{session.user.displayName}</p>
+            <Link
+              href={`/teams/${session.user.username}`}
+              className="hover:underline"
+            >
+              {session.user.displayName}
+            </Link>
             <LogoutButton />
           </>
         ) : (
