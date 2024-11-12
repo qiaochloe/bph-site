@@ -38,5 +38,11 @@ export default async function Page({
     );
   }
 
-  return <TeamInfoPage displayName={team.displayName} teamId={team.id} />;
+  return (
+    <TeamInfoPage
+      displayName={team.displayName}
+      username={username}
+      teamId={team.id}
+    />
+  );
 }

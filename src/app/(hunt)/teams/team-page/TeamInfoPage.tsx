@@ -3,13 +3,22 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TeamInfoForm } from "../team-page/TeamInfoForm";
 import { PasswordResetForm } from "../team-page/PasswordResetForm";
-type TeamInfoPageProps = { displayName: string; teamId: string };
+type TeamInfoPageProps = {
+  displayName: string;
+  username: string;
+  teamId: string;
+};
 
-export function TeamInfoPage({ displayName, teamId }: TeamInfoPageProps) {
+export function TeamInfoPage({
+  displayName,
+  username,
+  teamId,
+}: TeamInfoPageProps) {
   return (
     <div className="flex w-2/3 min-w-36 grow flex-col">
       <div className="flex flex-col items-center py-8">
         <h1>Team Name: {displayName}</h1>
+        <h2>Team username: {username}</h2>
       </div>
       <div className="flex flex-col items-center">
         <Tabs
