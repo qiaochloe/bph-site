@@ -123,12 +123,12 @@ export function TeamTable<TData, TValue>({
                       if (event.metaKey || event.ctrlKey) {
                         // Open in new tab
                         window.open(
-                          `/teams/${row.getValue("username")}`,
+                          `/admin/teams/${row.getValue("username")}`,
                           "_blank",
                         );
                       } else {
                         // Move to team page
-                        router.push(`/teams/${row.getValue("username")}`);
+                        router.push(`/admin/teams/${row.getValue("username")}`);
                         router.refresh();
                       }
                     }}
