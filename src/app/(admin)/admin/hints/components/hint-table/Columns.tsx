@@ -72,6 +72,8 @@ export const columns: ColumnDef<HintWithRelations>[] = [
   {
     accessorKey: "claimer",
     header: () => <div className="w-32">Claimed By</div>,
+    sortingFn: (rowA: any): number =>
+      rowA.getValue("claimer") === null ? 1 : -1,
     cell: ({ row }) => (
       <div className="w-24 truncate">
         <ClaimBox row={row} />
