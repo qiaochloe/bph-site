@@ -77,3 +77,18 @@ export async function unclaimHint(hintId: number) {
 
   revalidatePath("/admin/");
 }
+
+export async function refundHint(hintId: number) {
+  const session = await auth();
+
+  if (session?.user?.role !== "admin") {
+    throw new Error("Not authorized");
+  }
+
+  await db
+    .update(hints)
+    .set({ status: "refunded" })
+    .where(eq(hints.id, hintId));
+
+  revalidatePath("/admin/");
+}

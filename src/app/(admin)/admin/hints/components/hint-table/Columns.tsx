@@ -71,7 +71,7 @@ export const columns: ColumnDef<HintWithRelations>[] = [
   },
   {
     accessorKey: "claimer",
-    header: () => <div className="w-32">Claimed By</div>,
+    header: () => <div className="w-32">Status</div>,
     cell: ({ row }) => (
       <div className="w-24 truncate">
         <ClaimBox row={row} />
@@ -80,6 +80,10 @@ export const columns: ColumnDef<HintWithRelations>[] = [
   },
   {
     accessorKey: "responseTime",
+    header: () => null,
+  },
+  {
+    accessorKey: "status",
     header: () => null,
   },
 ];

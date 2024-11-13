@@ -74,9 +74,9 @@ export default async function Page({
       <div className="flex flex-col items-center">
         <h1>Answer a Hint</h1>
         <ClaimBox
-          id={hint.id}
+          hintId={hint.id}
           claimer={hint.claimer}
-          response={hint.response}
+          status={hint.status}
           userId={session.user.id}
         />
       </div>

@@ -1,31 +1,23 @@
 "use client";
-import { claimHint, unclaimHint } from "../../actions";
+import { claimHint, refundHint, unclaimHint } from "../../actions";
 import { toast } from "~/hooks/use-toast";
 import { HintClaimer } from "../hint-table/Columns";
 import { useState } from "react";
 
 export default function ClaimBox({
-  id,
+  hintId,
   claimer,
-  response,
+  status,
   userId,
 }: {
-  id: number;
+  hintId: number;
   claimer: HintClaimer;
-  response: string | null;
+  status: string;
   userId: string;
 }) {
-  const [isClaimed, setIsClaimed] = useState(!!claimer);
-  const [isOwnClaim, setIsOwnClaim] = useState(
-    claimer?.id === userId && response === null,
-  );
-
   const handleClaim = async () => {
-    setIsOwnClaim(true);
-    setIsClaimed(true);
-    const { claimer } = await claimHint(id);
+    const { claimer } = await claimHint(hintId);
     if (claimer) {
-      setIsOwnClaim(false);
       toast({
         variant: "destructive",
         title: "Error claming hint",
@@ -35,12 +27,15 @@ export default function ClaimBox({
   };
 
   const handleUnclaim = async () => {
-    setIsOwnClaim(false);
-    setIsClaimed(false);
-    await unclaimHint(id);
+    await unclaimHint(hintId);
   };
 
-  if (!isClaimed) {
+  const handleRefund = async () => {
+    await refundHint(hintId);
+  };
+
+  // No claimer
+  if (!claimer) {
     return (
       <div className="p-4">
         <button
@@ -51,18 +46,43 @@ export default function ClaimBox({
         </button>
       </div>
     );
-  } else if (isOwnClaim) {
-    return (
-      <div className="p-4">
-        <button
-          className="rounded-md border border-red-600 text-red-600"
-          onClick={handleUnclaim}
-        >
-          <p className="px-10 text-3xl">UNCLAIM</p>
-        </button>
-      </div>
-    );
-  } else {
-    return <div className="p-4">Claimed by: {claimer?.displayName}</div>;
+  }
+  // Puzzle is claimed by you
+  else if (claimer.id == userId) {
+    if (status == "no_response") {
+      return (
+        <div className="p-4">
+          <button
+            className="rounded-md border border-red-600 text-red-600"
+            onClick={handleUnclaim}
+          >
+            <p className="px-10 text-3xl">UNCLAIM</p>
+          </button>
+        </div>
+      );
+    } else if (status == "answered") {
+      return (
+        <div className="p-4">
+          <button
+            className="rounded-md border border-gray-600 text-gray-600"
+            onClick={handleRefund}
+          >
+            <p className="px-10 text-3xl">REFUND</p>
+          </button>
+        </div>
+      );
+    } else {
+      return <div className="p-4">Refunded by: {claimer.displayName}</div>;
+    }
+  }
+  // Puzzle is claimed by others
+  else {
+    if (status == "no_response") {
+      return <div className="p-4">Claimed by: {claimer.displayName}</div>;
+    } else if (status == "answered") {
+      return <div className="p-4">Answered by: {claimer.displayName}</div>;
+    } else if (status == "refunded") {
+      return <div className="p-4">Refunded by: {claimer.displayName}</div>;
+    }
   }
 }
