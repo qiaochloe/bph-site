@@ -101,7 +101,7 @@ export default async function Page({
               <p>
                 <strong>From: </strong>
                 <Link
-                  href={`/teams/${hint.team.username}`}
+                  href={`/admin/teams/${hint.team.username}`}
                   className="text-blue-600 hover:underline"
                 >
                   {hint.team.displayName}
