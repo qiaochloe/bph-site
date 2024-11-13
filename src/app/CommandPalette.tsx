@@ -90,7 +90,7 @@ export function CommandPalette() {
           </CommandItem>
           <CommandItem
             onSelect={() => {
-              router.push("/admin/puzzles");
+              router.push("/admin/solutions");
               setOpen(false);
             }}
           >

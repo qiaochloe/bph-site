@@ -11,7 +11,7 @@ export async function HuntTopNav() {
           Home
         </Link>
         <Link href="/puzzle" className="hover:underline">
-          Puzzle
+          Puzzles
         </Link>
         <Link href="/teams" className="hover:underline">
           Teams

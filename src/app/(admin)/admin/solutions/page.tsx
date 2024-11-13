@@ -20,7 +20,7 @@ export default async function Home() {
 
   return (
     <div className="flex grow flex-col items-center">
-      <h1 className="mb-2">Puzzles!</h1>
+      <h1 className="mb-2">Solutions!</h1>
       <div className="w-1/3">
         <Table className="justify-center">
           <TableHeader>
