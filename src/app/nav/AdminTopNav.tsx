@@ -24,10 +24,26 @@ export async function AdminTopNav() {
         </Link>
       </div>
       <div className="flex space-x-4">
-        <Link href="/" className="hover:underline">
-          Hunt
-        </Link>
-        <LogoutButton />
+        {session?.user?.id ? (
+          <>
+            <Link
+              href={`/teams/${session.user.username}`}
+              className="hover:underline"
+            >
+              {session.user.displayName}
+            </Link>
+            {session?.user?.role === "admin" && (
+              <Link href="/" className="hover:underline">
+                Hunt
+              </Link>
+            )}
+            <LogoutButton />
+          </>
+        ) : (
+          <Link href="/login" className="hover:underline">
+            Login
+          </Link>
+        )}
       </div>
     </nav>
   );
