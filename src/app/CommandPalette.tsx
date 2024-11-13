@@ -32,7 +32,7 @@ export function CommandPalette() {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        e.stopPropagation()
+        e.stopPropagation();
         setOpen((open) => !open);
       }
     };
@@ -41,7 +41,7 @@ export function CommandPalette() {
   }, []);
 
   if (session?.data?.user?.role != "admin") {
-    return <></>
+    return <></>;
   }
 
   return (
