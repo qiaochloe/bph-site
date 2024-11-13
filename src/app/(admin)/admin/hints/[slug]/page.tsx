@@ -40,7 +40,7 @@ export default async function Page({
   const hint = await db.query.hints.findFirst({
     where: eq(hints.id, hintId),
     with: {
-      team: { columns: { displayName: true } },
+      team: { columns: { displayName: true, username: true } },
       claimer: { columns: { id: true, displayName: true } },
       puzzle: { columns: { name: true } },
     },
@@ -99,7 +99,13 @@ export default async function Page({
           <TabsContent value="response">
             <div className="bg-zinc-100 p-4 text-zinc-700">
               <p>
-                <strong>From:</strong> {hint.team.displayName}
+                <strong>From: </strong>
+                <Link
+                  href={`/teams/${hint.team.username}`}
+                  className="text-blue-600 hover:underline"
+                >
+                  {hint.team.displayName}
+                </Link>
               </p>
               <p>
                 <strong>For:</strong>{" "}
