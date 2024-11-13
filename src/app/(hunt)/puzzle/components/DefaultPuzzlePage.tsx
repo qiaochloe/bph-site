@@ -49,14 +49,16 @@ export default async function DefaultPuzzlePage({
   // Get previous hints
   const previousHints = await db.query.hints.findMany({
     where: and(eq(hints.teamId, session.user.id), eq(hints.puzzleId, puzzleId)),
-    columns: { id: true, request: true, response: true },
+    columns: { id: true, request: true, response: true, status: true },
   });
 
-  const hintsRemaining = getTotalHints(session.user.id) - previousHints.length;
+  const hintsRemaining =
+    getTotalHints(session.user.id) -
+    previousHints.filter((hint) => hint.status !== "refunded").length;
 
   const query = await db.query.hints.findFirst({
     columns: {},
-    where: and(eq(hints.teamId, session.user.id), isNull(hints.response)),
+    where: and(eq(hints.teamId, session.user.id), eq(hints.status, "no_response")),
     with: { puzzle: { columns: { id: true, name: true } } },
   });
   const unansweredHint = query
