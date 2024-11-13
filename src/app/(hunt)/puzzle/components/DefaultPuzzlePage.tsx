@@ -58,7 +58,10 @@ export default async function DefaultPuzzlePage({
 
   const query = await db.query.hints.findFirst({
     columns: {},
-    where: and(eq(hints.teamId, session.user.id), eq(hints.status, "no_response")),
+    where: and(
+      eq(hints.teamId, session.user.id),
+      eq(hints.status, "no_response"),
+    ),
     with: { puzzle: { columns: { id: true, name: true } } },
   });
   const unansweredHint = query
