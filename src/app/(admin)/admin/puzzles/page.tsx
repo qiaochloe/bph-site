@@ -55,6 +55,7 @@ export default async function Home() {
                     {nextPuzzlesMap[puzzle.id] &&
                       nextPuzzlesMap[puzzle.id]?.map((puzzle) => (
                         <Link
+                          key={puzzle.id}
                           href={`/puzzle/${puzzle.id}`}
                           className="hover:underline"
                         >
