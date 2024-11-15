@@ -7,11 +7,9 @@ import { guesses, hints, errata, puzzles } from "~/server/db/schema";
 import PreviousGuessTable from "../components/PreviousGuessTable";
 import PreviousHintTable from "../components/PreviousHintTable";
 import ErratumDialog from "../components/ErratumDialog";
-import HintForm from "../components/HintForm";
+import HintDialog from "../components/HintForm";
 import GuessForm from "../components/GuessForm";
 import { getTotalHints, NUMBER_OF_GUESSES_PER_PUZZLE } from "~/hunt.config";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Button } from "~/components/ui/button";
 
 // TODO: database queries can definitely be more efficient
 // See drizzle
@@ -108,24 +106,11 @@ export default async function DefaultPuzzlePage({
         <PreviousHintTable previousHints={previousHints} />
       </div>
       {hasCorrectGuess || (
-        <div>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button className="z-90 fixed bottom-4 right-4">
-                <p className="m-2">Request a hint</p>
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <div className="mb-4 min-w-36">
-                <HintForm
-                  puzzleId={puzzleId}
-                  hintsRemaining={hintsRemaining}
-                  unansweredHint={unansweredHint}
-                />
-              </div>
-            </DialogContent>
-          </Dialog>
-        </div>
+        <HintDialog
+          puzzleId={puzzleId}
+          hintsRemaining={hintsRemaining}
+          unansweredHint={unansweredHint}
+        />
       )}
     </div>
   );
