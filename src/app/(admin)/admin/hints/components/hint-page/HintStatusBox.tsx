@@ -2,9 +2,8 @@
 import { claimHint, refundHint, unclaimHint } from "../../actions";
 import { toast } from "~/hooks/use-toast";
 import { HintClaimer } from "../hint-table/Columns";
-import { useState } from "react";
 
-export default function ClaimBox({
+export default function HintStatusBox({
   hintId,
   claimer,
   status,
@@ -16,22 +15,36 @@ export default function ClaimBox({
   userId: string;
 }) {
   const handleClaim = async () => {
-    const { claimer } = await claimHint(hintId);
-    if (claimer) {
+    const { error, title } = await claimHint(hintId);
+    if (error) {
       toast({
         variant: "destructive",
-        title: "Error claming hint",
-        description: `Hint claimed by ${claimer}.`,
+        title,
+        description: error,
       });
     }
   };
 
   const handleUnclaim = async () => {
-    await unclaimHint(hintId);
+    const { error, title } = await unclaimHint(hintId);
+    if (error) {
+      toast({
+        variant: "destructive",
+        title,
+        description: error,
+      });
+    }
   };
 
   const handleRefund = async () => {
-    await refundHint(hintId);
+    const { error, title } = await refundHint(hintId);
+    if (error) {
+      toast({
+        variant: "destructive",
+        title,
+        description: error,
+      });
+    }
   };
 
   // No claimer

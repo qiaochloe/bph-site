@@ -10,7 +10,7 @@ import PreviousHintTable from "../../../../(hunt)/puzzle/components/PreviousHint
 import PreviousGuessTable from "~/app/(hunt)/puzzle/components/PreviousGuessTable";
 import { RequestBox } from "../components/hint-page/RequestBox";
 import { ResponseBox } from "../components/hint-page/ResponseBox";
-import ClaimBox from "../components/hint-page/ClaimBox";
+import HintStatusBox from "../components/hint-page/HintStatusBox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Toast from "../components/hint-page/Toast";
 
@@ -73,7 +73,7 @@ export default async function Page({
     <div className="flex w-2/3 min-w-36 grow flex-col">
       <div className="flex flex-col items-center">
         <h1>Answer a Hint</h1>
-        <ClaimBox
+        <HintStatusBox
           hintId={hint.id}
           claimer={hint.claimer}
           status={hint.status}

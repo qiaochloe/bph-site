@@ -15,12 +15,12 @@ export default function ClaimBox<TData>({ row }: { row: Row<TData> }) {
   const status = row.getValue("status");
 
   const handleClaim = async () => {
-    const { claimer } = await claimHint(hintId);
-    if (claimer) {
+    const { error, title } = await claimHint(hintId);
+    if (error) {
       toast({
         variant: "destructive",
-        title: "Error claming hint",
-        description: `Hint claimed by ${claimer}.`,
+        title,
+        description: error,
       });
     } else {
       window.open(`/admin/hints/${row.getValue("id")}`, "_blank");
@@ -28,11 +28,25 @@ export default function ClaimBox<TData>({ row }: { row: Row<TData> }) {
   };
 
   const handleUnclaim = async () => {
-    await unclaimHint(hintId);
+    const { error, title } = await unclaimHint(hintId);
+    if (error) {
+      toast({
+        variant: "destructive",
+        title,
+        description: error,
+      });
+    }
   };
 
   const handleRefund = async () => {
-    await refundHint(hintId);
+    const { error, title } = await refundHint(hintId);
+    if (error) {
+      toast({
+        variant: "destructive",
+        title,
+        description: error,
+      });
+    }
   };
 
   if (status == "refunded") {

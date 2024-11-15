@@ -3,7 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { hints } from "~/server/db/schema";
-import ClaimBox from "./ClaimBox";
+import HintStatusBox from "./HintStatusBox";
 
 /* TODO: 
   Shorten request time to just the time (if it is today) and the date (if it is not today)
@@ -74,7 +74,7 @@ export const columns: ColumnDef<HintWithRelations>[] = [
     header: () => <div className="w-32">Status</div>,
     cell: ({ row }) => (
       <div className="w-24 truncate">
-        <ClaimBox row={row} />
+        <HintStatusBox row={row} />
       </div>
     ),
   },
