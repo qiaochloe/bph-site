@@ -82,10 +82,11 @@ export function ResponseBox({ hint }: { hint: HintWithRelations }) {
             Respond
           </Button>
           <Button
-            className="mt-4 w-fit bg-gray-400 hover:bg-gray-400"
+            variant="outline"
+            className="mt-4 w-fit"
             onClick={handleResponseAndRefund}
           >
-            Refund
+            Respond & Refund
           </Button>
         </div>
       </div>
