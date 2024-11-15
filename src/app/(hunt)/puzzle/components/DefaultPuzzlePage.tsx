@@ -9,7 +9,10 @@ import PreviousHintTable from "../components/PreviousHintTable";
 import ErratumDialog from "../components/ErratumDialog";
 import HintDialog from "../components/HintForm";
 import GuessForm from "../components/GuessForm";
-import { getTotalHints, NUMBER_OF_GUESSES_PER_PUZZLE } from "~/hunt.config";
+import {
+  getNumberOfHintsRemaining,
+  NUMBER_OF_GUESSES_PER_PUZZLE,
+} from "~/hunt.config";
 
 // TODO: database queries can definitely be more efficient
 // See drizzle
@@ -52,9 +55,7 @@ export default async function DefaultPuzzlePage({
     columns: { id: true, request: true, response: true, status: true },
   });
 
-  const hintsRemaining =
-    getTotalHints(session.user.id) -
-    previousHints.filter((hint) => hint.status !== "refunded").length;
+  const hintsRemaining = await getNumberOfHintsRemaining(session.user.id);
 
   const query = await db.query.hints.findFirst({
     columns: {},

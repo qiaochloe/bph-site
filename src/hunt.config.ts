@@ -1,7 +1,7 @@
 import { insertUnlock } from "./app/(hunt)/puzzle/actions";
 import { db } from "./server/db";
 import { teams, puzzles, guesses, hints } from "./server/db/schema";
-import { and, count, eq } from "drizzle-orm";
+import { and, count, eq, ne } from "drizzle-orm";
 
 /** REGISTRATION AND HUNT START */
 
@@ -91,13 +91,11 @@ export function getTotalHints(teamId: string) {
 /** Calculates the total number of hints available to a team */
 export async function getNumberOfHintsRemaining(teamId: string) {
   const totalHints = getTotalHints(teamId);
-
   const query = await db
     .select({ count: count() })
     .from(hints)
-    .where(eq(hints.teamId, teamId));
+    .where(and(eq(hints.teamId, teamId), ne(hints.status, "refunded")));
   const usedHints = query[0]?.count ? query[0].count : 0;
-
   return totalHints - usedHints;
 }
 
