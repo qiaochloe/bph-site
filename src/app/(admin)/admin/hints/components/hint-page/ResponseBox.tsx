@@ -6,7 +6,7 @@ import { AutosizeTextarea } from "~/components/ui/autosize-textarea";
 import { Label } from "~/components/ui/label";
 import { Button } from "~/components/ui/button";
 import { HintWithRelations } from "../hint-table/Columns";
-import { respondToHint } from "../../actions";
+import { refundHint, respondToHint } from "../../actions";
 
 export function ResponseBox({ hint }: { hint: HintWithRelations }) {
   const { data: session } = useSession();
@@ -30,6 +30,27 @@ export function ResponseBox({ hint }: { hint: HintWithRelations }) {
         description: error,
       });
     }
+
+    return { error };
+  };
+
+  const handleResponseAndRefund = async () => {
+    const response_status = await handleResponse();
+    if (response_status.error) {
+      return;
+    }
+
+    const { error, title } = await refundHint(hint.id);
+
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: title,
+        description: error,
+      });
+    }
+
+    return { error };
   };
 
   if (hint.response) {
@@ -56,9 +77,17 @@ export function ResponseBox({ hint }: { hint: HintWithRelations }) {
           placeholder="No response yet"
           id={`hint-response-${hint.id}`}
         />
-        <Button className="mt-4 w-fit" onClick={handleResponse}>
-          Respond
-        </Button>
+        <div className="flex items-center space-x-2">
+          <Button className="mt-4 w-fit" onClick={handleResponse}>
+            Respond
+          </Button>
+          <Button
+            className="mt-4 w-fit bg-gray-400 hover:bg-gray-400"
+            onClick={handleResponseAndRefund}
+          >
+            Refund
+          </Button>
+        </div>
       </div>
     );
 }
