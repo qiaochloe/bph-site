@@ -4,9 +4,6 @@ import { toast } from "~/hooks/use-toast";
 import { useSession } from "next-auth/react";
 import { HintClaimer } from "./Columns";
 
-// TODO: Add refund hint functionality
-// TODO: Actually keep track of number of hints claimed
-
 export default function ClaimBox<TData>({ row }: { row: Row<TData> }) {
   const { data: session } = useSession();
   const userId = session?.user?.id as string;
