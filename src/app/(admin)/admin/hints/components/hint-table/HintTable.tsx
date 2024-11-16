@@ -86,7 +86,7 @@ export function HintTable<TData, TValue>({
           {/* Disable the left button on the first page of the table */}
           {table.getState().pagination.pageIndex === 0 ? (
             <Button variant="outline" size="sm" disabled>
-              <ChevronLeft size="1.5em"/>
+              <ChevronLeft size="1.5em" />
             </Button>
           ) : (
             <Button
@@ -94,7 +94,7 @@ export function HintTable<TData, TValue>({
               size="sm"
               onClick={() => table.previousPage()}
             >
-              <ChevronLeft size="1.5em"/>
+              <ChevronLeft size="1.5em" />
             </Button>
           )}
           {/* Disable the right button on the last page of the table */}
