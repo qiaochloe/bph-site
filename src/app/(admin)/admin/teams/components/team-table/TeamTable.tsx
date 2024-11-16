@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useSession } from "next-auth/react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -34,9 +34,6 @@ export function TeamTable<TData, TValue>({
   data,
 }: TeamTableProps<TData, TValue>) {
   const router = useRouter();
-  const { data: session } = useSession();
-  const userId = session?.user?.id;
-
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const pageSize = 10;
 
@@ -61,8 +58,6 @@ export function TeamTable<TData, TValue>({
     },
     pageCount: Math.ceil(data.length / pageSize),
   });
-
-  if (!userId) return null;
 
   return (
     <div className="flex h-full flex-col">

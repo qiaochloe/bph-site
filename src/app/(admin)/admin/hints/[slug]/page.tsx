@@ -63,6 +63,7 @@ export default async function Page({
   });
 
   const previousHints = await db.query.hints.findMany({
+    columns: { id: true, request: true, response: true },
     where: and(
       eq(hints.teamId, hint.teamId),
       eq(hints.puzzleId, hint.puzzleId),

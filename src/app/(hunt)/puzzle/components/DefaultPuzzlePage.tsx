@@ -33,6 +33,7 @@ export default async function DefaultPuzzlePage({
   if (
     (initialPuzzles && initialPuzzles.includes(puzzleId)) ||
     (await db.query.unlocks.findFirst({
+      columns: { id: true },
       where: and(
         eq(unlocks.teamId, session.user.id),
         eq(unlocks.puzzleId, puzzleId),
@@ -84,8 +85,10 @@ export default async function DefaultPuzzlePage({
 
   // Get puzzle name
   const puzzle = await db.query.puzzles.findFirst({
+    columns: { name: true },
     where: eq(puzzles.id, puzzleId),
   })!;
+
   if (!puzzle) {
     throw new Error("Puzzle does not exist in database");
   }

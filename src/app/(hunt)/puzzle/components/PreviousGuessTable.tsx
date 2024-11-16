@@ -2,7 +2,6 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { guesses } from "~/server/db/schema";

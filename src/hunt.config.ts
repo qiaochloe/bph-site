@@ -24,9 +24,10 @@ export const NUMBER_OF_GUESSES_PER_PUZZLE = 20;
  * This is currently set to the first puzzle in the database alphabetically.
  */
 export const INITIAL_PUZZLES = async () => {
-  const firstPuzzle = (await db.query.puzzles.findMany()).sort((a, b) =>
-    a.name.localeCompare(b.name),
-  )[0];
+  const firstPuzzle = (
+    await db.query.puzzles.findMany({ columns: { id: true, name: true } })
+  ).sort((a, b) => a.name.localeCompare(b.name))[0];
+
   const INITIAL_PUZZLES: string[] = firstPuzzle ? [firstPuzzle.id] : [];
   return INITIAL_PUZZLES;
 };

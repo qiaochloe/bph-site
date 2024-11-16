@@ -69,7 +69,7 @@ export async function insertGuess(puzzleId: string, guess: string) {
 
   revalidatePath(`/puzzle/${puzzleId}`);
 
-  if (puzzle.answer === guess) {
+  if (correct) {
     await unlockPuzzleAfterSolve(session.user.id, puzzleId);
     await checkFinishHunt(session.user.id, puzzleId);
   }
@@ -82,6 +82,7 @@ export async function insertHint(puzzleId: string, hint: string) {
     throw new Error("Not logged in");
   }
 
+  // Check the the team has a hint
   const hasHint = (await getNumberOfHintsRemaining(session.user.id)) > 0;
   const hasUnansweredHint = (await db.query.hints.findFirst({
     columns: { id: true },
@@ -93,7 +94,6 @@ export async function insertHint(puzzleId: string, hint: string) {
     ? true
     : false;
 
-  // Check the the team has a hint
   if (hasHint && !hasUnansweredHint) {
     await db.insert(hints).values({
       teamId: session.user.id,
