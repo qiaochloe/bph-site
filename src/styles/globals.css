@@ -9,4 +9,7 @@
   h1 {
     @apply text-2xl font-bold; /* Adjust these values as needed */
   }
+  h3 {
+    @apply text-lg font-bold; /* Adjust these values as needed */
+  }
 }

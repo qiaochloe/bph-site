@@ -10,6 +10,9 @@ export async function HuntTopNav() {
         <Link href="/" className="hover:underline">
           Home
         </Link>
+        <Link href="/info" className="hover:underline">
+          Info
+        </Link>
         <Link href="/puzzle" className="hover:underline">
           Puzzles
         </Link>
