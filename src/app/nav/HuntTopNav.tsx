@@ -16,6 +16,9 @@ export async function HuntTopNav() {
         <Link href="/teams" className="hover:underline">
           Teams
         </Link>
+        <Link href="/feedback" className="hover:underline">
+          Feedback
+        </Link>
       </div>
       <div className="flex space-x-4">
         {session?.user?.id ? (
