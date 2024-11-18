@@ -92,29 +92,23 @@ export const guesses = createTable("guess", {
 
 export const errata = createTable("erratum", {
   id: serial("id").primaryKey(),
-
   puzzleId: varchar("puzzle_id")
     .notNull()
     .references(() => puzzles.id, { onDelete: "cascade" }),
-
   timestamp: timestamp("timestamp", { withTimezone: true })
     .notNull()
     .$defaultFn(() => new Date()),
-
   description: text("description").notNull(),
 });
 
 export const feedback = createTable("feedback", {
   id: serial("id").primaryKey(),
-
   teamId: varchar("team_id")
     .notNull()
     .references(() => teams.id, { onDelete: "cascade" }),
-
   timestamp: timestamp("timestamp", { withTimezone: true })
     .notNull()
     .$defaultFn(() => new Date()),
-
   description: text("feedback").notNull(),
 });
 
