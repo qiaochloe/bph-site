@@ -4,7 +4,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import FeedbackDialog from "~/app/(hunt)/puzzle/components/FeedbackDialog";
+import FeedbackDialog from "~/app/(hunt)/feedback/FeedbackDialog";
 import {
   Form,
   FormControl,
@@ -14,17 +14,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-import { feedback } from "@/db/schema";
+import { feedback } from "~/server/db/schema";
 import { insertFeedback } from "./actions";
-import { Label } from "@radix-ui/react-label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "~/hooks/use-toast";
 
@@ -35,7 +26,7 @@ export const feedbackFormSchema = z.object({
 export default function FeedbackForm({
   feedbackList,
 }: {
-  feedbackList: { description: string }[];
+  feedbackList: { id: number; description: string; timestamp: Date }[];
 }) {
   const [error, setError] = useState<string | null>(null);
 
@@ -66,25 +57,27 @@ export default function FeedbackForm({
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        {/* <FeedbackDialog feedbackList={teamFeedback} /> */}
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Textarea placeholder="No response yet" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {error && <p className="text-red-500">{error}</p>}
-        <Button type="submit">Submit</Button>
-      </form>
-    </Form>
+    <>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Please enter your thoughts on the hunt!</FormLabel>
+                <FormControl>
+                  <Textarea placeholder="No response yet" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {error && <p className="text-red-500">{error}</p>}
+          <Button type="submit">Submit</Button>
+        </form>
+      </Form>
+      <FeedbackDialog feedbackList={feedbackList} />
+    </>
   );
 }
