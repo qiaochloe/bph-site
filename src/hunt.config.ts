@@ -12,6 +12,7 @@ import { and, count, eq, ne } from "drizzle-orm";
 export const REGISTRATION_START_TIME = new Date("2024-10-24T05:56:35Z");
 export const REGISTRATION_END_TIME = new Date("2024-11-20T05:56:35Z");
 export const HUNT_START_TIME = new Date("2024-11-09T05:59:00Z");
+/** When the hunt ends, the leaderboard locks, solutions drops, and hinting ends. */
 export const HUNT_END_TIME = new Date("2024-11-20T05:56:35Z");
 export const NUMBER_OF_GUESSES_PER_PUZZLE = 20;
 
@@ -80,10 +81,15 @@ export async function checkFinishHunt(teamId: string, puzzleId: string) {
  * Teams cannot have more than one outstanding request at a time.
  */
 
-/** Calculates the total number of hints given to a team */
+/** Calculates the total number of hints given to a team.
+ * Teams start off with 1 hint and earn an additional 1 hint every day.
+ * Teams stop receiving more hints when the hunt ends.
+ */
 export function getTotalHints(teamId: string) {
   const currentTime = new Date();
-  const timeDifference = currentTime.getTime() - HUNT_START_TIME.getTime(); // In milliseconds
+  const timeDifference =
+    Math.min(currentTime.getTime(), HUNT_END_TIME.getTime()) -
+    HUNT_START_TIME.getTime(); // In milliseconds
   const rate = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
   return Math.floor(timeDifference / rate);
 }
