@@ -6,8 +6,12 @@ import { db } from "@/db/index";
 
 export async function insertFeedback(description: string) {
   const session = await auth();
+  if (!session?.user?.id) {
+    throw new Error("Not logged in");
+  }
 
   await db.insert(feedback).values({
+    teamId: session.user.id,
     description,
   });
 

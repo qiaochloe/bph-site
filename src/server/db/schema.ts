@@ -107,6 +107,10 @@ export const errata = createTable("erratum", {
 export const feedback = createTable("feedback", {
   id: serial("id").primaryKey(),
 
+  teamId: varchar("team_id")
+    .notNull()
+    .references(() => teams.id, { onDelete: "cascade" }),
+
   timestamp: timestamp("timestamp", { withTimezone: true })
     .notNull()
     .$defaultFn(() => new Date()),

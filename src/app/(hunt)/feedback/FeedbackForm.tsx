@@ -35,7 +35,7 @@ export const feedbackFormSchema = z.object({
 export default function FeedbackForm({
   feedbackList,
 }: {
-  feedbackList: (typeof feedback.$inferSelect)[];
+  feedbackList: { description: string }[];
 }) {
   const [error, setError] = useState<string | null>(null);
 
