@@ -1,13 +1,12 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { type DefaultSession } from "next-auth";
-// import { DrizzleAdapter } from "@auth/drizzle-adapter";
 
 import { eq } from "drizzle-orm";
 import { db } from "~/server/db";
 import { teams } from "~/server/db/schema";
 import { object, string } from "zod";
-import { compare } from "bcrypt";
+import { compare } from "bcryptjs";
 
 import { authConfig } from "./auth.config";
 

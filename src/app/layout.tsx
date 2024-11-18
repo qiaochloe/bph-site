@@ -2,6 +2,7 @@ import "~/styles/globals.css";
 import { Providers } from "~/app/nav/providers";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
+import { CommandPalette } from "./CommandPalette";
 
 export const metadata: Metadata = {
   title: "Brown Puzzle Hunt",
@@ -14,7 +15,10 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
-      <body>{children}</body>
+      <Providers>
+        <CommandPalette />
+        <body>{children}</body>
+      </Providers>
     </html>
   );
 }

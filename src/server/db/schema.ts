@@ -1,16 +1,13 @@
-import { relations, sql } from "drizzle-orm";
+import { relations } from "drizzle-orm";
 import {
   boolean,
   index,
-  integer,
   pgTableCreator,
   pgEnum,
-  primaryKey,
   serial,
   text,
   timestamp,
   varchar,
-  foreignKey,
 } from "drizzle-orm/pg-core";
 
 /* Naming conventions:
@@ -23,12 +20,13 @@ import {
 
 export const createTable = pgTableCreator((name) => `bph_site_${name}`);
 
-// TEAMS, PUZZLES, and GUESSES
 export const roleEnum = pgEnum("role", ["admin", "user"]);
+
 export const interactionModeEnum = pgEnum("interaction_type", [
   "in-person",
   "remote",
 ]);
+
 export const hintStatusEnum = pgEnum("status", [
   "no_response",
   "answered",
@@ -40,14 +38,12 @@ export const teams = createTable("team", {
     .notNull()
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-
   username: varchar("username", { length: 255 }).notNull(), // For login
   displayName: varchar("display_name", { length: 255 }).notNull(), // For display
   password: varchar("password", { length: 255 }).notNull(),
   role: roleEnum("role").notNull().default("user"),
   interactionMode: interactionModeEnum("interaction_type").notNull(),
   finishTime: timestamp("finish_time", { withTimezone: true }),
-
   // Time of creation of team
   createTime: timestamp("create_time", { withTimezone: true }),
   // When this team should start the hunt for early-testing purposes
@@ -65,41 +61,112 @@ export const puzzles = createTable("puzzle", {
   // Human-readable name that can be changed at any time
   name: varchar("name", { length: 255 }).notNull(),
   answer: varchar("answer", { length: 255 }).notNull(),
-
   // Not included:
   // body_template, round, order, is_meta, emoji
   // unlock_hours, unlock_global, unlock_local
 });
 
-export const guesses = createTable("guess", {
-  id: serial("id").primaryKey(),
+export const unlocks = createTable(
+  "unlock",
+  {
+    id: serial("id").primaryKey(),
+    puzzleId: varchar("puzzle_id")
+      .notNull()
+      .references(() => puzzles.id, { onDelete: "cascade" }),
+    teamId: varchar("team_id")
+      .notNull()
+      .references(() => teams.id, { onDelete: "cascade" }),
+    unlockTime: timestamp("unlock_time", { withTimezone: true }),
+    // NOTE: Storing the solve time is probably more efficient for querying
+    // But it's also generally a bad idea to have the same information
+    // in two different places.
+    // solveTime: timestamp("solve_time", { withTimezone: true }).notNull(),
+  },
+  (table) => {
+    return {
+      team_and_puzzle_idx: index("unlocks_team_puzzle_idx").on(
+        table.teamId,
+        table.puzzleId,
+      ),
+    };
+  },
+);
 
-  puzzleId: varchar("puzzle_id")
-    .notNull()
-    .references(() => puzzles.id, { onDelete: "cascade" }),
+export const guesses = createTable(
+  "guess",
+  {
+    id: serial("id").primaryKey(),
+    puzzleId: varchar("puzzle_id")
+      .notNull()
+      .references(() => puzzles.id, { onDelete: "cascade" }),
+    teamId: varchar("team_id")
+      .notNull()
+      .references(() => teams.id, { onDelete: "cascade" }),
+    guess: varchar("guess", { length: 255 }).notNull(),
+    isCorrect: boolean("is_correct").notNull(),
+    submitTime: timestamp("submit_time", { withTimezone: true }).notNull(),
+    // Not included:
+    // used_free_answer
+  },
+  (table) => {
+    return {
+      team_and_puzzle_idx: index("guesses_team_and_puzzle_idx").on(
+        table.teamId,
+        table.puzzleId,
+      ),
+    };
+  },
+);
 
-  teamId: varchar("team_id")
-    .notNull()
-    .references(() => teams.id, { onDelete: "cascade" }),
+export const hints = createTable(
+  "hint",
+  {
+    id: serial("id").primaryKey(),
+    puzzleId: varchar("puzzle_id")
+      .notNull()
+      .references(() => puzzles.id, { onDelete: "cascade" }),
+    teamId: varchar("team_id")
+      .notNull()
+      .references(() => teams.id, { onDelete: "cascade" }),
+    request: text("request").notNull(),
+    requestTime: timestamp("request_time", { withTimezone: true }),
+    claimer: varchar("claimer").references(() => teams.id),
+    claimTime: timestamp("claim_time", { withTimezone: true }),
+    response: text("response"),
+    responseTime: timestamp("response_time", { withTimezone: true }),
+    status: hintStatusEnum("status").notNull().default("no_response"),
+    // Not included:
+    // obsolute statuses
+    // notify_emails, discord_id, is_followup
+  },
+  (table) => {
+    return {
+      team_and_puzzle_idx: index("hins_team_and_puzzle_idx").on(
+        table.teamId,
+        table.puzzleId,
+      ),
+    };
+  },
+);
 
-  guess: varchar("guess", { length: 255 }).notNull(),
-  isCorrect: boolean("is_correct").notNull(),
-  submitTime: timestamp("submit_time", { withTimezone: true }).notNull(),
-
-  // Not included:
-  // used_free_answer
-});
-
-export const errata = createTable("erratum", {
-  id: serial("id").primaryKey(),
-  puzzleId: varchar("puzzle_id")
-    .notNull()
-    .references(() => puzzles.id, { onDelete: "cascade" }),
-  timestamp: timestamp("timestamp", { withTimezone: true })
-    .notNull()
-    .$defaultFn(() => new Date()),
-  description: text("description").notNull(),
-});
+export const errata = createTable(
+  "erratum",
+  {
+    id: serial("id").primaryKey(),
+    puzzleId: varchar("puzzle_id")
+      .notNull()
+      .references(() => puzzles.id, { onDelete: "cascade" }),
+    timestamp: timestamp("timestamp", { withTimezone: true })
+      .notNull()
+      .$defaultFn(() => new Date()),
+    description: text("description").notNull(),
+  },
+  (table) => {
+    return {
+      puzzle_idx: index("errata_puzzle_idx").on(table.puzzleId),
+    };
+  },
+);
 
 export const feedback = createTable("feedback", {
   id: serial("id").primaryKey(),
@@ -112,33 +179,8 @@ export const feedback = createTable("feedback", {
   description: text("feedback").notNull(),
 });
 
-export const hints = createTable("hint", {
-  id: serial("id").primaryKey(),
-
-  puzzleId: varchar("puzzle_id")
-    .notNull()
-    .references(() => puzzles.id, { onDelete: "cascade" }),
-
-  teamId: varchar("team_id")
-    .notNull()
-    .references(() => teams.id, { onDelete: "cascade" }),
-
-  request: text("request").notNull(),
-  requestTime: timestamp("request_time", { withTimezone: true }),
-  claimer: varchar("claimer").references(() => teams.id),
-  claimTime: timestamp("claim_time", { withTimezone: true }),
-  response: text("response"),
-  responseTime: timestamp("response_time", { withTimezone: true }),
-  status: hintStatusEnum("status").notNull().default("no_response"),
-
-  // Not included:
-  // obsolute statuses
-  // notify_emails, discord_id, is_followup
-});
-
-// TODO: Add indexes
-
 export const teamRelations = relations(teams, ({ many }) => ({
+  unlocks: many(unlocks),
   guesses: many(guesses),
   // Hints requested by this team
   requestedHints: many(hints, { relationName: "requested_hints" }),
@@ -147,9 +189,21 @@ export const teamRelations = relations(teams, ({ many }) => ({
 }));
 
 export const puzzleRelations = relations(puzzles, ({ many }) => ({
+  unlocks: many(unlocks),
   guesses: many(guesses),
   hints: many(hints),
   errata: many(errata),
+}));
+
+export const unlockRelations = relations(unlocks, ({ one }) => ({
+  team: one(teams, {
+    fields: [unlocks.teamId],
+    references: [teams.id],
+  }),
+  puzzle: one(puzzles, {
+    fields: [unlocks.puzzleId],
+    references: [puzzles.id],
+  }),
 }));
 
 export const guessRelations = relations(guesses, ({ one }) => ({

@@ -20,7 +20,7 @@ export default async function Home() {
 
   return (
     <div className="flex grow flex-col items-center">
-      <h1 className="mb-2">Puzzles!</h1>
+      <h1 className="mb-2">Solutions!</h1>
       <div className="w-1/3">
         <Table className="justify-center">
           <TableHeader>
@@ -55,6 +55,7 @@ export default async function Home() {
                     {nextPuzzlesMap[puzzle.id] &&
                       nextPuzzlesMap[puzzle.id]?.map((puzzle) => (
                         <Link
+                          key={puzzle.id}
                           href={`/puzzle/${puzzle.id}`}
                           className="hover:underline"
                         >

@@ -2,10 +2,11 @@
 
 import { db } from "@/db/index";
 import { teams, type interactionModeEnum } from "@/db/schema";
-import { hash } from "bcrypt";
+import { hash } from "bcryptjs";
 import { eq } from "drizzle-orm";
 import { login } from "../login/actions";
 
+/** Inserts a team into the team table */
 export async function insertTeam(
   username: string,
   displayName: string,

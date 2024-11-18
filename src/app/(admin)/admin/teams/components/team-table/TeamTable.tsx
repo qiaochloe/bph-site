@@ -24,15 +24,15 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-interface HintTableProps<TData, TValue> {
+interface TeamTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export function HintTable<TData, TValue>({
+export function TeamTable<TData, TValue>({
   columns,
   data,
-}: HintTableProps<TData, TValue>) {
+}: TeamTableProps<TData, TValue>) {
   const router = useRouter();
   const { data: session } = useSession();
   const userId = session?.user?.id;
@@ -57,7 +57,6 @@ export function HintTable<TData, TValue>({
       },
       columnVisibility: {
         responseTime: false,
-        status: false,
       },
     },
     pageCount: Math.ceil(data.length / pageSize),
@@ -69,10 +68,12 @@ export function HintTable<TData, TValue>({
     <div className="flex h-full flex-col">
       <div className="flex items-center justify-between space-x-2 p-4">
         <Input
-          placeholder="Filter hints..."
-          value={(table.getColumn("request")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter teams..."
+          value={
+            (table.getColumn("username")?.getFilterValue() as string) ?? ""
+          }
           onChange={(event) =>
-            table.getColumn("request")?.setFilterValue(event.target.value)
+            table.getColumn("username")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
@@ -122,12 +123,12 @@ export function HintTable<TData, TValue>({
                       if (event.metaKey || event.ctrlKey) {
                         // Open in new tab
                         window.open(
-                          `/admin/hints/${row.getValue("id")}`,
+                          `/admin/teams/${row.getValue("username")}`,
                           "_blank",
                         );
                       } else {
-                        // Move to hint page
-                        router.push(`/admin/hints/${row.getValue("id")}`);
+                        // Move to team page
+                        router.push(`/admin/teams/${row.getValue("username")}`);
                         router.refresh();
                       }
                     }}

@@ -1,6 +1,6 @@
-import { auth } from "@/auth";
-import { LogoutButton } from "./LogoutButton";
 import Link from "next/link";
+import { auth } from "~/server/auth/auth";
+import { LogoutButton } from "./LogoutButton";
 
 export async function HuntTopNav() {
   const session = await auth();
@@ -11,7 +11,7 @@ export async function HuntTopNav() {
           Home
         </Link>
         <Link href="/puzzle" className="hover:underline">
-          Puzzle
+          Puzzles
         </Link>
         <Link href="/teams" className="hover:underline">
           Teams
@@ -21,13 +21,21 @@ export async function HuntTopNav() {
         </Link>
       </div>
       <div className="flex space-x-4">
-        {session?.user?.role === "admin" && (
-          <Link href="/admin" className="hover:underline">
-            Admin
-          </Link>
-        )}
         {session?.user?.id ? (
-          <LogoutButton />
+          <>
+            <Link
+              href={`/teams/${session.user.username}`}
+              className="hover:underline"
+            >
+              {session.user.displayName}
+            </Link>
+            {session?.user?.role === "admin" && (
+              <Link href="/admin" className="hover:underline">
+                Admin
+              </Link>
+            )}
+            <LogoutButton />
+          </>
         ) : (
           <Link href="/login" className="hover:underline">
             Login

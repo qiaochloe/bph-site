@@ -84,18 +84,21 @@ export default function HintForm({
                     remaining.{" "}
                   </>
                 )}
-                {unansweredHint && (
-                  <>
-                    You have an outstanding hint on the puzzle{" "}
-                    <Link
-                      href={`/puzzle/${unansweredHint.puzzleId}`}
-                      className="text-blue-500"
-                    >
-                      {unansweredHint.puzzleName}
-                    </Link>
-                    .
-                  </>
-                )}
+                {unansweredHint &&
+                  (puzzleId === unansweredHint.puzzleId ? (
+                    <>You have an outstanding hint on this puzzle.</>
+                  ) : (
+                    <>
+                      You have an outstanding hint on the puzzle{" "}
+                      <Link
+                        href={`/puzzle/${unansweredHint.puzzleId}`}
+                        className="text-blue-500 hover:underline"
+                      >
+                        {unansweredHint.puzzleName}
+                      </Link>
+                      .
+                    </>
+                  ))}
               </FormDescription>
               <FormMessage />
             </FormItem>
