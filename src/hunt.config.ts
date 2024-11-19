@@ -156,7 +156,7 @@ export async function getNextPuzzleMap() {
 
 /** Solution drop system */
 
-/** Determines whether the user can view the solutions. 
+/** Determines whether the user can view the solutions.
  * WARNING: make sure to exclude certain puzzles if the solutions aren't available
  */
 export async function canViewSolutions(puzzleId: string) {
