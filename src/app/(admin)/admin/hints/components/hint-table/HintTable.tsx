@@ -25,6 +25,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { hintStatusEnum } from "~/server/db/schema";
+import { HintClaimer } from "./Columns";
 
 interface HintTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -40,7 +42,9 @@ export function HintTable<TData, TValue>({
   const userId = session?.user?.id;
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: "claimer", desc: true },
+  ]);
   const pageSize = 10;
 
   const table = useReactTable({
@@ -64,6 +68,61 @@ export function HintTable<TData, TValue>({
       columnVisibility: {
         responseTime: false,
         status: false,
+      },
+    },
+    sortingFns: {
+      sortHintByStatus: (rowA, rowB, _columnId) => {
+        const claimerA: HintClaimer | null = rowA.getValue("claimer");
+        const claimerB: HintClaimer | null = rowB.getValue("claimer");
+        const statusA: string = rowA.getValue("status");
+        const statusB: string = rowB.getValue("status");
+
+        // Unclaimed hints are only below the user's claimed and unanswered hints
+        if (claimerA === null) {
+          if (claimerB === null) return 0;
+          if (claimerB.id === userId && statusB === "no_response") return -1;
+          return 1;
+        }
+        if (claimerB === null) {
+          if (claimerA.id === userId && statusA === "no_response") return 1;
+          return -1;
+        }
+
+        // Refundable hints are at the very bottom
+        if (statusA === "answered") {
+          if (claimerA.id === userId)
+            return statusB === "answered" && claimerB.id === userId ? 0 : -1;
+          else if (statusB === "answered")
+            return claimerB.id === userId ? 1 : -1;
+        }
+        if (statusB === "answered") {
+          return claimerB.id === userId ? 1 : -1;
+        }
+
+        // Refunded hints are right above them
+        if (statusA === "refunded") {
+          return statusB === "refunded" ? 0 : -1;
+        }
+        if (statusB === "refunded") return 1;
+
+        // Answered hints are sorted by who answered them
+        if (statusA === "answered") {
+          if (statusB === "answered") {
+            if (claimerA.id === userId) return claimerB.id === userId ? 0 : 1;
+            return claimerB.id === userId ? -1 : 0;
+          }
+          return -1;
+        }
+        if (statusB === "answered") {
+          return 1;
+        }
+
+        // Remaining hints have no response, show user's claimed hints first
+        if (claimerA.id === userId) {
+          return claimerB.id === userId ? 0 : 1;
+        } else {
+          return claimerB.id === userId ? -1 : 0;
+        }
       },
     },
     pageCount: Math.ceil(data.length / pageSize),
