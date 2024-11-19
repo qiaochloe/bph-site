@@ -63,6 +63,7 @@ export function HintTable<TData, TValue>({
       },
       columnVisibility: {
         responseTime: false,
+        status: false,
       },
     },
     pageCount: Math.ceil(data.length / pageSize),

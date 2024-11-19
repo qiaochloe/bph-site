@@ -10,7 +10,7 @@ import PreviousHintTable from "../../../../(hunt)/puzzle/components/PreviousHint
 import PreviousGuessTable from "~/app/(hunt)/puzzle/components/PreviousGuessTable";
 import { RequestBox } from "../components/hint-page/RequestBox";
 import { ResponseBox } from "../components/hint-page/ResponseBox";
-import ClaimBox from "../components/hint-page/ClaimBox";
+import HintStatusBox from "../components/hint-page/HintStatusBox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Toast from "../components/hint-page/Toast";
 
@@ -40,7 +40,7 @@ export default async function Page({
   const hint = await db.query.hints.findFirst({
     where: eq(hints.id, hintId),
     with: {
-      team: { columns: { displayName: true } },
+      team: { columns: { displayName: true, username: true } },
       claimer: { columns: { id: true, displayName: true } },
       puzzle: { columns: { name: true } },
     },
@@ -73,10 +73,10 @@ export default async function Page({
     <div className="flex w-2/3 min-w-36 grow flex-col">
       <div className="flex flex-col items-center">
         <h1>Answer a Hint</h1>
-        <ClaimBox
-          id={hint.id}
+        <HintStatusBox
+          hintId={hint.id}
           claimer={hint.claimer}
-          response={hint.response}
+          status={hint.status}
           userId={session.user.id}
         />
       </div>
@@ -99,7 +99,13 @@ export default async function Page({
           <TabsContent value="response">
             <div className="bg-zinc-100 p-4 text-zinc-700">
               <p>
-                <strong>From:</strong> {hint.team.displayName}
+                <strong>From: </strong>
+                <Link
+                  href={`/admin/teams/${hint.team.username}`}
+                  className="text-blue-600 hover:underline"
+                >
+                  {hint.team.displayName}
+                </Link>
               </p>
               <p>
                 <strong>For:</strong>{" "}

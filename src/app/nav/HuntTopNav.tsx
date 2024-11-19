@@ -11,18 +11,16 @@ export async function HuntTopNav() {
           Home
         </Link>
         <Link href="/puzzle" className="hover:underline">
-          Puzzle
+          Puzzles
         </Link>
         <Link href="/teams" className="hover:underline">
           Teams
         </Link>
+        <Link href="/feedback" className="hover:underline">
+          Feedback
+        </Link>
       </div>
       <div className="flex space-x-4">
-        {session?.user?.role === "admin" && (
-          <Link href="/admin" className="hover:underline">
-            Admin
-          </Link>
-        )}
         {session?.user?.id ? (
           <>
             <Link
@@ -31,6 +29,11 @@ export async function HuntTopNav() {
             >
               {session.user.displayName}
             </Link>
+            {session?.user?.role === "admin" && (
+              <Link href="/admin" className="hover:underline">
+                Admin
+              </Link>
+            )}
             <LogoutButton />
           </>
         ) : (

@@ -4,12 +4,15 @@ import { eq, and, isNull } from "drizzle-orm";
 import { db } from "~/server/db";
 import { guesses, hints, errata, puzzles } from "~/server/db/schema";
 
-import PreviousGuessTable from "../components/PreviousGuessTable";
-import PreviousHintTable from "../components/PreviousHintTable";
-import ErratumDialog from "../components/ErratumDialog";
-import HintForm from "../components/HintForm";
-import GuessForm from "../components/GuessForm";
-import { getTotalHints, NUMBER_OF_GUESSES_PER_PUZZLE } from "~/hunt.config";
+import PreviousGuessTable from "./PreviousGuessTable";
+import PreviousHintTable from "./PreviousHintTable";
+import ErratumDialog from "./ErratumDialog";
+import HintForm from "./HintForm";
+import GuessForm from "./GuessForm";
+import {
+  getNumberOfHintsRemaining,
+  NUMBER_OF_GUESSES_PER_PUZZLE,
+} from "~/hunt.config";
 
 // TODO: database queries can definitely be more efficient
 // See drizzle
@@ -49,14 +52,17 @@ export default async function DefaultPuzzlePage({
   // Get previous hints
   const previousHints = await db.query.hints.findMany({
     where: and(eq(hints.teamId, session.user.id), eq(hints.puzzleId, puzzleId)),
-    columns: { id: true, request: true, response: true },
+    columns: { id: true, request: true, response: true, status: true },
   });
 
-  const hintsRemaining = getTotalHints(session.user.id) - previousHints.length;
+  const hintsRemaining = await getNumberOfHintsRemaining(session.user.id);
 
   const query = await db.query.hints.findFirst({
     columns: {},
-    where: and(eq(hints.teamId, session.user.id), isNull(hints.response)),
+    where: and(
+      eq(hints.teamId, session.user.id),
+      eq(hints.status, "no_response"),
+    ),
     with: { puzzle: { columns: { id: true, name: true } } },
   });
   const unansweredHint = query
