@@ -1,4 +1,5 @@
 import { insertUnlock } from "./app/(hunt)/puzzle/actions";
+import { auth } from "./server/auth/auth";
 import { db } from "./server/db";
 import { teams, puzzles, guesses, hints } from "./server/db/schema";
 import { and, count, eq, ne } from "drizzle-orm";
@@ -153,23 +154,25 @@ export async function getNextPuzzleMap() {
   */
 }
 
-/**
- * Runs every time a team solves a puzzle.
+/** Solution drop system */
+
+/** Determines whether the user can view the solutions. 
+ * WARNING: make sure to exclude certain puzzles if the solutions aren't available
  */
-// export async function unlockPuzzleAfterSolve(teamId: string, puzzleId: string) {
-//   const nextPuzzles = (await getNextPuzzleMap())[puzzleId];
+export async function canViewSolutions(puzzleId: string) {
+  // Get user id
+  const session = await auth()!;
+  if (!session?.user?.id) {
+    throw new Error("Not authorized");
+  }
 
-//   if (!nextPuzzles) {
-//     return null;
-//   }
+  const isSolved = !!(await db.query.guesses.findFirst({
+    where: and(
+      eq(guesses.teamId, session.user.id),
+      eq(guesses.puzzleId, puzzleId),
+      guesses.isCorrect,
+    ),
+  }));
 
-//   await insertUnlock(
-//     teamId,
-//     nextPuzzles.map((puzzle) => puzzle.id),
-//   );
-// }
-//
-
-/** Checks whether a team has completed the hunt. This is called every time
- * a team submits a correct guess for a puzzle.
- */
+  return session.user.role == "admin" || isSolved || new Date() > HUNT_END_TIME;
+}

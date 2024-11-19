@@ -1,6 +1,6 @@
 import { db } from "~/server/db";
-import DefaultPuzzlePage from "../components/DefaultPuzzlePage";
-import { PuzzleBody } from "./data";
+import DefaultSolutionPage from "../../components/DefaultSolutionPage";
+import { SolutionBody } from "../data";
 
 // Send to 404 if route was not generated at build-time
 export const dynamicParams = false;
@@ -17,5 +17,5 @@ export default async function Page({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  return <DefaultPuzzlePage puzzleId={slug} puzzleBody={PuzzleBody()} />;
+  return <DefaultSolutionPage puzzleId={slug} solutionBody={SolutionBody()} />;
 }
