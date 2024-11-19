@@ -9,11 +9,11 @@ import PreviousHintTable from "./PreviousHintTable";
 import ErratumDialog from "./ErratumDialog";
 import HintForm from "./HintForm";
 import GuessForm from "./GuessForm";
+import GuessStatisticsInfo from "~/app/(admin)/admin/puzzles/components/GuessStatisticsInfo";
 import {
   getNumberOfHintsRemaining,
   NUMBER_OF_GUESSES_PER_PUZZLE,
 } from "~/hunt.config";
-import GuessStatisticsInfo from "~/app/(admin)/admin/puzzles/components/GuessStatisticsInfo";
 
 // TODO: database queries can definitely be more efficient
 // See drizzle
