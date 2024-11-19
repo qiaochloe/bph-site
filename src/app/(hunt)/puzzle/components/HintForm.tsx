@@ -80,7 +80,7 @@ export default function HintForm({
     if (hintsRemaining === 0) {
       return <>No hints remaining.</>;
     } else if (hintsRemaining === 1) {
-      return <>1 hinting remaining.</>;
+      return <>1 hint remaining.</>;
     } else {
       return <>{hintsRemaining} hints remaining.</>;
     }
