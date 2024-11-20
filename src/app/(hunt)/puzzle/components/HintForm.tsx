@@ -19,6 +19,8 @@ import {
 } from "@/components/ui/form";
 import { insertHint } from "../actions";
 import Link from "next/link";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { useState } from "react";
 
 const formSchema = z.object({
   hintRequest: z.string().min(1, {
@@ -30,24 +32,32 @@ type FormProps = {
   puzzleId: string;
   hintsRemaining: number;
   unansweredHint: { puzzleId: string; puzzleName: string } | null;
+  hintRequest: string;
+  setHintRequest: (hintRequest: string) => void;
+  closeDialog: () => void;
 };
 
-export default function HintForm({
+function HintForm({
   puzzleId,
   hintsRemaining,
   unansweredHint,
+  hintRequest,
+  setHintRequest,
+  closeDialog,
 }: FormProps) {
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      hintRequest: "",
+      hintRequest: hintRequest,
     },
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     await insertHint(puzzleId, data.hintRequest);
+    setHintRequest("");
     form.reset();
+    closeDialog();
     router.refresh();
   };
 
@@ -73,6 +83,11 @@ export default function HintForm({
                   className="resize-none"
                   disabled={!!unansweredHint || hintsRemaining < 1}
                   {...field}
+                  value={hintRequest}
+                  onChange={(e) => {
+                    setHintRequest(e.target.value);
+                    field.onChange(e);
+                  }}
                 />
               </FormControl>
               <FormDescription>
@@ -109,5 +124,40 @@ export default function HintForm({
         </Button>
       </form>
     </Form>
+  );
+}
+
+export default function HintDialog({
+  puzzleId,
+  hintsRemaining,
+  unansweredHint,
+}: {
+  puzzleId: string;
+  hintsRemaining: number;
+  unansweredHint: { puzzleId: string; puzzleName: string } | null;
+}) {
+  const [hintRequest, setHintRequest] = useState("");
+  const [open, setOpen] = useState(false);
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="outline" className="z-90 fixed bottom-4 right-4">
+          <p className="m-2">Request a hint</p>
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <div className="mb-4 min-w-36">
+          <HintForm
+            puzzleId={puzzleId}
+            hintsRemaining={hintsRemaining}
+            unansweredHint={unansweredHint}
+            hintRequest={hintRequest}
+            setHintRequest={setHintRequest}
+            closeDialog={() => setOpen(false)}
+          />
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

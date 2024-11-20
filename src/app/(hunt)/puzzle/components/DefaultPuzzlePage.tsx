@@ -8,7 +8,7 @@ import { guesses, hints, errata, puzzles, unlocks } from "~/server/db/schema";
 import PreviousGuessTable from "./PreviousGuessTable";
 import PreviousHintTable from "./PreviousHintTable";
 import ErratumDialog from "./ErratumDialog";
-import HintForm from "./HintForm";
+import HintDialog from "./HintForm";
 import GuessForm from "./GuessForm";
 import {
   getNumberOfHintsRemaining,
@@ -123,20 +123,17 @@ export default async function DefaultPuzzlePage({
         <PreviousGuessTable previousGuesses={previousGuesses} />
       </div>
 
-      {hasCorrectGuess || (
-        <div className="mb-4 w-2/3 min-w-36">
-          <HintForm
-            puzzleId={puzzleId}
-            hintsRemaining={hintsRemaining}
-            unansweredHint={unansweredHint}
-          />
-        </div>
-      )}
-
       <h2 className="mb-2">Previous Hints</h2>
       <div className="w-2/3 min-w-36">
         <PreviousHintTable previousHints={previousHints} />
       </div>
+      {hasCorrectGuess || (
+        <HintDialog
+          puzzleId={puzzleId}
+          hintsRemaining={hintsRemaining}
+          unansweredHint={unansweredHint}
+        />
+      )}
     </div>
   );
 }
