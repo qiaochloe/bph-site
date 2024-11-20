@@ -152,24 +152,3 @@ export async function getNextPuzzleMap() {
   }
   */
 }
-
-/**
- * Runs every time a team solves a puzzle.
- */
-// export async function unlockPuzzleAfterSolve(teamId: string, puzzleId: string) {
-//   const nextPuzzles = (await getNextPuzzleMap())[puzzleId];
-
-//   if (!nextPuzzles) {
-//     return null;
-//   }
-
-//   await insertUnlock(
-//     teamId,
-//     nextPuzzles.map((puzzle) => puzzle.id),
-//   );
-// }
-//
-
-/** Checks whether a team has completed the hunt. This is called every time
- * a team submits a correct guess for a puzzle.
- */
