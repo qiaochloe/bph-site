@@ -21,22 +21,40 @@ export const NUMBER_OF_GUESSES_PER_PUZZLE = 20;
  * You should really avoid changing anything here after the hunt starts
  */
 
-/** Handles puzzle unlocks after a puzzle is solved.
+/** Puzzles available at the beginning of the hunt that will never need to be unlocked by the team.
+ * This is currently set to the first puzzle in the database alphabetically.
+ */
+export const INITIAL_PUZZLES = async () => {
+  const firstPuzzle = (
+    await db.query.puzzles.findMany({ columns: { id: true, name: true } })
+  ).sort((a, b) => a.name.localeCompare(b.name))[0];
+
+  const INITIAL_PUZZLES: string[] = firstPuzzle ? [firstPuzzle.id] : [];
+  return INITIAL_PUZZLES;
+};
+
+/** Returns a map for the next puzzles unlocked after a puzzle is solved.
  * This is currently set to a sequential unlock, sorted alphabetically by puzzle name.
  */
-export async function unlockPuzzleAfterSolve(teamId: string, puzzleId: string) {
+export async function getNextPuzzleMap() {
   /* Example: list unlock */
-  const puzzles = (await db.query.puzzles.findMany()).sort((a, b) =>
-    a.name.localeCompare(b.name),
-  );
+  const puzzles = (
+    await db.query.puzzles.findMany({ columns: { id: true, name: true } })
+  ).sort((a, b) => a.name.localeCompare(b.name));
 
-  const nextIndex = puzzles.findIndex(({ id }) => id == puzzleId) + 1;
+  const nextPuzzleMap: Record<string, { id: string; name: string }[] | null> =
+    puzzles.reduce(
+      (map, puzzle, index) => {
+        const nextPuzzle = puzzles[index + 1];
+        if (nextPuzzle) {
+          map[puzzle.id] = [nextPuzzle];
+        }
+        return map;
+      },
+      {} as Record<string, { id: string; name: string }[] | null>,
+    );
 
-  if (!puzzles[nextIndex]) {
-    return null;
-  }
-
-  await insertUnlock(teamId, [puzzles[nextIndex].id]);
+  return nextPuzzleMap;
 
   /* Example: adjacency list unlock
 
@@ -51,8 +69,20 @@ export async function unlockPuzzleAfterSolve(teamId: string, puzzleId: string) {
     await insertUnlock(teamId, PUZZLE_UNLOCK_MAP[puzzleId]);
   }
   */
+}
 
-  return null;
+/** Handles puzzle unlocks after a puzzle is solved.
+ * This is currently set to a sequential unlock, sorted alphabetically by puzzle name.
+ */
+export async function unlockPuzzleAfterSolve(teamId: string, puzzleId: string) {
+  const nextPuzzleMap = await getNextPuzzleMap();
+  let nextPuzzles = nextPuzzleMap[puzzleId];
+  if (nextPuzzles) {
+    await insertUnlock(
+      teamId,
+      nextPuzzles.map((puzzle) => puzzle.id),
+    );
+  }
 }
 
 /** Checks whether a team has completed the hunt. This is called every time
@@ -98,60 +128,6 @@ export async function getNumberOfHintsRemaining(teamId: string) {
     .where(and(eq(hints.teamId, teamId), ne(hints.status, "refunded")));
   const usedHints = query[0]?.count ? query[0].count : 0;
   return totalHints - usedHints;
-}
-
-/** PUZZLE UNLOCK SYSTEM
- * WARNING: make sure that everything here is a valid puzzle ID.
- * You should really avoid changing anything here after the hunt starts
- */
-
-/** Puzzles available at the beginning of the hunt that will never need to be unlocked by the team.
- * This is currently set to the first puzzle in the database alphabetically.
- */
-export const INITIAL_PUZZLES = async () => {
-  const firstPuzzle = (await db.query.puzzles.findMany()).sort((a, b) =>
-    a.name.localeCompare(b.name),
-  )[0];
-  const INITIAL_PUZZLES: string[] = firstPuzzle ? [firstPuzzle.id] : [];
-  return INITIAL_PUZZLES;
-};
-
-/** Returns a map for the next puzzles unlocked after a puzzle is solved.
- * This is currently set to a sequential unlock, sorted alphabetically by puzzle name.
- */
-export async function getNextPuzzleMap() {
-  /* Example: list unlock */
-  const puzzles = (
-    await db.query.puzzles.findMany({ columns: { id: true, name: true } })
-  ).sort((a, b) => a.name.localeCompare(b.name));
-
-  const nextPuzzleMap: Record<string, { id: string; name: string }[] | null> =
-    puzzles.reduce(
-      (map, puzzle, index) => {
-        const nextPuzzle = puzzles[index + 1];
-        if (nextPuzzle) {
-          map[puzzle.id] = [nextPuzzle];
-        }
-        return map;
-      },
-      {} as Record<string, { id: string; name: string }[] | null>,
-    );
-
-  return nextPuzzleMap;
-
-  /* Example: adjacency list unlock
-
-  const PUZZLE_UNLOCK_MAP: { [key: string]: string[] } = {
-    puzzle1: ["puzzle1", "puzzle2", "hello"],
-    puzzle2: ["hello", "sorry"],
-    hello: ["sorry", "puzzle2", "puzzle1"],
-    sorry: ["sorry", "puzzle2", "puzzle1"],
-  };
-
-  if (PUZZLE_UNLOCK_MAP[puzzleId]) {
-    await insertUnlock(teamId, PUZZLE_UNLOCK_MAP[puzzleId]);
-  }
-  */
 }
 
 /** Solution drop system */

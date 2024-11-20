@@ -7,7 +7,7 @@ export const dynamicParams = false;
 
 // Return a list of `params` to populate the [slug] dynamic segment
 export async function generateStaticParams() {
-  const puzzles = await db.query.puzzles.findMany();
+  const puzzles = await db.query.puzzles.findMany({ columns: { id: true } });
   return puzzles.map((puzzle) => ({ slug: puzzle.id }));
 }
 

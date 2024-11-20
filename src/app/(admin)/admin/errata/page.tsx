@@ -1,14 +1,10 @@
-import { auth } from "@/auth";
 import { db } from "@/db/index";
 import ErratumForm from "./ErratumForm";
 
 export default async function Home() {
-  const session = await auth();
-  if (session?.user?.role !== "admin") {
-    return <p>You are not authorized to access this page.</p>;
-  }
-
-  const puzzleList = await db.query.puzzles.findMany();
+  const puzzleList = await db.query.puzzles.findMany({
+    columns: { id: true, name: true },
+  });
 
   const errataList = (await db.query.errata.findMany()).sort(
     (a, b) => a.timestamp.getTime() - b.timestamp.getTime(),
