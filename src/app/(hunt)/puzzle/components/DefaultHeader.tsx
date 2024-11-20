@@ -4,9 +4,11 @@ import { canViewSolutions } from "~/hunt.config";
 export default async function DefaultHeader({
   puzzleName,
   puzzleId,
+  hasSolution,
 }: {
   puzzleName: string;
   puzzleId: string;
+  hasSolution: boolean;
 }) {
   return (
     <div className="mb-4 w-2/3 min-w-36 flex-col items-center text-center">
@@ -25,7 +27,7 @@ export default async function DefaultHeader({
         >
           Hint
         </Link>
-        {(await canViewSolutions(puzzleId)) && (
+        {hasSolution && (await canViewSolutions(puzzleId)) && (
           <>
             <span className="text-gray-500">|</span>
             <Link
