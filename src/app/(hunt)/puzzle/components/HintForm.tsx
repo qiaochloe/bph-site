@@ -1,12 +1,11 @@
 "use client";
 
 import React from "react";
-import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
-
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -17,8 +16,10 @@ import {
   FormMessage,
   FormLabel,
 } from "@/components/ui/form";
+
+import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { insertHint } from "../actions";
-import Link from "next/link";
+import { HUNT_END_TIME } from "~/hunt.config";
 
 const formSchema = z.object({
   hintRequest: z.string().min(1, {
@@ -39,6 +40,7 @@ export default function HintForm({
   unansweredHint,
   isSolved,
 }: FormProps) {
+  const currDate = new Date();
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -52,6 +54,43 @@ export default function HintForm({
     form.reset();
     router.refresh();
   };
+
+  function getFormDescription() {
+    if (currDate > HUNT_END_TIME) {
+      return <>Hunt has ended and live hinting has closed.</>;
+    }
+
+    if (isSolved) {
+      return <>You have already solved this puzzle.</>;
+    }
+
+    if (unansweredHint) {
+      if (puzzleId === unansweredHint.puzzleId) {
+        return <>You have an outstanding hint on this puzzle.</>;
+      } else {
+        return (
+          <>
+            You have an outstanding hint on the puzzle{" "}
+            <Link
+              href={`/puzzle/${unansweredHint.puzzleId}`}
+              className="text-blue-500 hover:underline"
+            >
+              {unansweredHint.puzzleName}
+            </Link>
+            .
+          </>
+        );
+      }
+    }
+
+    if (hintsRemaining === 0) {
+      return <>No hints remaining.</>;
+    } else if (hintsRemaining === 1) {
+      return <>1 hint remaining.</>;
+    } else {
+      return <>{hintsRemaining} hints remaining.</>;
+    }
+  }
 
   return (
     <Form {...form}>
@@ -73,44 +112,28 @@ export default function HintForm({
                 <AutosizeTextarea
                   maxHeight={500}
                   className="resize-none"
-                  disabled={isSolved || !!unansweredHint || hintsRemaining < 1}
+                  disabled={
+                    isSolved ||
+                    !!unansweredHint ||
+                    hintsRemaining < 1 ||
+                    currDate > HUNT_END_TIME
+                  }
                   {...field}
                 />
               </FormControl>
-              <FormDescription>
-                {hintsRemaining === 0 ? (
-                  "No hints remaining. "
-                ) : (
-                  <>
-                    {hintsRemaining} {hintsRemaining === 1 ? "hint" : "hints"}{" "}
-                    remaining.{" "}
-                  </>
-                )}
-                {isSolved && <>You have already solved this puzzle.</>}
-                {!isSolved &&
-                  unansweredHint &&
-                  (puzzleId === unansweredHint.puzzleId ? (
-                    <>You have an outstanding hint on this puzzle.</>
-                  ) : (
-                    <>
-                      You have an outstanding hint on the puzzle{" "}
-                      <Link
-                        href={`/puzzle/${unansweredHint.puzzleId}`}
-                        className="text-blue-500 hover:underline"
-                      >
-                        {unansweredHint.puzzleName}
-                      </Link>
-                      .
-                    </>
-                  ))}
-              </FormDescription>
+              <FormDescription>{getFormDescription()}</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
         <Button
           type="submit"
-          disabled={isSolved || !!unansweredHint || hintsRemaining < 1}
+          disabled={
+            isSolved ||
+            !!unansweredHint ||
+            hintsRemaining < 1 ||
+            currDate > HUNT_END_TIME
+          }
         >
           Submit
         </Button>
