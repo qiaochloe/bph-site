@@ -10,6 +10,7 @@ import PreviousHintTable from "./PreviousHintTable";
 import ErratumDialog from "./ErratumDialog";
 import HintForm from "./HintForm";
 import GuessForm from "./GuessForm";
+import GuessStatisticsInfo from "~/app/(admin)/admin/puzzles/components/GuessStatisticsInfo";
 import {
   getNumberOfHintsRemaining,
   INITIAL_PUZZLES,
@@ -101,6 +102,9 @@ export default async function DefaultPuzzlePage({
 
       <h1 className="mb-4">{puzzle.name}</h1>
       {puzzleBody}
+      {session.user.role === "admin" && (
+        <GuessStatisticsInfo puzzleId={puzzleId} />
+      )}
 
       <div className="mt-4 w-2/3 min-w-36">
         {!hasCorrectGuess && numberOfGuessesLeft > 0 && (
