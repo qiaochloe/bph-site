@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { canViewSolutions } from "~/hunt.config";
+import { canViewSolution } from "~/hunt.config";
 
 export default async function DefaultHeader({
   puzzleName,
@@ -27,7 +27,7 @@ export default async function DefaultHeader({
         >
           Hint
         </Link>
-        {hasSolution && (await canViewSolutions(puzzleId)) && (
+        {hasSolution && (await canViewSolution(puzzleId)) && (
           <>
             <span className="text-gray-500">|</span>
             <Link

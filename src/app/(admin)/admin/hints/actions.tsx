@@ -8,7 +8,6 @@ import { revalidatePath } from "next/cache";
 
 export async function respondToHint(hintId: number, response: string) {
   const session = await auth();
-
   if (session?.user?.role !== "admin") {
     throw new Error("Not authorized");
   }
@@ -69,13 +68,8 @@ export async function respondToHint(hintId: number, response: string) {
 
 export async function claimHint(hintId: number) {
   const session = await auth();
-
-  if (!session?.user?.id) {
-    throw new Error("Not logged in.");
-  }
-
-  if (session.user.role !== "admin") {
-    throw new Error("Not authorized.");
+  if (session?.user?.role !== "admin") {
+    throw new Error("Not authorized");
   }
 
   // For a hint to be claimed, the claimer must be null
@@ -128,15 +122,13 @@ export async function claimHint(hintId: number) {
 
 export async function unclaimHint(hintId: number) {
   const session = await auth();
-
-  // For a hint to be unclaimed, the claimer must be the user
-  // And the hint status must be "no_response"
   if (session?.user?.role !== "admin") {
     throw new Error("Not authorized");
   }
 
+  // For a hint to be unclaimed, the claimer must be the user
+  // And the hint status must be "no_response"
   let user = session.user.id ? session.user.id : "";
-
   let result = await db
     .update(hints)
     .set({ claimer: null, claimTime: null })
@@ -184,10 +176,9 @@ export async function refundHint(hintId: number) {
     throw new Error("Not authorized");
   }
 
-  let user = session.user.id ? session.user.id : "";
-
   // For a hint to be refunded, the claimer must be the user
   // And the hint status must not be "no_response"
+  let user = session.user.id ? session.user.id : "";
   let result = await db
     .update(hints)
     .set({ status: "refunded" })

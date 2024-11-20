@@ -1,18 +1,19 @@
 "use server";
 
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { auth } from "~/server/auth/auth";
 import { db } from "@/db/index";
 import { guesses, hints } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 
+import Toast from "../components/hint-page/Toast";
+import HintStatusBox from "../components/hint-page/HintStatusBox";
 import PreviousHintTable from "../../../../(hunt)/puzzle/components/PreviousHintTable";
 import PreviousGuessTable from "~/app/(hunt)/puzzle/components/PreviousGuessTable";
 import { RequestBox } from "../components/hint-page/RequestBox";
 import { ResponseBox } from "../components/hint-page/ResponseBox";
-import HintStatusBox from "../components/hint-page/HintStatusBox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Toast from "../components/hint-page/Toast";
 
 export default async function Page({
   params,

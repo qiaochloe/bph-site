@@ -1,7 +1,7 @@
 import { db } from "~/server/db";
 import { eq } from "drizzle-orm";
 import { puzzles } from "~/server/db/schema";
-import { canViewSolutions, HUNT_END_TIME } from "~/hunt.config";
+import { canViewSolution, HUNT_END_TIME } from "~/hunt.config";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -26,7 +26,7 @@ export default async function DefaultSolutionPage({
   }
 
   // Hide the solution if the user is not an admin, has not solved the puzzle, and the hunt has not ended
-  const authorized = await canViewSolutions(puzzleId);
+  const authorized = await canViewSolution(puzzleId);
   if (!authorized) {
     return (
       <div className="flex w-2/3 min-w-36 grow flex-col items-center justify-center">

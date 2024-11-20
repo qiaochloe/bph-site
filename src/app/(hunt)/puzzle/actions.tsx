@@ -105,7 +105,6 @@ export async function insertHint(puzzleId: string, hint: string) {
   }
 }
 
-// TODO: this function is very slow
 /** Inserts a puzzle unlock into the unlock table */
 export async function insertUnlock(teamId: string, puzzleIds: string[]) {
   try {
