@@ -1,8 +1,9 @@
 import { auth } from "@/auth";
-import { eq, and, isNull } from "drizzle-orm";
+import { redirect } from "next/navigation";
 
 import { db } from "~/server/db";
-import { guesses, hints, errata, puzzles } from "~/server/db/schema";
+import { eq, and } from "drizzle-orm";
+import { guesses, hints, errata, puzzles, unlocks } from "~/server/db/schema";
 
 import PreviousGuessTable from "./PreviousGuessTable";
 import PreviousHintTable from "./PreviousHintTable";
@@ -11,11 +12,9 @@ import HintForm from "./HintForm";
 import GuessForm from "./GuessForm";
 import {
   getNumberOfHintsRemaining,
+  INITIAL_PUZZLES,
   NUMBER_OF_GUESSES_PER_PUZZLE,
 } from "~/hunt.config";
-
-// TODO: database queries can definitely be more efficient
-// See drizzle
 
 export default async function DefaultPuzzlePage({
   puzzleId,
@@ -24,10 +23,25 @@ export default async function DefaultPuzzlePage({
   puzzleId: string;
   puzzleBody: React.ReactNode;
 }) {
-  // Get user id
+  // Check if team has unlocked the puzzle yet
   const session = await auth()!;
   if (!session?.user?.id) {
     throw new Error("Not authorized");
+  }
+
+  const initialPuzzles = await INITIAL_PUZZLES();
+  if (
+    (initialPuzzles && initialPuzzles.includes(puzzleId)) ||
+    (await db.query.unlocks.findFirst({
+      columns: { id: true },
+      where: and(
+        eq(unlocks.teamId, session.user.id),
+        eq(unlocks.puzzleId, puzzleId),
+      ),
+    }))
+  ) {
+  } else {
+    redirect("/404");
   }
 
   // Get errata
@@ -71,8 +85,10 @@ export default async function DefaultPuzzlePage({
 
   // Get puzzle name
   const puzzle = await db.query.puzzles.findFirst({
+    columns: { name: true },
     where: eq(puzzles.id, puzzleId),
   })!;
+
   if (!puzzle) {
     throw new Error("Puzzle does not exist in database");
   }

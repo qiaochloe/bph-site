@@ -16,6 +16,7 @@ export async function insertTeam(
   username = username.toLowerCase();
 
   const duplicateUsername = await db.query.teams.findFirst({
+    columns: { id: true },
     where: eq(teams.username, username),
   });
 

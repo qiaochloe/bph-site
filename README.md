@@ -56,44 +56,7 @@ The setup is in the `src/server/auth` folder.
 Finally, on the frontend, we are using **Shadcn UI** components with the **Tailwind CSS** framework. Components are in the `src/components/ui` folder.
 
 # Roadmap
-
-## Current Progress
-
-- [x] Deploy to Vercel
-- [x] Add Vercel Postgres
-- [x] Add NextAuth with Discord
-- [x] Attach database to UI
-- [x] Create basic schema for puzzles and teams
-- [x] Add leaderboard page
-    - [x] Make the leaderboard page order by puzzles completed 
-- [x] Add simple puzzle page
-    - [x] Add client guess submission 
-    - [x] Add server side validation
-    - [x] Display previous guesses
-    - [x] Validate that the guess is not an empty string
-    - [x] Validate that the guess has not already been submitted before
-    - [x] Automatically convert the guess to uppercase alphabetic characters
-- [x] Handle authentication
-    - [x] Add registration page
-    - [x] Add login page
-    - [x] Add session management
-    - [x] Add middleware
-    - [x] Redesign the login page to look more like the registration page
-    - [x] Validate that the username is not already taken before inserting a new team
-    - [x] Hash and salt the password
-    - [x] Update "login" to "logout" on the nav bar when the user is logged in
-- [x] Finish data-modeling using gph-site/puzzles/models.py
-- [x] Add puzzle drop system
-    - [x] Display list of puzzles dynamically
-    - [x] Display puzzles when hunt starts
-- [x] Add hinting system
-    - [x] Add hint request form
-    - [x] Add previous hints table
-    - [x] Add hint response table in the admin panel
-
 ## By Puzzlethon
-
-**Goals:**
 
 1. In terms of hunt logistics:
     1. Registration opens
@@ -116,29 +79,9 @@ Finally, on the frontend, we are using **Shadcn UI** components with the **Tailw
     3. See all requests for hints (`src/app/admin/hints`)
     4. Give teams hints (`src/app/admin/hints`)
 
-**TODO Backlog:**
-
-- [ ] Automatically start and end registration
-- [ ] Automatically end the hunt
-- [ ] Add logic for teams "completing the hunt"
-- [ ] Add errata system
-
 ## By Brown Puzzlehunt
 
-- [ ] Extend the admin panel
-    - [ ] Add a Big Board (a live-updating team progress page)
-    - [ ] Add Submission Queue (a live-updating queue of submitted guesses)
-- [ ] Add test-solving system
-    - [ ] Remember to exclude those users from the leaderboard
 - [ ] Discord bot
-- [ ] Logging
-- [ ] Index the database
-- [ ] Redis layer
-- [ ] Add round system
-- [ ] Add password reset
-
-## Would be nice to have
-
 - [ ] Sync hint claiming between team members using streams
 - [ ] Sync guesses between team members using streams
 

@@ -1,17 +1,9 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import Link from "next/link";
 import { hints } from "~/server/db/schema";
 import HintStatusBox from "./HintStatusBox";
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
-
-/* TODO: 
-  Shorten request time to just the time (if it is today) and the date (if it is not today)
-  Exclude the year from the date
-  Display claimer as initials
-  #GoodFirstIssue
-*/
 
 export function formatTime(time: unknown) {
   if (!(time instanceof Date)) {
