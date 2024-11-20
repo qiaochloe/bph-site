@@ -22,7 +22,7 @@ export default async function Page({
   // Authentication
   const session = await auth();
   if (!session?.user?.id) {
-    return <p>Not authenticated.</p>;
+    throw new Error("Not authenticated");
   }
 
   // Check if slug is a valid number
@@ -63,6 +63,7 @@ export default async function Page({
   });
 
   const previousHints = await db.query.hints.findMany({
+    columns: { id: true, request: true, response: true },
     where: and(
       eq(hints.teamId, hint.teamId),
       eq(hints.puzzleId, hint.puzzleId),
