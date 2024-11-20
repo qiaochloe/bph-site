@@ -7,7 +7,7 @@ import { guesses, errata, unlocks } from "~/server/db/schema";
 import PreviousGuessTable from "./PreviousGuessTable";
 import ErratumDialog from "./ErratumDialog";
 import GuessForm from "./GuessForm";
-import { INITIAL_PUZZLES, NUMBER_OF_GUESSES_PER_PUZZLE } from "~/hunt.config";
+import { canViewPuzzle, NUMBER_OF_GUESSES_PER_PUZZLE } from "~/hunt.config";
 
 // TODO: database queries can definitely be more efficient
 // See drizzle
@@ -19,24 +19,9 @@ export default async function DefaultPuzzlePage({
   puzzleId: string;
   puzzleBody: React.ReactNode;
 }) {
-  // Check if team has unlocked the puzzle yet
+  // Get user
   const session = await auth()!;
-  if (!session?.user?.id) {
-    throw new Error("Not authorized");
-  }
-
-  const initialPuzzles = await INITIAL_PUZZLES();
-  if (
-    (initialPuzzles && initialPuzzles.includes(puzzleId)) ||
-    (await db.query.unlocks.findFirst({
-      columns: { id: true },
-      where: and(
-        eq(unlocks.teamId, session.user.id),
-        eq(unlocks.puzzleId, puzzleId),
-      ),
-    }))
-  ) {
-  } else {
+  if (!session?.user?.id || !(await canViewPuzzle(puzzleId))) {
     redirect("/404");
   }
 

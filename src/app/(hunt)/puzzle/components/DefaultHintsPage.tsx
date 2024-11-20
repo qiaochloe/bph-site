@@ -5,20 +5,22 @@ import { guesses, hints, puzzles } from "~/server/db/schema";
 import PreviousHintTable from "./PreviousHintTable";
 import HintForm from "./HintForm";
 import {
+  canViewPuzzle,
   getNumberOfHintsRemaining,
   NUMBER_OF_GUESSES_PER_PUZZLE,
 } from "~/hunt.config";
 import DefaultHeader from "./DefaultHeader";
+import { redirect } from "next/navigation";
 
 export default async function DefaultHintsPage({
   puzzleId,
 }: {
   puzzleId: string;
 }) {
-  // Get user id
+  // Get user
   const session = await auth()!;
-  if (!session?.user?.id) {
-    throw new Error("Not authorized");
+  if (!session?.user?.id || !(await canViewPuzzle(puzzleId))) {
+    redirect("/404");
   }
 
   // Check if puzzle is solved

@@ -1,9 +1,10 @@
-import { eq } from "drizzle-orm";
-import DefaultHeader from "../components/DefaultHeader";
+import { redirect } from "next/navigation";
 import { db } from "~/server/db";
-import { puzzles } from "~/server/db/schema";
-import { puzzleId } from "./data";
-import { SolutionBody } from "./data";
+import { eq, and } from "drizzle-orm";
+import { puzzles, unlocks } from "~/server/db/schema";
+
+import { puzzleId, SolutionBody } from "./data";
+import DefaultHeader from "../components/DefaultHeader";
 
 export default async function RootLayout({
   children,
@@ -13,7 +14,7 @@ export default async function RootLayout({
     where: eq(puzzles.id, puzzleId),
   })!;
   if (!puzzle) {
-    throw new Error("Puzzle does not exist in database");
+    redirect("/404");
   }
 
   const hasSolution = !!SolutionBody();
