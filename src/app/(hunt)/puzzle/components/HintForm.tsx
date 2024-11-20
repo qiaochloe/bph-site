@@ -22,7 +22,7 @@ import Link from "next/link";
 
 const formSchema = z.object({
   hintRequest: z.string().min(1, {
-    message: "Hint must contain at least one character",
+    message: "Request must contain at least one character",
   }),
 });
 
