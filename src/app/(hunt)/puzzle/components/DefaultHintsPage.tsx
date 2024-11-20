@@ -22,7 +22,7 @@ export default async function DefaultHintsPage({
   }
 
   // Check if puzzle is solved
-  const isSolved = !!(await db.query.guesses.findMany({
+  const isSolved = !!(await db.query.guesses.findFirst({
     where: and(
       eq(guesses.teamId, session.user.id),
       eq(guesses.puzzleId, puzzleId),
