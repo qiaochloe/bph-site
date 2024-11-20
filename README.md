@@ -1,17 +1,89 @@
 # Table of Contents
 
+[Hunt Guide](#hunt-guide)
+1. [Creating the Hunt](#creating-the-hunt)
+    1. [Before the Hunt](#before-the-hunt)
+    2. [Adding puzzles](#adding-puzzles)
+    3. [Hunt structure](#hunt-structure)
+2. [Administering the Hunt](#navigation)
+    1. [Navigation](#navigation)
+    2. [Hinting and errata](#hinting-and-errata)
+    3. [Team management](#team-management)
+
+[Developer's Guide](#developers-guide)
 1. [Quick Start](#quick-start)
 3. [Quick Links](#quick-links)
 2. [Overview](#overview)
 4. [Roadmap](#roadmap)
-   1. [Current Progress](#current-progress)
-   2. [By Puzzlethon](#by-puzzlethon)
-   3. [By Brown Puzzlehunt](#by-brown-puzzlehunt)
+    1. [Current Progress](#current-progress)
+    2. [By Puzzlethon](#by-puzzlethon)
+    3. [By Brown Puzzlehunt](#by-brown-puzzlehunt)
 5. [Some design decisions](#some-design-decisions)
-   1. [Architecture](#architecture)
-   2. [Different ways to communicate between client and server](#different-ways-to-communicate-between-client-and-server)
-   3. [Server Components vs Client Components](#server-components-vs-client-components)
+    1. [Architecture](#architecture)
+    2. [Different ways to communicate between client and server](#different-ways-to-communicate-between-client-and-server)
+    3. [Server Components vs Client Components](#server-components-vs-client-components)
 
+
+# Hunt Guide
+## Creating the hunt
+### Before the hunt
+
+Before registration starts, set registration and hunt start and end times in `hunt.config.js`.
+
+Before the hunt starts,
+1. Remove `src/app/(hunt)/puzzle/[slug]`
+2. Remove `src/app/(hunt)/puzzle/example`
+3. Check the puzzle unlock structure and the hunt end function
+
+### Adding puzzles
+1. Get the puzzle name, the slug, and the answer. This is up to the puzzle-writer. The slug must be unique.
+
+    ```
+    Puzzle name: "Sudoku #51"
+    Slug: "sudoku51"
+    Answer: "IMMEDIATE"
+    ```
+
+2. Update the puzzle table on Drizzle.
+    
+    To get to Drizzle, run `pnpm run db:push` and
+    go to `https://local.drizzle.studio/`. The `name` column is the name, the `id` column is the slug, and the `answer` column is the answer.
+
+    ```
+    {
+        id: "sudoku51",
+        name: "Sudoku #51",
+        answer: "IMMEDIATE"
+    }
+    ```
+
+3. There are several steps to creating a puzzle page with varying levels of customizability.
+    1. After adding the puzzle to the puzzle table, you can automatically access the default look of the puzzle. This is useful for checking that the database is working correctly.
+    
+        Eg. `https://localhost:3000/puzzle/sudoku51`
+
+    2. To customize the puzzle page, create a folder in `src/app/(hunt)/puzzle/`. The folder must be named after the puzzle slug. Copy the contents of the `src/app/(hunt)/puzzle/example` folder. **Hard-code the puzzle id, the puzzle body, and the solution body inside of data.tsx.** The puzzle, hint, and solution pages for this particular puzzle will be automatically updated. You can view them at:
+
+        1. Puzzle: `https://localhost:3000/puzzle/sudoku51/`
+        2. Solution: `https://localhost:3000/puzzle/sudoku51/solution`
+        3. Hint: `https://localhost:3000/puzzle/sudoku51/hint`
+
+    3. To completely customize the puzzle page, throw out the default components and edit `page.tsx` directly.
+
+### Hunt Structure
+Everything managing the hunt structure is in `hunt.config.js`. To change how puzzles are unlocked, edit `getNextPuzzleMap` in `hunt.config.js`. To change how many hints a team gets, edit `getTotalHints`.
+
+## Administering the Hunt
+### Navigation
+For admins, there is an `admin` section and a `hunt` section with different navbars. You can navigate using the navbar or the command palette (`Cmd-K` or `Ctrl-K`). 
+
+### Hinting and Errata
+This can be managed in the `admin` section under `admin/hints` and `admin/errata`.
+
+### Team Management
+Team password resets can be made in `teams/username`. Please don't change them directly in the Drizzle database. It won't work correctly because passwords need to be hashed.
+
+# Developers' Guide
 ## Quick start
 
 1. Install [pnpm](https://pnpm.io/) from online or using Homebrew and clone this repo.
@@ -56,44 +128,7 @@ The setup is in the `src/server/auth` folder.
 Finally, on the frontend, we are using **Shadcn UI** components with the **Tailwind CSS** framework. Components are in the `src/components/ui` folder.
 
 # Roadmap
-
-## Current Progress
-
-- [x] Deploy to Vercel
-- [x] Add Vercel Postgres
-- [x] Add NextAuth with Discord
-- [x] Attach database to UI
-- [x] Create basic schema for puzzles and teams
-- [x] Add leaderboard page
-    - [x] Make the leaderboard page order by puzzles completed 
-- [x] Add simple puzzle page
-    - [x] Add client guess submission 
-    - [x] Add server side validation
-    - [x] Display previous guesses
-    - [x] Validate that the guess is not an empty string
-    - [x] Validate that the guess has not already been submitted before
-    - [x] Automatically convert the guess to uppercase alphabetic characters
-- [x] Handle authentication
-    - [x] Add registration page
-    - [x] Add login page
-    - [x] Add session management
-    - [x] Add middleware
-    - [x] Redesign the login page to look more like the registration page
-    - [x] Validate that the username is not already taken before inserting a new team
-    - [x] Hash and salt the password
-    - [x] Update "login" to "logout" on the nav bar when the user is logged in
-- [x] Finish data-modeling using gph-site/puzzles/models.py
-- [x] Add puzzle drop system
-    - [x] Display list of puzzles dynamically
-    - [x] Display puzzles when hunt starts
-- [x] Add hinting system
-    - [x] Add hint request form
-    - [x] Add previous hints table
-    - [x] Add hint response table in the admin panel
-
 ## By Puzzlethon
-
-**Goals:**
 
 1. In terms of hunt logistics:
     1. Registration opens
@@ -116,29 +151,9 @@ Finally, on the frontend, we are using **Shadcn UI** components with the **Tailw
     3. See all requests for hints (`src/app/admin/hints`)
     4. Give teams hints (`src/app/admin/hints`)
 
-**TODO Backlog:**
-
-- [ ] Automatically start and end registration
-- [ ] Automatically end the hunt
-- [ ] Add logic for teams "completing the hunt"
-- [ ] Add errata system
-
 ## By Brown Puzzlehunt
 
-- [ ] Extend the admin panel
-    - [ ] Add a Big Board (a live-updating team progress page)
-    - [ ] Add Submission Queue (a live-updating queue of submitted guesses)
-- [ ] Add test-solving system
-    - [ ] Remember to exclude those users from the leaderboard
 - [ ] Discord bot
-- [ ] Logging
-- [ ] Index the database
-- [ ] Redis layer
-- [ ] Add round system
-- [ ] Add password reset
-
-## Would be nice to have
-
 - [ ] Sync hint claiming between team members using streams
 - [ ] Sync guesses between team members using streams
 

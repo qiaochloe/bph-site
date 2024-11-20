@@ -23,7 +23,7 @@ import { HUNT_END_TIME } from "~/hunt.config";
 
 const formSchema = z.object({
   hintRequest: z.string().min(1, {
-    message: "Hint must contain at least one character",
+    message: "Request must contain at least one character",
   }),
 });
 
@@ -31,12 +31,14 @@ type FormProps = {
   puzzleId: string;
   hintsRemaining: number;
   unansweredHint: { puzzleId: string; puzzleName: string } | null;
+  isSolved: boolean;
 };
 
 export default function HintForm({
   puzzleId,
   hintsRemaining,
   unansweredHint,
+  isSolved,
 }: FormProps) {
   const currDate = new Date();
   const router = useRouter();
@@ -56,6 +58,10 @@ export default function HintForm({
   function getFormDescription() {
     if (currDate > HUNT_END_TIME) {
       return <>Hunt has ended and live hinting has closed.</>;
+    }
+
+    if (isSolved) {
+      return <>You have already solved this puzzle.</>;
     }
 
     if (unansweredHint) {
@@ -106,11 +112,7 @@ export default function HintForm({
                 <AutosizeTextarea
                   maxHeight={500}
                   className="resize-none"
-                  disabled={
-                    !!unansweredHint ||
-                    hintsRemaining < 1 ||
-                    currDate > HUNT_END_TIME
-                  }
+                  disabled={isSolved || !!unansweredHint || hintsRemaining < 1 || currDate > HUNT_END_TIME}
                   {...field}
                 />
               </FormControl>
@@ -119,7 +121,10 @@ export default function HintForm({
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={!!unansweredHint || hintsRemaining < 1}>
+        <Button
+          type="submit"
+          disabled={isSolved || !!unansweredHint || hintsRemaining < 1 || currDate > HUNT_END_TIME}
+        >
           Submit
         </Button>
       </form>

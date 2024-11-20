@@ -35,10 +35,11 @@ export default async function Home() {
   // Get all puzzles available to the team
   let initialPuzzles = await db.query.puzzles.findMany({
     columns: { id: true, name: true, answer: true },
-    where: inArray(puzzles.id, await INITIAL_PUZZLES()),
+    where: inArray(puzzles.id, INITIAL_PUZZLES),
   });
 
   let unlockedPuzzles = await db.query.unlocks.findMany({
+    columns: { unlockTime: true },
     where: eq(unlocks.teamId, session.user.id),
     with: { puzzle: { columns: { id: true, name: true, answer: true } } },
   });
@@ -53,8 +54,8 @@ export default async function Home() {
 
   // Check which puzzles are solved
   let solvedPuzzles = await db.query.guesses.findMany({
-    where: and(eq(guesses.teamId, session.user.id), guesses.isCorrect),
     columns: { puzzleId: true },
+    where: and(eq(guesses.teamId, session.user.id), guesses.isCorrect),
   });
 
   return (

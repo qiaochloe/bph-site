@@ -1,10 +1,13 @@
 "use client";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "~/hooks/use-toast";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+
 import { Button } from "@/components/ui/button";
 import ErratumDialog from "~/app/(hunt)/puzzle/components/ErratumDialog";
+import { AutosizeTextarea } from "~/components/ui/autosize-textarea";
 import {
   Form,
   FormControl,
@@ -13,7 +16,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
 import {
   Select,
   SelectContent,
@@ -22,38 +24,34 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { puzzles, errata } from "@/db/schema";
+import { errata } from "@/db/schema";
 import { insertErratum } from "./actions";
-import { Label } from "@radix-ui/react-label";
-import { Textarea } from "@/components/ui/textarea";
-import { toast } from "~/hooks/use-toast";
 
-export const erratumFormSchema = z.object({
+type FormProps = {
+  puzzleList: { id: string; name: string }[];
+  errataList: (typeof errata.$inferSelect)[];
+};
+
+const formSchema = z.object({
   puzzleId: z.string().min(1, { message: "Puzzle is required" }),
   description: z.string().min(1, { message: "Description is required" }),
 });
 
-export default function ErratumForm({
-  puzzleList,
-  errataList,
-}: {
-  puzzleList: (typeof puzzles.$inferSelect)[];
-  errataList: (typeof errata.$inferSelect)[];
-}) {
+export default function ErratumForm({ puzzleList, errataList }: FormProps) {
   const [error, setError] = useState<string | null>(null);
   const [puzzleErrata, setPuzzleErrata] = useState<
     (typeof errata.$inferSelect)[]
   >([]);
 
-  const form = useForm<z.infer<typeof erratumFormSchema>>({
-    resolver: zodResolver(erratumFormSchema),
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       puzzleId: "",
       description: "",
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof erratumFormSchema>) => {
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const result = await insertErratum(data.puzzleId, data.description);
     if (result.error) {
       setError(result.error);
@@ -127,7 +125,12 @@ export default function ErratumForm({
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Textarea placeholder="No response yet" {...field} />
+                <AutosizeTextarea
+                  maxHeight={500}
+                  className="resize-none"
+                  placeholder="No response yet"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

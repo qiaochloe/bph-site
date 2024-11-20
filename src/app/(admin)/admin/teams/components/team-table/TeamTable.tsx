@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useSession } from "next-auth/react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -13,6 +13,8 @@ import {
   getPaginationRowModel,
   getFilteredRowModel,
   useReactTable,
+  SortingState,
+  getSortedRowModel,
 } from "@tanstack/react-table";
 
 import {
@@ -34,10 +36,8 @@ export function TeamTable<TData, TValue>({
   data,
 }: TeamTableProps<TData, TValue>) {
   const router = useRouter();
-  const { data: session } = useSession();
-  const userId = session?.user?.id;
-
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
   const pageSize = 10;
 
   const table = useReactTable({
@@ -47,7 +47,10 @@ export function TeamTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
     state: {
+      sorting,
       columnFilters,
     },
     initialState: {
@@ -61,8 +64,6 @@ export function TeamTable<TData, TValue>({
     },
     pageCount: Math.ceil(data.length / pageSize),
   });
-
-  if (!userId) return null;
 
   return (
     <div className="flex h-full flex-col">
@@ -91,14 +92,23 @@ export function TeamTable<TData, TValue>({
         </div>
       </div>
       <div className="flex overflow-auto rounded-md border">
-        <div className="overflow-y-auto">
+        <div className="w-full overflow-y-auto">
           {" "}
           <Table>
             <TableHeader className="sticky top-0 z-10 bg-white">
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={`header-${headerGroup.id}`}>
                   {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id}>
+                    <TableHead
+                      key={header.id}
+                      onClick={() =>
+                        header.column.toggleSorting(
+                          header.column.getIsSorted() === "asc",
+                        )
+                      }
+                      className="hover:underline"
+                      role="button"
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(

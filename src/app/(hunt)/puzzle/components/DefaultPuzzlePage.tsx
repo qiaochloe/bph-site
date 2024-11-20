@@ -1,18 +1,13 @@
 import { auth } from "@/auth";
-import { eq, and, isNull } from "drizzle-orm";
+import { redirect } from "next/navigation";
 
 import { db } from "~/server/db";
-import { guesses, hints, errata, puzzles } from "~/server/db/schema";
-
+import { eq, and } from "drizzle-orm";
+import { guesses, errata, unlocks } from "~/server/db/schema";
 import PreviousGuessTable from "./PreviousGuessTable";
-import PreviousHintTable from "./PreviousHintTable";
 import ErratumDialog from "./ErratumDialog";
-import HintForm from "./HintForm";
 import GuessForm from "./GuessForm";
-import {
-  getNumberOfHintsRemaining,
-  NUMBER_OF_GUESSES_PER_PUZZLE,
-} from "~/hunt.config";
+import { canViewPuzzle, NUMBER_OF_GUESSES_PER_PUZZLE } from "~/hunt.config";
 
 // TODO: database queries can definitely be more efficient
 // See drizzle
@@ -24,10 +19,10 @@ export default async function DefaultPuzzlePage({
   puzzleId: string;
   puzzleBody: React.ReactNode;
 }) {
-  // Get user id
+  // Get user
   const session = await auth()!;
-  if (!session?.user?.id) {
-    throw new Error("Not authorized");
+  if (!session?.user?.id || !(await canViewPuzzle(puzzleId))) {
+    redirect("/404");
   }
 
   // Get errata
@@ -49,42 +44,13 @@ export default async function DefaultPuzzlePage({
   const numberOfGuessesLeft =
     NUMBER_OF_GUESSES_PER_PUZZLE - previousGuesses.length;
 
-  // Get previous hints
-  const previousHints = await db.query.hints.findMany({
-    where: and(eq(hints.teamId, session.user.id), eq(hints.puzzleId, puzzleId)),
-    columns: { id: true, request: true, response: true, status: true },
-  });
-
-  const hintsRemaining = await getNumberOfHintsRemaining(session.user.id);
-
-  const query = await db.query.hints.findFirst({
-    columns: {},
-    where: and(
-      eq(hints.teamId, session.user.id),
-      eq(hints.status, "no_response"),
-    ),
-    with: { puzzle: { columns: { id: true, name: true } } },
-  });
-  const unansweredHint = query
-    ? { puzzleId: query.puzzle.id, puzzleName: query.puzzle.name }
-    : null;
-
-  // Get puzzle name
-  const puzzle = await db.query.puzzles.findFirst({
-    where: eq(puzzles.id, puzzleId),
-  })!;
-  if (!puzzle) {
-    throw new Error("Puzzle does not exist in database");
-  }
-
   return (
-    <div className="flex w-2/3 min-w-36 grow flex-col items-center">
+    <>
       <div className="w-2/3 min-w-36">
         <ErratumDialog errataList={errataList} />
       </div>
 
-      <h1 className="mb-4">{puzzle.name}</h1>
-      {puzzleBody}
+      <div className="mt-4 w-2/3 min-w-36">{puzzleBody}</div>
 
       <div className="mt-4 w-2/3 min-w-36">
         {!hasCorrectGuess && numberOfGuessesLeft > 0 && (
@@ -106,21 +72,6 @@ export default async function DefaultPuzzlePage({
       <div className="mb-4 w-2/3 min-w-36">
         <PreviousGuessTable previousGuesses={previousGuesses} />
       </div>
-
-      {hasCorrectGuess || (
-        <div className="mb-4 w-2/3 min-w-36">
-          <HintForm
-            puzzleId={puzzleId}
-            hintsRemaining={hintsRemaining}
-            unansweredHint={unansweredHint}
-          />
-        </div>
-      )}
-
-      <h2 className="mb-2">Previous Hints</h2>
-      <div className="w-2/3 min-w-36">
-        <PreviousHintTable previousHints={previousHints} />
-      </div>
-    </div>
+    </>
   );
 }

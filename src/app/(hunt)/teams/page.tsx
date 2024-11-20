@@ -57,7 +57,7 @@ export default async function Home() {
           <TableHeader>
             <TableRow>
               <TableHead>#</TableHead>
-              <TableHead className="w-[10em]">Team Name</TableHead>
+              <TableHead className="w-[20em]">Team Name</TableHead>
               <TableHead className="w-[10em] text-center">
                 Total Solved
               </TableHead>
@@ -68,7 +68,9 @@ export default async function Home() {
             {teamRows.map((teamRow, index) => (
               <TableRow>
                 <TableCell>{index + 1}</TableCell>
-                <TableCell>{teamRow.displayName}</TableCell>
+                <TableCell className="w-[20em] break-all">
+                  {teamRow.displayName}
+                </TableCell>
                 <TableCell className="text-center">
                   {teamRow.correctGuesses ?? 0}
                 </TableCell>
