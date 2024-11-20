@@ -60,15 +60,14 @@ export default async function DefaultHintsPage({
 
   return (
     <>
-      {!isSolved || (
-        <div className="mb-4 w-2/3 min-w-36">
-          <HintForm
-            puzzleId={puzzleId}
-            hintsRemaining={hintsRemaining}
-            unansweredHint={unansweredHint}
-          />
-        </div>
-      )}
+      <div className="mb-4 w-2/3 min-w-36">
+        <HintForm
+          puzzleId={puzzleId}
+          hintsRemaining={hintsRemaining}
+          unansweredHint={unansweredHint}
+          isSolved={isSolved}
+        />
+      </div>
 
       <h2 className="mb-2">Previous Hints</h2>
       <div className="w-2/3 min-w-36">
