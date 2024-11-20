@@ -1,16 +1,13 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-
 import { db } from "~/server/db";
 import { eq, and } from "drizzle-orm";
-import { guesses, errata, unlocks } from "~/server/db/schema";
+import { guesses, errata } from "~/server/db/schema";
+
 import PreviousGuessTable from "./PreviousGuessTable";
 import ErratumDialog from "./ErratumDialog";
 import GuessForm from "./GuessForm";
 import { canViewPuzzle, NUMBER_OF_GUESSES_PER_PUZZLE } from "~/hunt.config";
-
-// TODO: database queries can definitely be more efficient
-// See drizzle
 
 export default async function DefaultPuzzlePage({
   puzzleId,
