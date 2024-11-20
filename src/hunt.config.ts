@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import { insertUnlock } from "./app/(hunt)/puzzle/actions";
 import { auth } from "./server/auth/auth";
 import { db } from "./server/db";
@@ -139,7 +140,7 @@ export async function canViewSolutions(puzzleId: string) {
   // Get user id
   const session = await auth()!;
   if (!session?.user?.id) {
-    throw new Error("Not authorized");
+    notFound();
   }
 
   const isSolved = !!(await db.query.guesses.findFirst({
