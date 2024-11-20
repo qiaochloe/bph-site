@@ -15,7 +15,7 @@ export const REGISTRATION_START_TIME = new Date("2024-10-24T05:56:35Z");
 export const REGISTRATION_END_TIME = new Date("2024-11-20T05:56:35Z");
 export const HUNT_START_TIME = new Date("2024-11-09T05:59:00Z");
 /** When the hunt ends, the leaderboard locks, solutions drops, and hinting ends. */
-export const HUNT_END_TIME = new Date("2024-11-20T05:56:35Z");
+export const HUNT_END_TIME = new Date("2024-11-18T05:56:35Z");
 export const NUMBER_OF_GUESSES_PER_PUZZLE = 20;
 
 /** PUZZLE UNLOCK SYSTEM
@@ -160,7 +160,7 @@ export async function canViewPuzzle(puzzleId: string) {
     redirect("/404");
   }
 
-  return (
+  const isUnlocked =
     (INITIAL_PUZZLES && INITIAL_PUZZLES.includes(puzzleId)) ||
     (await db.query.unlocks.findFirst({
       columns: { id: true },
@@ -168,6 +168,7 @@ export async function canViewPuzzle(puzzleId: string) {
         eq(unlocks.teamId, session.user.id),
         eq(unlocks.puzzleId, puzzleId),
       ),
-    }))
-  );
+    }));
+
+  return session.user.role == "admin" || isUnlocked || new Date() > HUNT_END_TIME;
 }
