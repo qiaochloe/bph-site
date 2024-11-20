@@ -87,7 +87,8 @@ export default function HintForm({
                   </>
                 )}
                 {isSolved && <>You have already solved this puzzle.</>}
-                {!isSolved && unansweredHint &&
+                {!isSolved &&
+                  unansweredHint &&
                   (puzzleId === unansweredHint.puzzleId ? (
                     <>You have an outstanding hint on this puzzle.</>
                   ) : (
