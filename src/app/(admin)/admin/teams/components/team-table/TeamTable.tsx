@@ -13,6 +13,8 @@ import {
   getPaginationRowModel,
   getFilteredRowModel,
   useReactTable,
+  SortingState,
+  getSortedRowModel,
 } from "@tanstack/react-table";
 
 import {
@@ -35,6 +37,7 @@ export function TeamTable<TData, TValue>({
 }: TeamTableProps<TData, TValue>) {
   const router = useRouter();
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
   const pageSize = 10;
 
   const table = useReactTable({
@@ -44,7 +47,10 @@ export function TeamTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
     state: {
+      sorting,
       columnFilters,
     },
     initialState: {
@@ -86,14 +92,23 @@ export function TeamTable<TData, TValue>({
         </div>
       </div>
       <div className="flex overflow-auto rounded-md border">
-        <div className="overflow-y-auto">
+        <div className="w-full overflow-y-auto">
           {" "}
           <Table>
             <TableHeader className="sticky top-0 z-10 bg-white">
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={`header-${headerGroup.id}`}>
                   {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id}>
+                    <TableHead
+                      key={header.id}
+                      onClick={() =>
+                        header.column.toggleSorting(
+                          header.column.getIsSorted() === "asc",
+                        )
+                      }
+                      className="hover:underline"
+                      role="button"
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
