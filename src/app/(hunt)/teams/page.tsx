@@ -8,8 +8,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { sql } from "drizzle-orm";
-import { asc, desc, eq } from "drizzle-orm/expressions";
+import { and, asc, desc, eq, lt } from "drizzle-orm/expressions";
 import { teams, guesses } from "~/server/db/schema";
+import { HUNT_END_TIME } from "~/hunt.config";
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +19,12 @@ export default async function Home() {
     .select({
       id: teams.id,
       displayName: teams.displayName,
-      finishTime: teams.finishTime,
+      // Exclude finish time if it is after hunt end
+      finishTime: sql<Date | null>`
+        case 
+          when ${teams.finishTime} > ${HUNT_END_TIME} then null
+          else ${teams.finishTime}
+        end`.as("finish_time"),
       correctGuesses:
         sql<number>`count(case when ${guesses.isCorrect} = true then 1 end)`.as(
           "correct_guesses",
@@ -28,8 +34,14 @@ export default async function Home() {
       ),
     })
     .from(teams)
-    .where(eq(teams.role, "user"))
-    .leftJoin(guesses, eq(teams.id, guesses.teamId))
+    // Filter out admin teams and teams who registered after the hunt end
+    .where(and(eq(teams.role, "user"), lt(teams.createTime, HUNT_END_TIME)))
+    // Get guesses that were submitted before the hunt end
+    // This is used for `correctGuesses` and `lastCorrectGuessTime`
+    .leftJoin(
+      guesses,
+      and(eq(guesses.teamId, teams.id), lt(guesses.submitTime, HUNT_END_TIME)),
+    )
     .groupBy(teams.id, teams.displayName, teams.finishTime)
     .orderBy(
       asc(teams.finishTime),

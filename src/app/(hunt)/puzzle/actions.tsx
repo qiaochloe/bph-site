@@ -117,12 +117,10 @@ export async function insertUnlock(teamId: string, puzzleIds: string[]) {
       where: eq(unlocks.teamId, teamId),
     });
 
-    const initialPuzzles = await INITIAL_PUZZLES();
-
     const newPuzzleIds = puzzleIds.filter(
       (puzzleId) =>
         !unlockedPuzzles.some((unlock) => unlock.puzzleId === puzzleId) &&
-        !initialPuzzles.some((initial) => initial === puzzleId),
+        !INITIAL_PUZZLES.some((initial) => initial === puzzleId),
     );
 
     // Check for empty list
