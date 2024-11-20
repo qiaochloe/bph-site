@@ -112,7 +112,12 @@ export default function HintForm({
                 <AutosizeTextarea
                   maxHeight={500}
                   className="resize-none"
-                  disabled={isSolved || !!unansweredHint || hintsRemaining < 1 || currDate > HUNT_END_TIME}
+                  disabled={
+                    isSolved ||
+                    !!unansweredHint ||
+                    hintsRemaining < 1 ||
+                    currDate > HUNT_END_TIME
+                  }
                   {...field}
                 />
               </FormControl>
@@ -123,7 +128,12 @@ export default function HintForm({
         />
         <Button
           type="submit"
-          disabled={isSolved || !!unansweredHint || hintsRemaining < 1 || currDate > HUNT_END_TIME}
+          disabled={
+            isSolved ||
+            !!unansweredHint ||
+            hintsRemaining < 1 ||
+            currDate > HUNT_END_TIME
+          }
         >
           Submit
         </Button>
