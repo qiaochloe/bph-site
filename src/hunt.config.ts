@@ -170,5 +170,7 @@ export async function canViewPuzzle(puzzleId: string) {
       ),
     }));
 
-  return session.user.role == "admin" || isUnlocked || new Date() > HUNT_END_TIME;
+  return (
+    session.user.role == "admin" || isUnlocked || new Date() > HUNT_END_TIME
+  );
 }
