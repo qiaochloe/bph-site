@@ -135,7 +135,7 @@ export async function getNumberOfHintsRemaining(teamId: string) {
 /** Determines whether the user can view the solutions.
  * WARNING: make sure to exclude certain puzzles if the solutions aren't available
  */
-export async function canViewSolutions(puzzleId: string) {
+export async function canViewSolution(puzzleId: string) {
   // Get user id
   const session = await auth()!;
   if (!session?.user?.id) {
