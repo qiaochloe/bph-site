@@ -19,8 +19,10 @@ export default auth(async (req) => {
     return Response.redirect(newUrl);
   }
 
-  // Protect puzzle pages
-  if (req.nextUrl.pathname.match("/puzzle/.+")) {
+  // Protect puzzle pages.
+  // This only matches on /puzzle/puzzleId, not /puzzle/puzzleId/solution
+  // or /puzzle/puzzleId/hint
+  if (req.nextUrl.pathname.match(/^\/puzzle\/[^\/]+\/$/)) {
     // Unauthenticated users
     if (!req.auth?.user?.id) {
       const newUrl = new URL("/login", req.nextUrl.origin);

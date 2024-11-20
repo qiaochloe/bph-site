@@ -22,7 +22,7 @@ import Link from "next/link";
 
 const formSchema = z.object({
   hintRequest: z.string().min(1, {
-    message: "Hint must contain at least one character",
+    message: "Request must contain at least one character",
   }),
 });
 
@@ -30,12 +30,14 @@ type FormProps = {
   puzzleId: string;
   hintsRemaining: number;
   unansweredHint: { puzzleId: string; puzzleName: string } | null;
+  isSolved: boolean;
 };
 
 export default function HintForm({
   puzzleId,
   hintsRemaining,
   unansweredHint,
+  isSolved,
 }: FormProps) {
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -71,7 +73,7 @@ export default function HintForm({
                 <AutosizeTextarea
                   maxHeight={500}
                   className="resize-none"
-                  disabled={!!unansweredHint || hintsRemaining < 1}
+                  disabled={isSolved || !!unansweredHint || hintsRemaining < 1}
                   {...field}
                 />
               </FormControl>
@@ -84,7 +86,9 @@ export default function HintForm({
                     remaining.{" "}
                   </>
                 )}
-                {unansweredHint &&
+                {isSolved && <>You have already solved this puzzle.</>}
+                {!isSolved &&
+                  unansweredHint &&
                   (puzzleId === unansweredHint.puzzleId ? (
                     <>You have an outstanding hint on this puzzle.</>
                   ) : (
@@ -104,7 +108,10 @@ export default function HintForm({
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={!!unansweredHint || hintsRemaining < 1}>
+        <Button
+          type="submit"
+          disabled={isSolved || !!unansweredHint || hintsRemaining < 1}
+        >
           Submit
         </Button>
       </form>
