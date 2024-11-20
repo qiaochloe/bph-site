@@ -3,6 +3,7 @@ import { eq } from "drizzle-orm";
 import { puzzles } from "~/server/db/schema";
 import { canViewSolutions, HUNT_END_TIME } from "~/hunt.config";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export default async function DefaultSolutionPage({
   puzzleId,
@@ -11,6 +12,11 @@ export default async function DefaultSolutionPage({
   puzzleId: string;
   solutionBody: React.ReactNode;
 }) {
+  // Check if there is solution
+  if (!solutionBody) {
+    redirect("/404");
+  }
+
   // Get puzzle name
   const puzzle = await db.query.puzzles.findFirst({
     where: eq(puzzles.id, puzzleId),

@@ -3,6 +3,7 @@ import DefaultHeader from "../components/DefaultHeader";
 import { db } from "~/server/db";
 import { puzzles } from "~/server/db/schema";
 import { puzzleId } from "./data";
+import { SolutionBody } from "./data";
 
 export default async function RootLayout({
   children,
@@ -15,9 +16,15 @@ export default async function RootLayout({
     throw new Error("Puzzle does not exist in database");
   }
 
+  const hasSolution = !!SolutionBody();
+
   return (
     <div className="flex w-2/3 min-w-36 grow flex-col items-center">
-      <DefaultHeader puzzleId={puzzleId} puzzleName={puzzle.name} />
+      <DefaultHeader
+        puzzleId={puzzleId}
+        puzzleName={puzzle.name}
+        hasSolution={hasSolution}
+      />
       {children}
     </div>
   );
