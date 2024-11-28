@@ -71,7 +71,7 @@ export default async function DefaultHintsPage({
         />
       </div>
 
-      <h2 className="mb-2">Previous Hints</h2>
+      <h2>Previous Hints</h2>
       <div className="w-2/3 min-w-36">
         <PreviousHintTable previousHints={previousHints} />
       </div>

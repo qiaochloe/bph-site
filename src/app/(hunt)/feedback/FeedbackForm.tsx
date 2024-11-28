@@ -1,8 +1,9 @@
 "use client";
+import { toast } from "~/hooks/use-toast";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import FeedbackDialog from "~/app/(hunt)/feedback/FeedbackDialog";
 import {
@@ -13,20 +14,26 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
-import { feedback } from "~/server/db/schema";
 import { insertFeedback } from "./actions";
-import { Textarea } from "@/components/ui/textarea";
-import { toast } from "~/hooks/use-toast";
+import { AutosizeTextarea } from "~/components/ui/autosize-textarea";
 
 export const feedbackFormSchema = z.object({
   description: z.string().min(1, { message: "Feedback is required" }),
 });
 
 export default function FeedbackForm({
+  teamId,
+  showTeam,
   feedbackList,
 }: {
-  feedbackList: { id: number; description: string; timestamp: Date }[];
+  teamId: string;
+  showTeam: boolean;
+  feedbackList: {
+    id: number;
+    teamId: string;
+    description: string;
+    timestamp: Date;
+  }[];
 }) {
   const [error, setError] = useState<string | null>(null);
 
@@ -45,6 +52,7 @@ export default function FeedbackForm({
       setError(null);
       const newFeedback = {
         id: feedbackList.length,
+        teamId: teamId,
         description: data.description,
         timestamp: new Date(),
       };
@@ -65,19 +73,29 @@ export default function FeedbackForm({
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Please enter your thoughts on the hunt!</FormLabel>
+                <FormLabel>
+                  Please enter your thoughts on the hunt! Any puzzle errors,
+                  website bugs, and general comments will be enormously helpful
+                  for us.
+                </FormLabel>
                 <FormControl>
-                  <Textarea placeholder="No response yet" {...field} />
+                  <AutosizeTextarea
+                    className="bg-slate-50 text-black"
+                    placeholder="No response yet"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
           {error && <p className="text-red-500">{error}</p>}
-          <Button type="submit">Submit</Button>
+          <Button className="bg-slate-900 hover:bg-gray-800" type="submit">
+            Submit
+          </Button>
         </form>
       </Form>
-      <FeedbackDialog feedbackList={feedbackList} />
+      <FeedbackDialog showTeam={showTeam} feedbackList={feedbackList} />
     </>
   );
 }

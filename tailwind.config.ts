@@ -1,5 +1,6 @@
 import { type Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
+import colors from "tailwindcss/colors"; // Change this line
 
 export default {
   darkMode: ["class"],
@@ -14,7 +15,10 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
-      colors: {},
+      colors: {
+        secondary: "#808080",
+        "hunt-nav-color": colors.slate[50],
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

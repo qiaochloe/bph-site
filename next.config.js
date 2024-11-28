@@ -12,6 +12,10 @@ const config = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  // TODO: Quick bug fix. Remove this as soon as possible.
+  env: {
+    POSTGRES_URL: process.env.POSTGRES_URL,
+  },
 };
 
 export default config;

@@ -4,7 +4,7 @@ export default async function Home() {
   return (
     <div className="flex grow flex-col items-center justify-center">
       <h1 className="mb-2">Admin!</h1>
-      <p>
+      <p className="text-black">
         See{" "}
         <Link href="admin/solutions" className="text-blue-600 hover:underline">
           solutions

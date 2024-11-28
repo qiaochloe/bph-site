@@ -8,13 +8,16 @@ import PreviousGuessTable from "./PreviousGuessTable";
 import ErratumDialog from "./ErratumDialog";
 import GuessForm from "./GuessForm";
 import { canViewPuzzle, NUMBER_OF_GUESSES_PER_PUZZLE } from "~/hunt.config";
+import CopyButton from "./CopyButton";
 
 export default async function DefaultPuzzlePage({
   puzzleId,
   puzzleBody,
+  copyText,
 }: {
   puzzleId: string;
   puzzleBody: React.ReactNode;
+  copyText: string | null;
 }) {
   // Get user
   const session = await auth()!;
@@ -47,7 +50,10 @@ export default async function DefaultPuzzlePage({
         <ErratumDialog errataList={errataList} />
       </div>
 
-      <div className="mt-4 w-2/3 min-w-36">{puzzleBody}</div>
+      <div className="flex w-2/3 min-w-36 justify-center space-x-2">
+        <div className="mt-4">{puzzleBody}</div>
+        {copyText && <CopyButton copyText={copyText}></CopyButton>}
+      </div>
 
       <div className="mt-4 w-2/3 min-w-36">
         {!hasCorrectGuess && numberOfGuessesLeft > 0 && (
@@ -65,8 +71,8 @@ export default async function DefaultPuzzlePage({
         )}
       </div>
 
-      <h2 className="mb-2">Previous Guesses</h2>
-      <div className="mb-4 w-2/3 min-w-36">
+      <h2>Previous Guesses</h2>
+      <div className="mb-4">
         <PreviousGuessTable previousGuesses={previousGuesses} />
       </div>
     </>

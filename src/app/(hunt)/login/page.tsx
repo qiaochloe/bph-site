@@ -1,4 +1,3 @@
-"use server";
 import { auth } from "@/auth";
 import { LogoutForm, LoginForm } from "./LoginForm";
 

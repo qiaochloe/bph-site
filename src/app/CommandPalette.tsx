@@ -16,11 +16,12 @@ import {
 import {
   Trophy,
   Puzzle,
-  MailQuestion,
+  MessageCircleQuestion,
   House,
   PartyPopper,
-  UserSearch,
   MessageCircleWarning,
+  UserRoundSearch,
+  ClipboardPenLine,
 } from "lucide-react";
 
 export function CommandPalette() {
@@ -77,6 +78,15 @@ export function CommandPalette() {
             <Trophy className="text-red-500" />
             <span>Leaderboard</span>
           </CommandItem>
+          <CommandItem
+            onSelect={() => {
+              router.push("/feedback");
+              setOpen(false);
+            }}
+          >
+            <ClipboardPenLine className="text-red-500" />
+            <span>Feedback</span>
+          </CommandItem>
         </CommandGroup>
         <CommandGroup heading="Admin">
           <CommandItem
@@ -103,7 +113,7 @@ export function CommandPalette() {
               setOpen(false);
             }}
           >
-            <UserSearch className="text-blue-500" />
+            <UserRoundSearch className="text-blue-500" />
             <span>Teams</span>
           </CommandItem>
           <CommandItem
@@ -112,7 +122,7 @@ export function CommandPalette() {
               setOpen(false);
             }}
           >
-            <MailQuestion className="text-blue-500" />
+            <MessageCircleQuestion className="text-blue-500" />
             <span>Hinting</span>
           </CommandItem>
           <CommandItem

@@ -3,19 +3,8 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { teams } from "~/server/db/schema";
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { FormattedTime } from "~/lib/time";
 
-export function formatTime(time: unknown) {
-  if (!(time instanceof Date)) {
-    return "";
-  }
-  return time.toLocaleString("en-US", {
-    year: "2-digit",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
 // Define the columns for the table using TanStack
 export const columns: ColumnDef<typeof teams.$inferSelect>[] = [
   {
@@ -123,9 +112,11 @@ export const columns: ColumnDef<typeof teams.$inferSelect>[] = [
       </div>
     ),
     cell: ({ row }) => {
-      const time = row.getValue("createTime");
+      const time: Date = row.getValue("createTime");
       return (
-        <div className="w-32 truncate font-medium">{formatTime(time)}</div>
+        <div className="w-32 truncate font-medium">
+          <FormattedTime time={time} />
+        </div>
       );
     },
   },
@@ -144,9 +135,11 @@ export const columns: ColumnDef<typeof teams.$inferSelect>[] = [
       </div>
     ),
     cell: ({ row }) => {
-      const time = row.getValue("startTime");
+      const time: Date = row.getValue("startTime");
       return (
-        <div className="w-32 truncate font-medium">{formatTime(time)}</div>
+        <div className="w-32 truncate font-medium">
+          <FormattedTime time={time} />
+        </div>
       );
     },
   },
@@ -165,9 +158,11 @@ export const columns: ColumnDef<typeof teams.$inferSelect>[] = [
       </div>
     ),
     cell: ({ row }) => {
-      const time = row.getValue("finishTime");
+      const time: Date = row.getValue("finishTime");
       return (
-        <div className="w-32 truncate font-medium">{formatTime(time)}</div>
+        <div className="w-32 truncate font-medium">
+          <FormattedTime time={time} />
+        </div>
       );
     },
   },

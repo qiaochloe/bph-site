@@ -62,7 +62,11 @@ export function LoginForm() {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="jcarberr" {...field} />
+                <Input
+                  className="placeholder:text-slate-300"
+                  placeholder="jcarberr"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -75,16 +79,23 @@ export function LoginForm() {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="password" {...field} />
+                <Input
+                  type="password"
+                  className="placeholder:text-slate-300"
+                  placeholder="password"
+                  {...field}
+                />
               </FormControl>
               <FormMessage>{error}</FormMessage>
             </FormItem>
           )}
         />
-        <Button type="submit">Log In</Button>
+        <Button className="hover:bg-otherblue" type="submit">
+          Log In
+        </Button>
         <div className="py-2 text-sm">
           New to the hunt?{" "}
-          <Link href="/register" className="text-blue-600 hover:underline">
+          <Link href="/register" className="text-secondary hover:underline">
             Register
           </Link>
         </div>
@@ -94,5 +105,9 @@ export function LoginForm() {
 }
 
 export function LogoutForm() {
-  return <Button onClick={() => logout()}>Logout</Button>;
+  return (
+    <Button className="hover:bg-otherblue" onClick={() => logout()}>
+      Logout
+    </Button>
+  );
 }

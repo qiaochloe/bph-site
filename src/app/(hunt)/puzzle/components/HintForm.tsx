@@ -101,7 +101,7 @@ export default function HintForm({
           render={({ field }) => (
             <FormItem>
               <FormLabel>Hint Request</FormLabel>
-              <FormDescription>
+              <FormDescription className="text-secondary">
                 Please provide as much detail as possible to help us understand
                 where you're at and where you're stuck! Specific clues, steps,
                 and hypotheses are all helpful. If you're working with any

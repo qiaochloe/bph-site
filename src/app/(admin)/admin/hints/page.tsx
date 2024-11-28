@@ -2,6 +2,8 @@ import { db } from "@/db/index";
 import { columns } from "./components/hint-table/Columns";
 import { HintTable } from "./components/hint-table/HintTable";
 
+export const fetchCache = "force-no-store";
+
 export default async function Home() {
   const data = (
     await db.query.hints.findMany({

@@ -1,6 +1,8 @@
 import { db } from "@/db/index";
 import ErratumForm from "./ErratumForm";
 
+export const fetchCache = "force-no-store";
+
 export default async function Home() {
   const puzzleList = await db.query.puzzles.findMany({
     columns: { id: true, name: true },

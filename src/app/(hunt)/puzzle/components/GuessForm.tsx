@@ -31,7 +31,7 @@ const formSchema = z.object({
       .min(1, {
         message: "Guess must contain at least one alphabetical character",
       })
-      .max(50, { message: "Answer will not be longer than 50 characters" }),
+      .max(100, { message: "Answer will not be longer than 100 characters" }),
   ),
 });
 
@@ -83,6 +83,7 @@ export default function GuessForm({
                     });
                     setError(null);
                   }}
+                  className="bg-white text-black"
                 />
               </FormControl>
               <FormDescription>
@@ -93,7 +94,7 @@ export default function GuessForm({
             </FormItem>
           )}
         />
-        <Button type="submit" className="m-0">
+        <Button className="hover:bg-otherblue" type="submit">
           Submit
         </Button>
       </form>

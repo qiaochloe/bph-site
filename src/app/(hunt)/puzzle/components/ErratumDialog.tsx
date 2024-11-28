@@ -1,5 +1,5 @@
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
-import { formatTime } from "~/lib/utils";
+import { FormattedTime } from "~/lib/time";
 import { errata } from "~/server/db/schema";
 
 export default function ErratumDialog({
@@ -9,13 +9,15 @@ export default function ErratumDialog({
 }) {
   if (errataList.length > 0) {
     return (
-      <Alert className="mb-6 mt-2 bg-slate-100">
+      <Alert className="mb-6 mt-2">
         {errataList.map((e, index) => (
           <AlertDescription key={e.id} className="overflow-hidden break-words">
             {index != 0 && <br />}
-            <p className="whitespace-normal">
-              <strong>Erratum {formatTime(e.timestamp)}</strong>:{" "}
-              {e.description}
+            <p className="whitespace-normal text-slate-300">
+              <strong>
+                Erratum <FormattedTime time={e.timestamp} />
+              </strong>
+              : {e.description}
             </p>
           </AlertDescription>
         ))}

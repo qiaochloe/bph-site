@@ -1,7 +1,7 @@
 "use server";
 import { revalidatePath } from "next/dist/server/web/spec-extension/revalidate";
 import { db } from "@/db/index";
-import { puzzles, guesses, hints, unlocks } from "@/db/schema";
+import { puzzles, guesses, hints, unlocks, teams } from "@/db/schema";
 import { and, isNull, eq } from "drizzle-orm";
 import { auth } from "@/auth";
 import {
@@ -11,6 +11,8 @@ import {
   NUMBER_OF_GUESSES_PER_PUZZLE,
   INITIAL_PUZZLES,
 } from "~/hunt.config";
+
+import axios from "axios";
 
 /** Inserts a guess into the guess table */
 export async function insertGuess(puzzleId: string, guess: string) {
@@ -67,6 +69,14 @@ export async function insertGuess(puzzleId: string, guess: string) {
     submitTime: new Date(),
   });
 
+  const user = await db.query.teams.findFirst({
+    where: eq(teams.id, session.user.id),
+  });
+
+  await axios.post(process.env.DISCORD_WEBHOOK_URL!, {
+    content: `${puzzleId == "gate-lock" && correct ? "🏆" : "🧩"} **Guess** by [${user?.username}](https://puzzlethon.brownpuzzle.club/teams/${user?.username}) on [${puzzleId}](https://puzzlethon.brownpuzzle.club/puzzle/${puzzleId}): \`${guess}\` [${correct ? "✓" : "✕"}]`,
+  });
+
   revalidatePath(`/puzzle/${puzzleId}`);
 
   if (correct) {
@@ -101,6 +111,15 @@ export async function insertHint(puzzleId: string, hint: string) {
       request: hint,
       requestTime: new Date(),
       status: "no_response",
+    });
+
+    const user = await db.query.teams.findFirst({
+      where: eq(teams.id, session.user.id),
+    });
+
+    // TODO: get specific hint ID
+    await axios.post(process.env.DISCORD_WEBHOOK_URL!, {
+      content: `🙏 **Hint** [request](https://puzzlethon.brownpuzzle.club/admin/hints) by [${user?.username}](https://puzzlethon.brownpuzzle.club/teams/${user?.username}) on [${puzzleId}](https://puzzlethon.brownpuzzle.club/puzzle/${puzzleId}): _${hint}_ <@&1310029428864057504>`,
     });
   }
 }

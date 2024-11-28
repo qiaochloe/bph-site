@@ -4,19 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { hints } from "~/server/db/schema";
 import HintStatusBox from "./HintStatusBox";
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
-
-export function formatTime(time: unknown) {
-  if (!(time instanceof Date)) {
-    return "";
-  }
-  return time.toLocaleString("en-US", {
-    year: "2-digit",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
+import { FormattedTime } from "~/lib/time";
 
 export type HintClaimer = { id: string; displayName: string } | null;
 
@@ -101,7 +89,7 @@ export const columns: ColumnDef<HintWithRelations>[] = [
     accessorKey: "requestTime",
     header: ({ column }) => (
       <div className="flex w-32 space-x-2">
-        <p> Request Time</p>
+        <p>Request Time</p>
         {column.getIsSorted() === "asc" ? (
           <ArrowUp className="ml-2 h-4 w-4" />
         ) : column.getIsSorted() === "desc" ? (
@@ -112,9 +100,11 @@ export const columns: ColumnDef<HintWithRelations>[] = [
       </div>
     ),
     cell: ({ row }) => {
-      const time = row.getValue("requestTime");
+      const time: Date = row.getValue("requestTime");
       return (
-        <div className="w-32 truncate font-medium">{formatTime(time)}</div>
+        <div className="w-32 truncate font-medium">
+          <FormattedTime time={time} />
+        </div>
       );
     },
   },
