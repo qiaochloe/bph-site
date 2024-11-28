@@ -26,6 +26,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
 interface TeamTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -79,16 +81,40 @@ export function TeamTable<TData, TValue>({
           className="max-w-sm"
         />
         <div className="flex items-center space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-          >
-            Previous
-          </Button>
-          <Button variant="outline" size="sm" onClick={() => table.nextPage()}>
-            Next
-          </Button>
+          {/* Page [current page] of [total pages] */}
+          <span className="text-muted-foreground text-sm">
+            Page {table.getState().pagination.pageIndex + 1} of{" "}
+            {table.getPageCount()}
+          </span>
+          {/* Disable the left button on the first page of the table */}
+          {table.getState().pagination.pageIndex === 0 ? (
+            <Button variant="outline" size="sm" disabled>
+              <ChevronLeft size="1.5em" />
+            </Button>
+          ) : (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.previousPage()}
+            >
+              <ChevronLeft size="1.5em" />
+            </Button>
+          )}
+          {/* Disable the right button on the last page of the table */}
+          {table.getState().pagination.pageIndex + 1 ===
+          table.getPageCount() ? (
+            <Button variant="outline" size="sm" disabled>
+              <ChevronRight size="1.5em" />
+            </Button>
+          ) : (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.nextPage()}
+            >
+              <ChevronRight size="1.5em" />
+            </Button>
+          )}
         </div>
       </div>
       <div className="flex overflow-auto rounded-md border">
