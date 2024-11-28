@@ -106,7 +106,7 @@ export function LoginForm() {
 
 export function LogoutForm() {
   return (
-    <Button className=" hover:bg-otherblue" onClick={() => logout()}>
+    <Button className="hover:bg-otherblue" onClick={() => logout()}>
       Logout
     </Button>
   );

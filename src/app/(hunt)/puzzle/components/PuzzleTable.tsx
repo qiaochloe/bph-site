@@ -61,7 +61,7 @@ export default function PuzzleTable({
                     router.refresh();
                   }
                 }}
-                className="cursor-pointer hover:"
+                className="hover: cursor-pointer"
                 key={puzzle.id}
               >
                 <TableCell>

@@ -94,7 +94,7 @@ export default function GuessForm({
             </FormItem>
           )}
         />
-        <Button className=" hover:bg-otherblue" type="submit">
+        <Button className="hover:bg-otherblue" type="submit">
           Submit
         </Button>
       </form>

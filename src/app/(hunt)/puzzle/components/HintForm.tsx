@@ -121,9 +121,7 @@ export default function HintForm({
                   {...field}
                 />
               </FormControl>
-              <FormDescription>
-                {getFormDescription()}
-              </FormDescription>
+              <FormDescription>{getFormDescription()}</FormDescription>
               <FormMessage />
             </FormItem>
           )}

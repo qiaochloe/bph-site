@@ -28,7 +28,12 @@ export default function FeedbackForm({
 }: {
   teamId: string;
   showTeam: boolean;
-  feedbackList: { id: number; teamId: string; description: string; timestamp: Date }[];
+  feedbackList: {
+    id: number;
+    teamId: string;
+    description: string;
+    timestamp: Date;
+  }[];
 }) {
   const [error, setError] = useState<string | null>(null);
 

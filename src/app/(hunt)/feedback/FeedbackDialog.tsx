@@ -6,7 +6,12 @@ export default function FeedbackDialog({
   feedbackList,
 }: {
   showTeam: boolean;
-  feedbackList: { id: number; teamId: string; description: string; timestamp: Date }[];
+  feedbackList: {
+    id: number;
+    teamId: string;
+    description: string;
+    timestamp: Date;
+  }[];
 }) {
   if (feedbackList.length > 0) {
     return (
@@ -18,8 +23,7 @@ export default function FeedbackDialog({
               <strong>
                 <FormattedTime time={e.timestamp} />
               </strong>
-              {showTeam && <> ({e.teamId})</>}
-              : {e.description}
+              {showTeam && <> ({e.teamId})</>}: {e.description}
             </p>
           </AlertDescription>
         ))}

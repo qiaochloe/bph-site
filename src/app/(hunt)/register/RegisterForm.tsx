@@ -182,24 +182,17 @@ export function RegisterForm({}: RegisterFormProps) {
                   <FormItem className="flex items-center space-x-3 space-y-0">
                     <FormControl>
                       <RadioGroupItem
-                        className="border-white "
+                        className="border-white"
                         value="in-person"
                       />
                     </FormControl>
-                    <FormLabel className="font-normal ">
-                      In-person
-                    </FormLabel>
+                    <FormLabel className="font-normal">In-person</FormLabel>
                   </FormItem>
                   <FormItem className="flex items-center space-x-3 space-y-0">
                     <FormControl>
-                      <RadioGroupItem
-                        className="border-white "
-                        value="remote"
-                      />
+                      <RadioGroupItem className="border-white" value="remote" />
                     </FormControl>
-                    <FormLabel className="font-normal ">
-                      Remote
-                    </FormLabel>
+                    <FormLabel className="font-normal">Remote</FormLabel>
                   </FormItem>
                 </RadioGroup>
               </FormControl>
@@ -207,7 +200,7 @@ export function RegisterForm({}: RegisterFormProps) {
             </FormItem>
           )}
         />
-        <Button className=" hover:bg-otherblue" type="submit">
+        <Button className="hover:bg-otherblue" type="submit">
           Register
         </Button>
         <div className="py-2 text-sm">

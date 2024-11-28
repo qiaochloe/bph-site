@@ -50,9 +50,7 @@ export default async function RootLayout({
         </div>
       </nav>
       <HuntTopNavSpacer />
-      <main className="flex min-h-[calc(100vh-80px-2em)]">
-        {children}
-      </main>
+      <main className="flex min-h-[calc(100vh-80px-2em)]">{children}</main>
       <Toaster />
       <footer className="py-2 text-center text-xs">
         <p>

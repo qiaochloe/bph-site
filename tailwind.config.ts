@@ -16,7 +16,7 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       colors: {
-        "secondary": "#808080",
+        secondary: "#808080",
         "hunt-nav-color": colors.slate[50],
       },
     },

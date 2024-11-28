@@ -12,8 +12,8 @@ export default async function Home() {
   const session = await auth()!;
   if (!session?.user?.id) {
     return (
-      <div className="flex grow flex-col items-center ">
-        <h1 className="mb-2 ">Puzzles!</h1>
+      <div className="flex grow flex-col items-center">
+        <h1 className="mb-2">Puzzles!</h1>
         <div>
           <Link href="/login" className="text-secondary hover:underline">
             Login
@@ -73,7 +73,7 @@ export default async function Home() {
 
   return (
     <div className="mb-6 flex grow flex-col items-center">
-      <h1 className="mb-2 ">Puzzles!</h1>
+      <h1 className="mb-2">Puzzles!</h1>
       {new Date() < HUNT_START_TIME && session.user.role != "admin" ? (
         <p>The hunt has not started yet.</p>
       ) : (

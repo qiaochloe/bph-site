@@ -5,7 +5,7 @@ export default async function Home() {
   const session = await auth();
 
   return (
-    <div className="flex grow flex-col items-center justify-center ">
+    <div className="flex grow flex-col items-center justify-center">
       {session?.user?.displayName ? (
         <>
           <p className="p-4">Welcome, {session?.user?.displayName}!</p>
@@ -13,7 +13,7 @@ export default async function Home() {
         </>
       ) : (
         <>
-          <h1 className="mb-2 ">Login!</h1>
+          <h1 className="mb-2">Login!</h1>
           <LoginForm />
         </>
       )}

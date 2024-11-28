@@ -22,8 +22,8 @@ export default function PreviousHintTable({
     <Table className="table-fixed">
       <TableHeader>
         <TableRow className="hover:bg-transparent">
-          <TableHead className="text-center ">Request</TableHead>
-          <TableHead className="text-center ">Response</TableHead>
+          <TableHead className="text-center">Request</TableHead>
+          <TableHead className="text-center">Response</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>

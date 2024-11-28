@@ -17,5 +17,11 @@ export default async function Page({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  return <DefaultPuzzlePage puzzleId={slug} puzzleBody={PuzzleBody()} copyText={copyText}/>;
+  return (
+    <DefaultPuzzlePage
+      puzzleId={slug}
+      puzzleBody={PuzzleBody()}
+      copyText={copyText}
+    />
+  );
 }

@@ -75,7 +75,7 @@ export async function checkFinishHunt(teamId: string, puzzleId: string) {
   //     .set({ finishTime: new Date() })
   //     .where(eq(teams.id, teamId));
   // }
-  
+
   if (puzzleId == "") {
     await db
       .update(teams)
