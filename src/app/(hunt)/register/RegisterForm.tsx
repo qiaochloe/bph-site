@@ -102,6 +102,7 @@ export function RegisterForm({}: RegisterFormProps) {
               <FormLabel>Username</FormLabel>
               <FormControl>
                 <Input
+                  className="placeholder:text-slate-300"
                   placeholder="jcarberr"
                   {...field}
                   onChange={(value) => {
@@ -110,7 +111,7 @@ export function RegisterForm({}: RegisterFormProps) {
                   }}
                 />
               </FormControl>
-              <FormDescription>
+              <FormDescription className="text-slate-300">
                 This is the private username your team will use when logging in.
               </FormDescription>
               <FormMessage>{error}</FormMessage>
@@ -124,9 +125,13 @@ export function RegisterForm({}: RegisterFormProps) {
             <FormItem>
               <FormLabel>Display name</FormLabel>
               <FormControl>
-                <Input placeholder="Josiah Carberry" {...field} />
+                <Input
+                  className="placeholder:text-slate-300"
+                  placeholder="Josiah Carberry"
+                  {...field}
+                />
               </FormControl>
-              <FormDescription>
+              <FormDescription className="text-slate-300">
                 This name will be displayed on the leaderboard.
               </FormDescription>
               <FormMessage />
@@ -142,7 +147,7 @@ export function RegisterForm({}: RegisterFormProps) {
               <FormControl>
                 <Input type="password" {...field} />
               </FormControl>
-              <FormDescription>
+              <FormDescription className="text-slate-300">
                 You'll probably share this with your team.
               </FormDescription>
               <FormMessage />
@@ -176,15 +181,25 @@ export function RegisterForm({}: RegisterFormProps) {
                 >
                   <FormItem className="flex items-center space-x-3 space-y-0">
                     <FormControl>
-                      <RadioGroupItem value="in-person" />
+                      <RadioGroupItem
+                        className="border-white "
+                        value="in-person"
+                      />
                     </FormControl>
-                    <FormLabel className="font-normal">In-person</FormLabel>
+                    <FormLabel className="font-normal ">
+                      In-person
+                    </FormLabel>
                   </FormItem>
                   <FormItem className="flex items-center space-x-3 space-y-0">
                     <FormControl>
-                      <RadioGroupItem value="remote" />
+                      <RadioGroupItem
+                        className="border-white "
+                        value="remote"
+                      />
                     </FormControl>
-                    <FormLabel className="font-normal">Remote</FormLabel>
+                    <FormLabel className="font-normal ">
+                      Remote
+                    </FormLabel>
                   </FormItem>
                 </RadioGroup>
               </FormControl>
@@ -192,10 +207,12 @@ export function RegisterForm({}: RegisterFormProps) {
             </FormItem>
           )}
         />
-        <Button type="submit">Register</Button>
+        <Button className=" hover:bg-otherblue" type="submit">
+          Register
+        </Button>
         <div className="py-2 text-sm">
           Already registered for the hunt?{" "}
-          <Link href="/login" className="text-blue-600 hover:underline">
+          <Link href="/login" className="text-secondary hover:underline">
             Login
           </Link>
         </div>

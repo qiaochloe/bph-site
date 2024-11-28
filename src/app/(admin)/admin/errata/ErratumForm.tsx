@@ -107,7 +107,7 @@ export default function ErratumForm({ puzzleList, errataList }: FormProps) {
                   <SelectContent>
                     {puzzleList?.map((puzzle) => (
                       <SelectItem key={puzzle.id} value={puzzle.id}>
-                        {puzzle.name}
+                        {puzzle.name.trim() ? puzzle.name : `[puzzle.id]`}
                       </SelectItem>
                     ))}
                   </SelectContent>

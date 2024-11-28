@@ -1,5 +1,3 @@
-"use server";
-
 import DefaultTeamPage from "../team-page/DefaultTeamPage";
 
 export default async function Page({

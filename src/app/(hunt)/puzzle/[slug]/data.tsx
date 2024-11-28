@@ -5,3 +5,5 @@ export function PuzzleBody() {
 export function SolutionBody() {
   return <div className="text-center">This is an example solution.</div>;
 }
+
+export const copyText = null;

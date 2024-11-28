@@ -11,8 +11,9 @@ import { sql } from "drizzle-orm";
 import { and, asc, desc, eq, lt } from "drizzle-orm/expressions";
 import { teams, guesses } from "~/server/db/schema";
 import { HUNT_END_TIME } from "~/hunt.config";
+import { FormattedTime } from "~/lib/time";
 
-export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 
 export default async function Home() {
   const teamRows = await db
@@ -50,8 +51,8 @@ export default async function Home() {
     );
 
   return (
-    <div className="flex grow flex-col items-center">
-      <h1 className="mb-2">Leaderboard!</h1>
+    <div className="mb-6 flex grow flex-col items-center ">
+      <h1 className="mb-2 ">Leaderboard!</h1>
       <div>
         <Table>
           <TableHeader>
@@ -61,12 +62,12 @@ export default async function Home() {
               <TableHead className="w-[10em] text-center">
                 Total Solved
               </TableHead>
-              <TableHead>Finish Time</TableHead>
+              <TableHead className="">Finish Time</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {teamRows.map((teamRow, index) => (
-              <TableRow>
+              <TableRow className="hover:" key={`${teamRow.id}`}>
                 <TableCell>{index + 1}</TableCell>
                 <TableCell className="w-[20em] break-all">
                   {teamRow.displayName}
@@ -75,9 +76,7 @@ export default async function Home() {
                   {teamRow.correctGuesses ?? 0}
                 </TableCell>
                 <TableCell>
-                  {teamRow.finishTime
-                    ? teamRow.finishTime.toLocaleString()
-                    : ""}
+                  <FormattedTime time={teamRow.finishTime} />
                 </TableCell>
               </TableRow>
             ))}

@@ -1,4 +1,3 @@
-"use server";
 import Link from "next/link";
 import { db } from "@/db/index";
 import {
@@ -9,19 +8,38 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { getNextPuzzleMap } from "~/hunt.config";
+import { getNextUnlocks } from "~/hunt.config";
+import { eq } from "drizzle-orm";
+import { puzzles } from "~/server/db/schema";
+export const fetchCache = "force-no-store";
 
 export default async function Home() {
-  const puzzles = await db.query.puzzles.findMany({
+  const allPuzzles = await db.query.puzzles.findMany({
     columns: { id: true, name: true, answer: true },
   });
 
-  const nextPuzzlesMap = await getNextPuzzleMap();
+  const allPuzzlesWithNextUnlocks = await Promise.all(
+    allPuzzles.map(async (puzzle) => ({
+      ...puzzle,
+      nextUnlocks: await Promise.all(
+        getNextUnlocks(puzzle.id).map(async (nextUnlock) => ({
+          id: nextUnlock,
+          name:
+            (
+              await db.query.puzzles.findFirst({
+                where: eq(puzzles.id, nextUnlock),
+                columns: { name: true },
+              })
+            )?.name || "",
+        })),
+      ),
+    })),
+  );
 
   return (
-    <div className="flex grow flex-col items-center">
+    <div className="flex grow flex-col items-center p-4">
       <h1 className="mb-2">Solutions!</h1>
-      <div className="w-1/3">
+      <div className="min-w-[40%]">
         <Table className="justify-center">
           <TableHeader>
             <TableRow>
@@ -31,7 +49,7 @@ export default async function Home() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {puzzles
+            {allPuzzlesWithNextUnlocks
               // If both puzzles have null times, sort alphabetically
               // Otherwise, prioritize the puzzle with null time
               // If neither puzzles have null times, sort by earliest unlock
@@ -45,23 +63,26 @@ export default async function Home() {
                       className="text-blue-600 hover:underline"
                       href={`/puzzle/${puzzle.id}`}
                     >
-                      {puzzle.name}
+                      {puzzle.name.trim() ? puzzle.name : `[${puzzle.id}]`}
                     </Link>
                   </TableCell>
                   <TableCell>
                     <p className="text-emerald-600">{puzzle.answer}</p>
                   </TableCell>
                   <TableCell>
-                    {nextPuzzlesMap[puzzle.id] &&
-                      nextPuzzlesMap[puzzle.id]?.map((puzzle) => (
+                    {puzzle.nextUnlocks.map((nextUnlock) => (
+                      <>
+                        <>[</>
                         <Link
-                          key={puzzle.id}
-                          href={`/puzzle/${puzzle.id}`}
+                          key={nextUnlock.id}
+                          href={`/puzzle/${nextUnlock.id}`}
                           className="hover:underline"
                         >
-                          {puzzle.name}
+                          {nextUnlock.name}
                         </Link>
-                      ))}
+                        <>] </>
+                      </>
+                    ))}
                   </TableCell>
                 </TableRow>
               ))}

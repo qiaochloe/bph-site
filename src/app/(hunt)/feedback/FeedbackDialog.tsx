@@ -1,11 +1,12 @@
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
-import { formatTime } from "~/lib/utils";
-import { feedback } from "~/server/db/schema";
+import { FormattedTime } from "~/lib/time";
 
 export default function FeedbackDialog({
+  showTeam,
   feedbackList,
 }: {
-  feedbackList: { id: number; description: string; timestamp: Date }[];
+  showTeam: boolean;
+  feedbackList: { id: number; teamId: string; description: string; timestamp: Date }[];
 }) {
   if (feedbackList.length > 0) {
     return (
@@ -14,7 +15,11 @@ export default function FeedbackDialog({
           <AlertDescription key={e.id} className="overflow-hidden break-words">
             {index != 0 && <br />}
             <p className="whitespace-normal">
-              <strong>{formatTime(e.timestamp)}</strong>: {e.description}
+              <strong>
+                <FormattedTime time={e.timestamp} />
+              </strong>
+              {showTeam && <> ({e.teamId})</>}
+              : {e.description}
             </p>
           </AlertDescription>
         ))}

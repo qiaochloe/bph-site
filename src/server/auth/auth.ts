@@ -42,11 +42,7 @@ declare module "next-auth" {
     username: string;
     displayName: string;
     role: string;
-    // image?: string | null | undefined;
-    // emailVerified: Date;
-    // email?: string | null | undefined;
-    // ...other properties
-    // role: Userrole;
+    interactionMode: string;
   }
 }
 
@@ -83,6 +79,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
                 username: user.username,
                 displayName: user.displayName,
                 role: user.role,
+                interactionMode: user.interactionMode,
               };
             }
           }

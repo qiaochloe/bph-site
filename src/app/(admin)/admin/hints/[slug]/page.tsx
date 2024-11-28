@@ -1,5 +1,3 @@
-"use server";
-
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "~/server/auth/auth";
@@ -14,6 +12,7 @@ import PreviousGuessTable from "~/app/(hunt)/puzzle/components/PreviousGuessTabl
 import { RequestBox } from "../components/hint-page/RequestBox";
 import { ResponseBox } from "../components/hint-page/ResponseBox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { FormattedTime } from "~/lib/time";
 
 export default async function Page({
   params,
@@ -143,15 +142,15 @@ export default async function Page({
               </p>
               <p>
                 <strong>Request Time: </strong>
-                {hint.requestTime?.toLocaleString()}
+                <FormattedTime time={hint.requestTime} />
               </p>
               <p>
                 <strong>Claim Time: </strong>
-                {hint.claimTime?.toLocaleString()}
+                <FormattedTime time={hint.claimTime} />
               </p>
               <p>
                 <strong>Response Time: </strong>
-                {hint.responseTime?.toLocaleString()}
+                <FormattedTime time={hint.responseTime} />
               </p>
             </div>
           </TabsContent>
