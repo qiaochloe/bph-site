@@ -28,6 +28,21 @@ export const NUMBER_OF_GUESSES_PER_PUZZLE = 20;
 export const INITIAL_PUZZLES: string[] = [];
 export const numbersToPuzzles: Record<number, string> = {};
 export const puzzlesToNumbers: Record<string, number> = {};
+
+/* Example: adjacency list unlock
+
+  const PUZZLE_UNLOCK_MAP: { [key: string]: string[] } = {
+    puzzle1: ["puzzle1", "puzzle2", "hello"],
+    puzzle2: ["hello", "sorry"],
+    hello: ["sorry", "puzzle2", "puzzle1"],
+    sorry: ["sorry", "puzzle2", "puzzle1"],
+  };
+
+  if (PUZZLE_UNLOCK_MAP[puzzleId]) {
+    await insertUnlock(teamId, PUZZLE_UNLOCK_MAP[puzzleId]);
+  }
+
+*/
 export const puzzleUnlockMap: Record<number, number[]> = {};
 
 /** Returns the next unlock after a puzzle is solved.
@@ -94,7 +109,7 @@ export function getTotalHints(teamId: string) {
   const initialNumberOfHints = 1;
   const currentTime = new Date();
   const timeDifference = currentTime.getTime() - HUNT_START_TIME.getTime(); // In milliseconds
-  const rate = 12 * 60 * 60 * 1000; // 24 hours in milliseconds
+  const rate = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
   return initialNumberOfHints + Math.floor(timeDifference / rate);
 }
 
@@ -125,7 +140,7 @@ export async function canViewSolution(puzzleId: string) {
     where: and(
       eq(guesses.teamId, session.user.id),
       eq(guesses.puzzleId, puzzleId),
-      eq(guesses.isCorrect, true),
+      guesses.isCorrect,
     ),
   }));
 

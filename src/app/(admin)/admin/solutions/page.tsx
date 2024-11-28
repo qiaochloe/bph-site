@@ -11,6 +11,7 @@ import {
 import { getNextUnlocks } from "~/hunt.config";
 import { eq } from "drizzle-orm";
 import { puzzles } from "~/server/db/schema";
+
 export const fetchCache = "force-no-store";
 
 export default async function Home() {

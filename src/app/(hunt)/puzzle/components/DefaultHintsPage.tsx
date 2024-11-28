@@ -28,7 +28,7 @@ export default async function DefaultHintsPage({
     where: and(
       eq(guesses.teamId, session.user.id),
       eq(guesses.puzzleId, puzzleId),
-      eq(guesses.isCorrect, true),
+      guesses.isCorrect,
     ),
   }));
 

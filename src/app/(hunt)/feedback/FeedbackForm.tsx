@@ -73,7 +73,7 @@ export default function FeedbackForm({
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="">
+                <FormLabel>
                   Please enter your thoughts on the hunt! Any puzzle errors,
                   website bugs, and general comments will be enormously helpful
                   for us.

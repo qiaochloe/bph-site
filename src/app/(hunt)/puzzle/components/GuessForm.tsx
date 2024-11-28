@@ -86,7 +86,7 @@ export default function GuessForm({
                   className="bg-white text-black"
                 />
               </FormControl>
-              <FormDescription className="">
+              <FormDescription>
                 {numberOfGuessesLeft}{" "}
                 {numberOfGuessesLeft === 1 ? "guess" : "guesses"} left
               </FormDescription>

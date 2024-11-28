@@ -28,7 +28,7 @@ export default function PreviousHintTable({
       </TableHeader>
       <TableBody>
         {previousHints.map((hint) => (
-          <TableRow key={hint.id} className="hover:">
+          <TableRow key={hint.id}>
             <TableCell className="break-words">{hint.request}</TableCell>
             <TableCell className="break-words">{hint.response}</TableCell>
           </TableRow>
