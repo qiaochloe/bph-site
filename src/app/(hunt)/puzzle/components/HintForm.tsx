@@ -57,7 +57,7 @@ export default function HintForm({
 
   function getFormDescription() {
     if (currDate > HUNT_END_TIME) {
-      return <>Hunt has ended and live hinting has closed.</>;
+      return <>The hunt has ended and live hinting has been closed.</>;
     }
 
     if (isSolved) {

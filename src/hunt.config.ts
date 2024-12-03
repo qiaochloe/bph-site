@@ -1,7 +1,7 @@
 import { insertUnlock } from "./app/(hunt)/puzzle/actions";
 import { auth } from "./server/auth/auth";
 import { db } from "./server/db";
-import { teams, puzzles, guesses, hints, unlocks } from "./server/db/schema";
+import { teams, guesses, hints, unlocks } from "./server/db/schema";
 import { and, count, eq, ne } from "drizzle-orm";
 import { redirect } from "next/navigation";
 
@@ -130,7 +130,13 @@ export async function getNumberOfHintsRemaining(teamId: string) {
  * WARNING: make sure to exclude certain puzzles if the solutions aren't available.
  */
 export async function canViewSolution(puzzleId: string) {
-  // Get user id
+  // If the hunt has ended, anyone can view solutions
+  if (new Date() > HUNT_END_TIME) {
+    return true;
+  }
+
+  // If the hunt has not ended, users must be signed-in
+  // And have solved the puzzle
   const session = await auth()!;
   if (!session?.user?.id) {
     redirect("/404");
@@ -149,8 +155,14 @@ export async function canViewSolution(puzzleId: string) {
 
 /** Checks whether the user can view the puzzle. */
 export async function canViewPuzzle(puzzleId: string) {
-  // Check if team has unlocked the puzzle yet
-  const session = await auth()!;
+  // If the hunt has ended, anyone can view puzzles
+  if (new Date() > HUNT_END_TIME) {
+    return true;
+  }
+
+  // If the hunt has not ended, users must be signed-in
+  // And have unlocked the puzzle
+  const session = await auth();
   if (!session?.user?.id) {
     redirect("/404");
   }
@@ -168,5 +180,5 @@ export async function canViewPuzzle(puzzleId: string) {
       ),
     }));
 
-  return isUnlocked || new Date() > HUNT_END_TIME;
+  return isUnlocked;
 }
