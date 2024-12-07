@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { db } from "~/server/db";
-import { eq, and } from "drizzle-orm";
-import { puzzles, unlocks } from "~/server/db/schema";
+import { eq } from "drizzle-orm";
+import { puzzles } from "~/server/db/schema";
 
 import { puzzleId, SolutionBody } from "./data";
 import DefaultHeader from "../components/DefaultHeader";

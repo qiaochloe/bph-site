@@ -13,11 +13,6 @@ export default async function DefaultSolutionPage({
   puzzleId: string;
   solutionBody: React.ReactNode;
 }) {
-  // Check if there is solution
-  if (!solutionBody) {
-    redirect("/404");
-  }
-
   // Get puzzle name
   const puzzle = await db.query.puzzles.findFirst({
     where: eq(puzzles.id, puzzleId),
@@ -51,6 +46,11 @@ export default async function DefaultSolutionPage({
         </p>
       </div>
     );
+  }
+
+  // Check if there is solution
+  if (!solutionBody) {
+    return <div>There are currently no solutions for this puzzle.</div>;
   }
 
   return (
