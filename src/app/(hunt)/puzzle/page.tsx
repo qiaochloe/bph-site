@@ -14,9 +14,9 @@ export default async function Home() {
   // If the hunt has not yet started, display a message
   if (new Date() < HUNT_START_TIME) {
     return (
-      <div className="flex grow flex-col items-center text-white">
+      <div className="flex grow flex-col items-center text-secondary">
         <div className="mb-6 flex grow flex-col items-center">
-          <h1 className="mb-2 text-white">Puzzles!</h1>
+          <h1 className="mb-2 text-secondary">Puzzles!</h1>
           <p>The hunt has not started yet.</p>
         </div>
       </div>
@@ -26,10 +26,10 @@ export default async function Home() {
   // If the user is not logged in and the hunt has not ended, display a message
   if (!session?.user?.id && new Date() < HUNT_END_TIME) {
     return (
-      <div className="flex grow flex-col items-center">
+      <div className="flex grow flex-col items-center text-secondary">
         <h1 className="mb-2">Puzzles!</h1>
-        <div>
-          <Link href="/login" className="text-secondary hover:underline">
+        <p>
+          <Link href="/login" className="text-perwinkle hover:underline">
             Login
           </Link>{" "}
           to access puzzles
@@ -91,14 +91,10 @@ export default async function Home() {
   return (
     <div className="mb-6 flex grow flex-col items-center">
       <h1 className="mb-2">Puzzles!</h1>
-      {new Date() < HUNT_START_TIME && session.user.role != "admin" ? (
-        <p>The hunt has not started yet.</p>
-      ) : (
-        <PuzzleTable
-          availablePuzzles={availablePuzzles}
-          solvedPuzzles={solvedPuzzles}
-        />
-      )}
+      <PuzzleTable
+        availablePuzzles={availablePuzzles}
+        solvedPuzzles={solvedPuzzles}
+      />
     </div>
   );
 }
