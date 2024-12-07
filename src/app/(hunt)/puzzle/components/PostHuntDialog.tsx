@@ -14,11 +14,17 @@ export default function PostHuntDialog() {
           We have made some adjustments to this puzzle to make it solvable for
           users who are not logged in. To get the original hunt experience,
           please{" "}
-          <Link href="/register" className="text-sky-200 font-medium hover:underline">
+          <Link
+            href="/register"
+            className="font-medium text-sky-200 hover:underline"
+          >
             register
           </Link>{" "}
           or{" "}
-          <Link href="/login" className="text-sky-200 font-medium hover:underline">
+          <Link
+            href="/login"
+            className="font-medium text-sky-200 hover:underline"
+          >
             log in
           </Link>
           .
