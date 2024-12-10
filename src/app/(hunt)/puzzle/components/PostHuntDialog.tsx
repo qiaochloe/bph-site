@@ -7,10 +7,10 @@ export default function PostHuntDialog() {
   return (
     <Alert className="mb-6 mt-2 bg-transparent">
       <AlertDescription className="overflow-hidden break-words">
-        <strong className="whitespace-normal text-slate-300">
+        <strong className="whitespace-normal text-gray-300">
           Post-hunt Warning:
         </strong>
-        <p className="whitespace-normal text-slate-300">
+        <p className="whitespace-normal text-gray-300">
           We have made some adjustments to this puzzle to make it solvable for
           users who are not logged in. To get the original hunt experience,
           please{" "}

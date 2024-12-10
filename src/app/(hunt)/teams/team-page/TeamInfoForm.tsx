@@ -165,7 +165,7 @@ export function TeamInfoForm({ teamId }: TeamInfoFormProps) {
             )}
           />
         )}
-        <Button className="bg-slate-900 hover:bg-gray-800" type="submit">
+        <Button className="bg-gray-900 hover:bg-gray-800" type="submit">
           Update team info
         </Button>
       </form>

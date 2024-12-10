@@ -102,7 +102,7 @@ export function RegisterForm({}: RegisterFormProps) {
               <FormLabel>Username</FormLabel>
               <FormControl>
                 <Input
-                  className="placeholder:text-slate-300"
+                  className="placeholder:text-gray-300"
                   placeholder="jcarberr"
                   {...field}
                   onChange={(value) => {
@@ -111,7 +111,7 @@ export function RegisterForm({}: RegisterFormProps) {
                   }}
                 />
               </FormControl>
-              <FormDescription className="text-slate-300">
+              <FormDescription className="text-gray-300">
                 This is the private username your team will use when logging in.
               </FormDescription>
               <FormMessage>{error}</FormMessage>
@@ -126,12 +126,12 @@ export function RegisterForm({}: RegisterFormProps) {
               <FormLabel>Display name</FormLabel>
               <FormControl>
                 <Input
-                  className="placeholder:text-slate-300"
+                  className="placeholder:text-gray-300"
                   placeholder="Josiah Carberry"
                   {...field}
                 />
               </FormControl>
-              <FormDescription className="text-slate-300">
+              <FormDescription className="text-gray-300">
                 This name will be displayed on the leaderboard.
               </FormDescription>
               <FormMessage />
@@ -147,7 +147,7 @@ export function RegisterForm({}: RegisterFormProps) {
               <FormControl>
                 <Input type="password" {...field} />
               </FormControl>
-              <FormDescription className="text-slate-300">
+              <FormDescription className="text-gray-300">
                 You'll probably share this with your team.
               </FormDescription>
               <FormMessage />

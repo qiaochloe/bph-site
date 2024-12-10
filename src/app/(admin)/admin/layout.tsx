@@ -12,7 +12,7 @@ export default async function RootLayout({
   return (
     <div className="h-full min-h-screen bg-white pb-5">
       {/* Navbar */}
-      <nav className="fixed z-50 flex w-full justify-between bg-slate-50 p-4">
+      <nav className="fixed z-50 flex w-full justify-between bg-gray-50 p-4">
         <div className="flex space-x-4">
           <Link href="/admin" className="hover:underline">
             Home

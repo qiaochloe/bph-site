@@ -80,7 +80,7 @@ export default function FeedbackForm({
                 </FormLabel>
                 <FormControl>
                   <AutosizeTextarea
-                    className="bg-slate-50 text-black"
+                    className="bg-gray-50 text-black"
                     placeholder="No response yet"
                     {...field}
                   />
@@ -90,7 +90,7 @@ export default function FeedbackForm({
             )}
           />
           {error && <p className="text-red-500">{error}</p>}
-          <Button className="bg-slate-900 hover:bg-gray-800" type="submit">
+          <Button className="bg-gray-900 hover:bg-gray-800" type="submit">
             Submit
           </Button>
         </form>

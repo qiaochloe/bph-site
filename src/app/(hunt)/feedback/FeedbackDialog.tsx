@@ -15,7 +15,7 @@ export default function FeedbackDialog({
 }) {
   if (feedbackList.length > 0) {
     return (
-      <Alert className="mt-7 bg-slate-100">
+      <Alert className="mt-7 bg-gray-100">
         {feedbackList.map((e, index) => (
           <AlertDescription key={e.id} className="overflow-hidden break-words">
             {index != 0 && <br />}
