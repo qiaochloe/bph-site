@@ -62,15 +62,20 @@ export default async function Page({
     ),
   });
 
-  const previousHints = (await db.query.hints.findMany({
-    where: and(eq(hints.teamId, hint.teamId), eq(hints.puzzleId, hint.puzzleId)),
-    columns: { id: true, request: true, response: true },
-    with: {
-      followUps: {
-        columns: { id: true, message: true, userId: true },
-      }
-    },
-  }))
+  const previousHints = (
+    await db.query.hints.findMany({
+      where: and(
+        eq(hints.teamId, hint.teamId),
+        eq(hints.puzzleId, hint.puzzleId),
+      ),
+      columns: { id: true, request: true, response: true },
+      with: {
+        followUps: {
+          columns: { id: true, message: true, userId: true },
+        },
+      },
+    })
+  )
     // Check whether the user can edit the hint
     .map((hint) => ({
       ...hint,
@@ -78,7 +83,7 @@ export default async function Page({
         id: followUp.id,
         message: followUp.message,
         canEdit: followUp.userId === session?.user?.id,
-      }))
+      })),
     }));
 
   return (
@@ -131,8 +136,8 @@ export default async function Page({
               <RequestBox hint={hint} />
               {(hint.response ||
                 (hint.claimer && hint.claimer.id === session.user.id)) && (
-                  <ResponseBox hint={hint} />
-                )}
+                <ResponseBox hint={hint} />
+              )}
             </div>
           </TabsContent>
           <TabsContent value="guesses">

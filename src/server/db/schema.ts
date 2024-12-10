@@ -153,16 +153,18 @@ export const followUps = createTable(
   "follow_up",
   {
     id: serial("id").primaryKey(),
-    hintId: serial("hint_id").notNull().references(() => hints.id, { onDelete: "cascade" }),
-    userId: varchar("user_id").notNull().references(() => teams.id, { onDelete: "cascade" }),
+    hintId: serial("hint_id")
+      .notNull()
+      .references(() => hints.id, { onDelete: "cascade" }),
+    userId: varchar("user_id")
+      .notNull()
+      .references(() => teams.id, { onDelete: "cascade" }),
     message: text("message").notNull(),
     time: timestamp("time", { withTimezone: true }).notNull(),
   },
   (table) => {
     return {
-      hint_idx: index("hint_idx").on(
-        table.hintId,
-      ),
+      hint_idx: index("hint_idx").on(table.hintId),
     };
   },
 );
@@ -257,8 +259,8 @@ export const followUpRelations = relations(followUps, ({ one }) => ({
   hint: one(hints, {
     fields: [followUps.hintId],
     references: [hints.id],
-  })
-}))
+  }),
+}));
 
 export const erratumRelations = relations(errata, ({ one }) => ({
   puzzle: one(puzzles, {

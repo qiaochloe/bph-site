@@ -33,15 +33,20 @@ export default async function DefaultHintsPage({
   }));
 
   // Get previous hints
-  const previousHints = (await db.query.hints.findMany({
-    where: and(eq(hints.teamId, session.user.id), eq(hints.puzzleId, puzzleId)),
-    columns: { id: true, request: true, response: true, status: true },
-    with: {
-      followUps: {
-        columns: { id: true, message: true, userId: true },
-      }
-    },
-  }))
+  const previousHints = (
+    await db.query.hints.findMany({
+      where: and(
+        eq(hints.teamId, session.user.id),
+        eq(hints.puzzleId, puzzleId),
+      ),
+      columns: { id: true, request: true, response: true, status: true },
+      with: {
+        followUps: {
+          columns: { id: true, message: true, userId: true },
+        },
+      },
+    })
+  )
     // Check whether the user can edit the hint
     .map((hint) => ({
       ...hint,
@@ -49,9 +54,8 @@ export default async function DefaultHintsPage({
         id: followUp.id,
         message: followUp.message,
         canEdit: followUp.userId === session?.user?.id,
-      }))
+      })),
     }));
-
 
   const hintsRemaining = await getNumberOfHintsRemaining(session.user.id);
 

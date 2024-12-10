@@ -1,7 +1,14 @@
 "use server";
 import { revalidatePath } from "next/dist/server/web/spec-extension/revalidate";
 import { db } from "@/db/index";
-import { puzzles, guesses, hints, followUps, unlocks, teams } from "@/db/schema";
+import {
+  puzzles,
+  guesses,
+  hints,
+  followUps,
+  unlocks,
+  teams,
+} from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { auth } from "@/auth";
 import {
@@ -96,12 +103,15 @@ export async function insertFollowUp(hintId: number, message: string) {
     throw new Error("Not logged in");
   }
 
-  const result = await db.insert(followUps).values({
-    hintId,
-    userId: session.user.id,
-    message,
-    time: new Date(),
-  }).returning({ id: followUps.id });
+  const result = await db
+    .insert(followUps)
+    .values({
+      hintId,
+      userId: session.user.id,
+      message,
+      time: new Date(),
+    })
+    .returning({ id: followUps.id });
 
   return result[0]?.id;
 }
@@ -184,7 +194,11 @@ export async function insertUnlock(teamId: string, puzzleIds: string[]) {
 }
 
 /** Edits a hint */
-export async function editMessage(id: number, message: string, type: MessageType) {
+export async function editMessage(
+  id: number,
+  message: string,
+  type: MessageType,
+) {
   const session = await auth();
   if (!session?.user?.id) {
     throw new Error("Not logged in");
@@ -192,20 +206,25 @@ export async function editMessage(id: number, message: string, type: MessageType
 
   switch (type) {
     case "request":
-      await db.update(hints)
+      await db
+        .update(hints)
         .set({ request: message })
         .where(and(eq(hints.id, id), eq(hints.teamId, session.user.id)))
         .returning({ id: hints.id });
       break;
     case "response":
-      await db.update(hints)
+      await db
+        .update(hints)
         .set({ response: message })
-        .where(and(eq(hints.id, id), eq(hints.claimer, session.user.id)))
+        .where(and(eq(hints.id, id), eq(hints.claimer, session.user.id)));
       break;
     case "follow-up":
-      await db.update(followUps)
+      await db
+        .update(followUps)
         .set({ message })
-        .where(and(eq(followUps.id, id), eq(followUps.userId, session.user.id)))
+        .where(
+          and(eq(followUps.id, id), eq(followUps.userId, session.user.id)),
+        );
       break;
   }
 }
