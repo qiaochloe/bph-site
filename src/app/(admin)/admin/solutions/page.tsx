@@ -11,7 +11,7 @@ import {
 import { getNextUnlocks } from "~/hunt.config";
 import { eq } from "drizzle-orm";
 import { puzzles } from "~/server/db/schema";
-import { Check, Clipboard, KeyRound, Puzzle } from "lucide-react";
+import { KeyRound, Puzzle } from "lucide-react";
 import CopyButton from "./CopyButton";
 
 export const fetchCache = "force-no-store";
@@ -44,8 +44,8 @@ export default async function Home() {
         const module = await import(
           `../../../(hunt)/puzzle/${puzzle.id}/data.tsx`
         );
-        puzzleBody = !!module.PuzzleBody;
-        solutionBody = !!module.SolutionBody;
+        puzzleBody = !!module.PuzzleBody();
+        solutionBody = !!module.SolutionBody();
         copyText = module.copyText;
       } catch (e) {
         puzzleBody = false;
@@ -114,7 +114,7 @@ export default async function Home() {
                       </>
                     ))}
                   </TableCell>
-                  <TableCell className="justify-center">
+                  <TableCell className="justify-center hover:opacity-75">
                     {puzzle.puzzleBody && (
                       <div className="flex justify-center">
                         <Link href={`/puzzle/${puzzle.id}`}>
@@ -123,7 +123,7 @@ export default async function Home() {
                       </div>
                     )}
                   </TableCell>
-                  <TableCell className="justify-center">
+                  <TableCell className="justify-center hover:opacity-75">
                     {puzzle.solutionBody && (
                       <div className="flex justify-center">
                         <Link href={`/puzzle/${puzzle.id}/solution`}>
@@ -132,7 +132,7 @@ export default async function Home() {
                       </div>
                     )}
                   </TableCell>
-                  <TableCell className="justify-center">
+                  <TableCell className="justify-center hover:opacity-75">
                     {puzzle.copyText && (
                       <div className="flex justify-center">
                         <CopyButton copyText={puzzle.copyText} />
