@@ -1,5 +1,5 @@
 "use client";
-import { useState, startTransition } from "react";
+import { useState, startTransition, Fragment } from "react";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { AutosizeTextarea } from "~/components/ui/autosize-textarea";
 import { editMessage, insertFollowUp, MessageType } from "../actions";
@@ -159,7 +159,7 @@ export default function PreviousHintTable({
     <Table className="table-fixed">
       <TableBody>
         {optimisticHints.map((hint) => (
-          <>
+          <Fragment key={`${hint.id}`}>
             {/* Request row */}
             <TableRow key={`${hint.id}-request`}>
               <TableCell className="break-words">
@@ -334,7 +334,7 @@ export default function PreviousHintTable({
                 </TableCell>
               </TableRow>
             )}
-          </>
+          </Fragment>
         ))}
       </TableBody>
     </Table>
