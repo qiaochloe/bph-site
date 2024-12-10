@@ -1,15 +1,13 @@
 import { auth } from "@/auth";
 import { db } from "~/server/db";
-import { eq, and, sql } from "drizzle-orm";
-import { guesses, hints, puzzles, followUps } from "~/server/db/schema";
+import { eq, and } from "drizzle-orm";
+import { guesses, hints, puzzles } from "~/server/db/schema";
 import PreviousHintTable from "./PreviousHintTable";
 import HintForm from "./HintForm";
 import {
   canViewPuzzle,
   getNumberOfHintsRemaining,
-  NUMBER_OF_GUESSES_PER_PUZZLE,
 } from "~/hunt.config";
-import DefaultHeader from "./DefaultHeader";
 import { redirect } from "next/navigation";
 
 export default async function DefaultHintsPage({
@@ -79,21 +77,16 @@ export default async function DefaultHintsPage({
     throw new Error("Puzzle does not exist in database");
   }
 
-  return (
-    <>
-      <div className="mb-4 w-2/3 min-w-36">
-        <HintForm
-          puzzleId={puzzleId}
-          hintsRemaining={hintsRemaining}
-          unansweredHint={unansweredHint}
-          isSolved={isSolved}
-        />
-      </div>
+  const hintState = {
+    puzzleId,
+    hintsRemaining,
+    unansweredHint,
+    isSolved,
+  }
 
-      <h2>Previous Hints</h2>
-      <div className="w-2/3 min-w-36">
-        <PreviousHintTable previousHints={previousHints} />
-      </div>
-    </>
+  return (
+    <div className="w-2/3 min-w-36 p-4">
+      <PreviousHintTable previousHints={previousHints} hintState={hintState} />
+    </div>
   );
 }

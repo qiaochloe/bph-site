@@ -136,13 +136,13 @@ export async function insertHint(puzzleId: string, hint: string) {
     : false;
 
   if (hasHint && !hasUnansweredHint) {
-    await db.insert(hints).values({
+    const result = await db.insert(hints).values({
       teamId: session.user.id,
       puzzleId,
       request: hint,
       requestTime: new Date(),
       status: "no_response",
-    });
+    }).returning({ id: hints.id });
 
     const user = await db.query.teams.findFirst({
       where: eq(teams.id, session.user.id),
@@ -154,6 +154,8 @@ export async function insertHint(puzzleId: string, hint: string) {
         content: `🙏 **Hint** [request](https://puzzlethon.brownpuzzle.club/admin/hints) by [${user?.username}](https://puzzlethon.brownpuzzle.club/teams/${user?.username}) on [${puzzleId}](https://puzzlethon.brownpuzzle.club/puzzle/${puzzleId}): _${hint}_ <@&1310029428864057504>`,
       });
     }
+
+    return result[0]?.id;
   }
 }
 

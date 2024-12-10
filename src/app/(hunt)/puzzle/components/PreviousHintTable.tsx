@@ -1,10 +1,30 @@
 "use client";
+import Link from "next/link";
 import { useState, startTransition, Fragment } from "react";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { AutosizeTextarea } from "~/components/ui/autosize-textarea";
-import { editMessage, insertFollowUp, MessageType } from "../actions";
+import {
+  editMessage,
+  insertFollowUp,
+  insertHint,
+  MessageType,
+} from "../actions";
+import { HUNT_END_TIME } from "@/hunt.config";
+import { Button } from "~/components/ui/button";
 
 type TableProps = {
+  previousHints: PreviousHints;
+  hintState?: HintState;
+};
+
+type HintState = {
+  puzzleId: string;
+  hintsRemaining: number;
+  unansweredHint: { puzzleId: string; puzzleName: string } | null;
+  isSolved: boolean;
+};
+
+type PreviousHints = {
   id: number;
   request: string;
   response: string | null;
@@ -24,13 +44,55 @@ type FollowUp = {
 
 export default function PreviousHintTable({
   previousHints,
-}: {
-  previousHints: TableProps;
-}) {
+  hintState,
+}: TableProps) {
   const [optimisticHints, setOptimisticHints] = useState(previousHints);
-  const [edit, setEdit] = useState<Message | null>(null);
+  const [request, setRequest] = useState<string>("");
   const [followUp, setFollowUp] = useState<FollowUp | null>(null);
+  const [edit, setEdit] = useState<Message | null>(null);
   const [hiddenFollowUps, setHiddenFollowUps] = useState<number[]>([]);
+
+  const handleChangeRequest = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setRequest(e.target.value);
+  };
+
+  const handleSubmitRequest = async (puzzleId: string, message: string) => {
+    // Optimistic update
+    startTransition(() => {
+      setOptimisticHints((prev) => [
+        ...prev,
+        {
+          id: 0,
+          request,
+          response: null,
+          followUps: [],
+        },
+      ]);
+    });
+
+    setRequest("");
+    const id = await insertHint(puzzleId, message);
+    if (!id) {
+      // Revert optimistic update
+      startTransition(() => {
+        setOptimisticHints((prev) => prev.filter((hint) => hint.id !== 0));
+      });
+    } else {
+      // Update followUpId
+      startTransition(() => {
+        setOptimisticHints((prev) =>
+          prev.map((hint) =>
+            hint.id === 0
+              ? {
+                  ...hint,
+                  id,
+                }
+              : hint,
+          ),
+        );
+      });
+    }
+  };
 
   const handleEdit = (id: number, value: string, type: MessageType) => {
     setEdit({ id, value, type });
@@ -82,11 +144,12 @@ export default function PreviousHintTable({
   };
 
   const handleHideFollowUps = (hintId: number) => {
-    if (hiddenFollowUps.includes(hintId)) {
-      setHiddenFollowUps((prev) => prev.filter((id) => id !== hintId));
-    } else {
-      setHiddenFollowUps((prev) => prev.concat(hintId));
-    }
+    // TODO: hiding doesn't work reliably with the follow-up toggle
+    // if (hiddenFollowUps.includes(hintId)) {
+    //   setHiddenFollowUps((prev) => prev.filter((id) => id !== hintId));
+    // } else {
+    //   setHiddenFollowUps((prev) => prev.concat(hintId));
+    // }
   };
 
   const handleSubmitFollowUp = async (hintId: number, message: string) => {
@@ -96,13 +159,13 @@ export default function PreviousHintTable({
         prev.map((hint) =>
           hint.id === hintId
             ? {
-              ...hint,
-              followUps: hint.followUps.concat({
-                id: 0,
-                message,
-                canEdit: false,
-              }),
-            }
+                ...hint,
+                followUps: hint.followUps.concat({
+                  id: 0,
+                  message,
+                  canEdit: false,
+                }),
+              }
             : hint,
         ),
       );
@@ -117,11 +180,11 @@ export default function PreviousHintTable({
           prev.map((hint) =>
             hint.id === hintId
               ? {
-                ...hint,
-                followUps: hint.followUps.filter(
-                  (followUp) => followUp.id !== 0,
-                ),
-              }
+                  ...hint,
+                  followUps: hint.followUps.filter(
+                    (followUp) => followUp.id !== 0,
+                  ),
+                }
               : hint,
           ),
         );
@@ -133,13 +196,13 @@ export default function PreviousHintTable({
           prev.map((hint) =>
             hint.id === hintId
               ? {
-                ...hint,
-                followUps: hint.followUps.map((followUp) =>
-                  followUp.id === 0
-                    ? { ...followUp, id: followUpId, canEdit: true }
-                    : followUp,
-                ),
-              }
+                  ...hint,
+                  followUps: hint.followUps.map((followUp) =>
+                    followUp.id === 0
+                      ? { ...followUp, id: followUpId, canEdit: true }
+                      : followUp,
+                  ),
+                }
               : hint,
           ),
         );
@@ -147,13 +210,56 @@ export default function PreviousHintTable({
     }
   };
 
-  const handleFollowUpChange = (
+  const handleChangeFollowUp = (
     hintId: number,
     e: React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
     if (followUp === null) return;
     setFollowUp({ hintId, message: e.target.value });
   };
+
+  const currDate = new Date();
+  let getFormDescription = null;
+
+  if (hintState) {
+    const { puzzleId, hintsRemaining, unansweredHint, isSolved } = hintState;
+    getFormDescription = () => {
+      if (currDate > HUNT_END_TIME) {
+        return <>Hunt has ended and live hinting has closed.</>;
+      }
+
+      if (isSolved) {
+        return <>You have already solved this puzzle.</>;
+      }
+
+      if (unansweredHint) {
+        if (puzzleId === unansweredHint.puzzleId) {
+          return <>You have an outstanding hint on this puzzle.</>;
+        } else {
+          return (
+            <>
+              You have an outstanding hint on the puzzle{" "}
+              <Link
+                href={`/puzzle/${unansweredHint.puzzleId}`}
+                className="hover:text-link text-blue-500 hover:underline"
+              >
+                {unansweredHint.puzzleName}
+              </Link>
+              .
+            </>
+          );
+        }
+      }
+
+      if (hintsRemaining === 0) {
+        return <>No hints remaining.</>;
+      } else if (hintsRemaining === 1) {
+        return <>1 hint remaining.</>;
+      } else {
+        return <>{hintsRemaining} hints remaining.</>;
+      }
+    };
+  }
 
   return (
     <Table className="table-fixed">
@@ -171,7 +277,7 @@ export default function PreviousHintTable({
                         onClick={() =>
                           handleEdit(hint.id, hint.request, "request")
                         }
-                        className="underline"
+                        className="text-link hover:underline"
                       >
                         Edit
                       </button>
@@ -181,13 +287,13 @@ export default function PreviousHintTable({
                           onClick={() =>
                             handleSubmitEdit(edit.id, edit.value, "request")
                           }
-                          className="underline"
+                          className="text-link hover:underline"
                         >
                           Save
                         </button>
                         <button
                           onClick={() => setEdit(null)}
-                          className="underline"
+                          className="text-link hover:underline"
                         >
                           Cancel
                         </button>
@@ -227,14 +333,14 @@ export default function PreviousHintTable({
                             onClick={() =>
                               setFollowUp({ hintId: hint.id, message: "" })
                             }
-                            className="underline"
+                            className="text-link hover:underline"
                           >
                             Follow-Up
                           </button>
                         ) : (
                           <button
                             onClick={() => setFollowUp(null)}
-                            className="underline"
+                            className="text-link hover:underline"
                           >
                             Cancel
                           </button>
@@ -246,7 +352,7 @@ export default function PreviousHintTable({
                 </TableCell>
               </TableRow>
             )}
-            {/* FollowUp row */}
+            {/* FollowUps row */}
             {!hiddenFollowUps.includes(hint.id) &&
               hint.followUps.map((followUp) => (
                 <TableRow key={`${followUp.id}`}>
@@ -255,10 +361,10 @@ export default function PreviousHintTable({
                       <p className="inline rounded-md bg-green-100 p-1">
                         Follow-Up
                       </p>
-                      {followUp.canEdit &&
+                      {followUp.canEdit && (
                         <div className="p-1">
                           {edit?.type === "follow-up" &&
-                            edit.id === followUp.id ? (
+                          edit.id === followUp.id ? (
                             <button
                               onClick={() =>
                                 handleSubmitEdit(
@@ -267,7 +373,7 @@ export default function PreviousHintTable({
                                   "follow-up",
                                 )
                               }
-                              className="underline"
+                              className="text-link hover:underline"
                             >
                               Save
                             </button>
@@ -280,13 +386,13 @@ export default function PreviousHintTable({
                                   "follow-up",
                                 )
                               }
-                              className="underline"
+                              className="text-link hover:underline"
                             >
                               Edit
                             </button>
                           )}
                         </div>
-                      }
+                      )}
                     </div>
                     <div className="p-1 pb-4">
                       {edit?.type === "follow-up" && edit.id === followUp.id ? (
@@ -303,41 +409,78 @@ export default function PreviousHintTable({
                   </TableCell>
                 </TableRow>
               ))}
+            {/* New followup row */}
             {followUp !== null && followUp.hintId === hint.id && (
               <TableRow key={`${hint.id}-follow-up-request`}>
-                <TableCell className="break-words bg-gray-200">
-                  <div className="pb-4">
-                    <p className="p-1">Follow-Up</p>
-                  </div>
-                  <div className="p-1 pb-4">
+                <TableCell className="break-words rounded-lg bg-gray-200">
+                  <p className="p-1 font-bold">Follow-Up</p>
+                  <div className="p-1">
                     <AutosizeTextarea
                       maxHeight={500}
                       className="resize-none"
                       value={followUp.message}
-                      onChange={(event) => handleFollowUpChange(hint.id, event)}
+                      onChange={(event) => handleChangeFollowUp(hint.id, event)}
                     />
                   </div>
                   <div className="flex space-x-2 p-1">
-                    <button
+                    <Button
                       onClick={() =>
                         handleSubmitFollowUp(hint.id, followUp.message)
                       }
-                      className="underline"
                     >
                       Submit
-                    </button>
-                    <button
-                      onClick={() => setFollowUp(null)}
-                      className="underline"
-                    >
+                    </Button>
+                    <Button variant="outline" onClick={() => setFollowUp(null)}>
                       Cancel
-                    </button>
+                    </Button>
                   </div>
                 </TableCell>
               </TableRow>
             )}
           </Fragment>
         ))}
+        {hintState && (
+          <TableRow>
+            <TableCell className="break-words rounded-lg bg-gray-200">
+              <p className="p-1 font-bold">Request</p>
+              <p className="p-1 text-gray-800">
+                Please provide as much detail as possible to help us understand
+                where you're at and where you're stuck! Specific clues, steps,
+                and hypotheses are all helpful. If you're working with any
+                spreadsheets, diagrams, or external resources, you can include
+                links.
+              </p>
+              <div className="p-1">
+                <AutosizeTextarea
+                  maxHeight={500}
+                  className="resize-none border-black bg-white"
+                  disabled={
+                    hintState.isSolved ||
+                    !!hintState.unansweredHint ||
+                    hintState.hintsRemaining < 1 ||
+                    currDate > HUNT_END_TIME
+                  }
+                  value={request}
+                  onChange={handleChangeRequest}
+                />
+                {getFormDescription && (
+                  <div className="p-1 text-sm text-gray-800">
+                    {getFormDescription()}
+                  </div>
+                )}
+              </div>
+              <div className="p-1">
+                <Button
+                  onClick={() =>
+                    handleSubmitRequest(hintState.puzzleId, request)
+                  }
+                >
+                  Submit
+                </Button>
+              </div>
+            </TableCell>
+          </TableRow>
+        )}
       </TableBody>
     </Table>
   );
