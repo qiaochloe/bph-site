@@ -1,8 +1,8 @@
 "use server";
 import { revalidatePath } from "next/dist/server/web/spec-extension/revalidate";
 import { db } from "@/db/index";
-import { puzzles, guesses, hints, unlocks, teams } from "@/db/schema";
-import { and, isNull, eq } from "drizzle-orm";
+import { puzzles, guesses, hints, followUps, unlocks, teams } from "@/db/schema";
+import { and, eq } from "drizzle-orm";
 import { auth } from "@/auth";
 import {
   getNumberOfHintsRemaining,
@@ -13,6 +13,8 @@ import {
 } from "~/hunt.config";
 
 import axios from "axios";
+
+export type MessageType = "request" | "response" | "follow-up";
 
 /** Inserts a guess into the guess table */
 export async function insertGuess(puzzleId: string, guess: string) {
@@ -87,6 +89,23 @@ export async function insertGuess(puzzleId: string, guess: string) {
   }
 }
 
+/** Inserts a follow-up hint into the hint table */
+export async function insertFollowUp(hintId: number, message: string) {
+  const session = await auth();
+  if (!session?.user?.id) {
+    throw new Error("Not logged in");
+  }
+
+  const result = await db.insert(followUps).values({
+    hintId,
+    userId: session.user.id,
+    message,
+    time: new Date(),
+  }).returning({ id: followUps.id });
+
+  return result[0]?.id;
+}
+
 /** Inserts a hint into the hint table */
 export async function insertHint(puzzleId: string, hint: string) {
   const session = await auth();
@@ -94,7 +113,7 @@ export async function insertHint(puzzleId: string, hint: string) {
     throw new Error("Not logged in");
   }
 
-  // Check the the team has a hint
+  // Checks
   const hasHint = (await getNumberOfHintsRemaining(session.user.id)) > 0;
   const hasUnansweredHint = (await db.query.hints.findFirst({
     columns: { id: true },
@@ -161,5 +180,32 @@ export async function insertUnlock(teamId: string, puzzleIds: string[]) {
     revalidatePath("/puzzle");
   } catch (e) {
     throw e;
+  }
+}
+
+/** Edits a hint */
+export async function editMessage(id: number, message: string, type: MessageType) {
+  const session = await auth();
+  if (!session?.user?.id) {
+    throw new Error("Not logged in");
+  }
+
+  switch (type) {
+    case "request":
+      await db.update(hints)
+        .set({ request: message })
+        .where(and(eq(hints.id, id), eq(hints.teamId, session.user.id)))
+        .returning({ id: hints.id });
+      break;
+    case "response":
+      await db.update(hints)
+        .set({ response: message })
+        .where(and(eq(hints.id, id), eq(hints.claimer, session.user.id)))
+      break;
+    case "follow-up":
+      await db.update(followUps)
+        .set({ message })
+        .where(and(eq(followUps.id, id), eq(followUps.userId, session.user.id)))
+      break;
   }
 }
