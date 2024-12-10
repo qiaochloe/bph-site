@@ -17,39 +17,37 @@ import CopyButton from "./CopyButton";
 export const fetchCache = "force-no-store";
 
 export default async function Home() {
-
   const allPuzzles = await db.query.puzzles.findMany({
     columns: { id: true, name: true, answer: true },
   });
 
-
   const allPuzzlesWithEverything = await Promise.all(
     allPuzzles.map(async (puzzle) => {
-      const nextUnlocks =
-        await Promise.all(
-          getNextUnlocks(puzzle.id).map(async (nextUnlock) => ({
-            id: nextUnlock,
-            name:
-              (
-                await db.query.puzzles.findFirst({
-                  where: eq(puzzles.id, nextUnlock),
-                  columns: { name: true },
-                })
-              )?.name || "",
-          })),
-        )
+      const nextUnlocks = await Promise.all(
+        getNextUnlocks(puzzle.id).map(async (nextUnlock) => ({
+          id: nextUnlock,
+          name:
+            (
+              await db.query.puzzles.findFirst({
+                where: eq(puzzles.id, nextUnlock),
+                columns: { name: true },
+              })
+            )?.name || "",
+        })),
+      );
 
       var puzzleBody;
       var solutionBody;
       var copyText;
 
       try {
-        const module = await import(`../../../(hunt)/puzzle/${puzzle.id}/data.tsx`);
+        const module = await import(
+          `../../../(hunt)/puzzle/${puzzle.id}/data.tsx`
+        );
         puzzleBody = !!module.PuzzleBody;
         solutionBody = !!module.SolutionBody;
         copyText = module.copyText;
-      }
-      catch (e) {
+      } catch (e) {
         puzzleBody = false;
         solutionBody = false;
         copyText = null;
@@ -60,9 +58,10 @@ export default async function Home() {
         nextUnlocks: nextUnlocks,
         puzzleBody: puzzleBody,
         solutionBody: solutionBody,
-        copyText: copyText
-      }
-    }));
+        copyText: copyText,
+      };
+    }),
+  );
 
   return (
     <div className="flex grow flex-col items-center p-4">
@@ -116,29 +115,29 @@ export default async function Home() {
                     ))}
                   </TableCell>
                   <TableCell className="justify-center">
-                    {puzzle.puzzleBody &&
+                    {puzzle.puzzleBody && (
                       <div className="flex justify-center">
                         <Link href={`/puzzle/${puzzle.id}`}>
                           <Puzzle className="text-red-500" />
                         </Link>
                       </div>
-                    }
+                    )}
                   </TableCell>
                   <TableCell className="justify-center">
-                    {puzzle.solutionBody &&
+                    {puzzle.solutionBody && (
                       <div className="flex justify-center">
                         <Link href={`/puzzle/${puzzle.id}/solution`}>
                           <KeyRound className="text-yellow-500" />
                         </Link>
                       </div>
-                    }
+                    )}
                   </TableCell>
                   <TableCell className="justify-center">
-                    {puzzle.copyText &&
+                    {puzzle.copyText && (
                       <div className="flex justify-center">
                         <CopyButton copyText={puzzle.copyText} />
                       </div>
-                    }
+                    )}
                   </TableCell>
                 </TableRow>
               ))}
