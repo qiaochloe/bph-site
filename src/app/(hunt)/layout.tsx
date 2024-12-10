@@ -4,51 +4,73 @@ import { Toaster } from "@/components/ui/toaster";
 import { HuntTopNavSpacer } from "../nav/HuntTopNavSpacer";
 import { auth } from "~/server/auth/auth";
 import { LogoutButton } from "../nav/LogoutButton";
+import { HamburgerMenu, MenuItem } from "../nav/HamburgerMenu";
 
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const session = await auth();
+
+  const leftMenuItems: MenuItem[] = [
+    {
+      title: "Home",
+      href: "/",
+      type: "link",
+    },
+    {
+      title: "Puzzles",
+      href: "/puzzle",
+      type: "link",
+    },
+    {
+      title: "Teams",
+      href: "/teams",
+      type: "link",
+    },
+  ];
+
+  const rightMenuItems: MenuItem[] = [];
+
+  if (session?.user?.role == "admin") {
+    rightMenuItems.push({
+      title: "admin",
+      href: "/admin",
+      type: "link",
+    });
+  }
+
+  if (session?.user?.id) {
+    leftMenuItems.push({
+      title: "Feedback",
+      href: "/feedback",
+      type: "link",
+    });
+
+    rightMenuItems.push({
+      title: session.user.displayName,
+      href: `/${session.user.username}`,
+      type: "link",
+    });
+
+    rightMenuItems.push({
+      title: "logout",
+      element: <LogoutButton />,
+      type: "element",
+    });
+  } else {
+    rightMenuItems.push({
+      title: "Login",
+      href: "/login",
+      type: "link",
+    });
+  }
+
   return (
     <>
-      <nav className="fixed z-50 flex w-full justify-between bg-hunt-nav-color p-4">
-        <div className="flex space-x-4">
-          <Link href="/" className="hover:underline">
-            Home
-          </Link>
-          <Link href="/puzzle" className="hover:underline">
-            Puzzles
-          </Link>
-          <Link href="/teams" className="hover:underline">
-            Teams
-          </Link>
-          <Link href="/feedback" className="hover:underline">
-            Feedback
-          </Link>
-        </div>
-        <div className="flex space-x-4">
-          {session?.user?.id ? (
-            <>
-              <Link
-                href={`/teams/${session.user.username}`}
-                className="hover:underline"
-              >
-                {session.user.displayName}
-              </Link>
-              {session?.user?.role === "admin" && (
-                <Link href="/admin" className="hover:underline">
-                  Admin
-                </Link>
-              )}
-              <LogoutButton />
-            </>
-          ) : (
-            <Link href="/login" className="hover:underline">
-              Login
-            </Link>
-          )}
-        </div>
-      </nav>
+      <HamburgerMenu
+        leftMenuItems={leftMenuItems}
+        rightMenuItems={rightMenuItems}
+      />
       <HuntTopNavSpacer />
       <main className="flex min-h-[calc(100vh-80px-2em)]">{children}</main>
       <Toaster />
