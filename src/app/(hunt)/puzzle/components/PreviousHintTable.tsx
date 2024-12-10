@@ -11,6 +11,7 @@ import {
 } from "../actions";
 import { HUNT_END_TIME } from "@/hunt.config";
 import { Button } from "~/components/ui/button";
+import { ChevronDown, ChevronRight } from "lucide-react";
 
 type TableProps = {
   previousHints: PreviousHints;
@@ -144,12 +145,19 @@ export default function PreviousHintTable({
   };
 
   const handleHideFollowUps = (hintId: number) => {
-    // TODO: hiding doesn't work reliably with the follow-up toggle
-    // if (hiddenFollowUps.includes(hintId)) {
-    //   setHiddenFollowUps((prev) => prev.filter((id) => id !== hintId));
-    // } else {
-    //   setHiddenFollowUps((prev) => prev.concat(hintId));
-    // }
+    if (hiddenFollowUps.includes(hintId)) {
+      setHiddenFollowUps((prev) => prev.filter((id) => id !== hintId));
+    } else {
+      setHiddenFollowUps((prev) => prev.concat(hintId));
+      if (followUp?.hintId === hintId) {
+        setFollowUp(null);
+      }
+    }
+  };
+
+  const handleFollowUp = (hintId: number) => {
+    setHiddenFollowUps((prev) => prev.filter((prevId) => prevId !== hintId));
+    setFollowUp({ hintId: hintId, message: "" });
   };
 
   const handleSubmitFollowUp = async (hintId: number, message: string) => {
@@ -264,184 +272,11 @@ export default function PreviousHintTable({
   return (
     <Table className="table-fixed">
       <TableBody>
-        {optimisticHints.map((hint) => (
-          <Fragment key={`${hint.id}`}>
-            {/* Request row */}
-            <TableRow key={`${hint.id}-request`}>
-              <TableCell className="break-words">
-                <div className="flex justify-between pb-4">
-                  <p className="inline rounded-md bg-sky-100 p-1">Request</p>
-                  <div className="p-1">
-                    {edit?.id !== hint.id ? (
-                      <button
-                        onClick={() =>
-                          handleEdit(hint.id, hint.request, "request")
-                        }
-                        className="text-link hover:underline"
-                      >
-                        Edit
-                      </button>
-                    ) : (
-                      <div className="space-x-2">
-                        <button
-                          onClick={() =>
-                            handleSubmitEdit(edit.id, edit.value, "request")
-                          }
-                          className="text-link hover:underline"
-                        >
-                          Save
-                        </button>
-                        <button
-                          onClick={() => setEdit(null)}
-                          className="text-link hover:underline"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="p-1 pb-4">
-                  {edit?.type === "request" && edit.id === hint.id ? (
-                    <AutosizeTextarea
-                      maxHeight={500}
-                      className="resize-none"
-                      value={edit.value}
-                      onChange={handleChangeEdit}
-                    />
-                  ) : (
-                    hint.request
-                  )}
-                </div>
-              </TableCell>
-            </TableRow>
-            {/* Response row */}
-            {hint.response && (
-              <TableRow key={`${hint.id}-response`}>
-                <TableCell
-                  className="break-words"
-                  onClick={() => handleHideFollowUps(hint.id)}
-                >
-                  <div className="flex justify-between pb-4">
-                    <p className="inline rounded-md bg-orange-100 p-1">
-                      Response
-                    </p>
-                    {hint.response && (
-                      <div className="p-1">
-                        {followUp === null ? (
-                          <button
-                            onClick={() =>
-                              setFollowUp({ hintId: hint.id, message: "" })
-                            }
-                            className="text-link hover:underline"
-                          >
-                            Follow-Up
-                          </button>
-                        ) : (
-                          <button
-                            onClick={() => setFollowUp(null)}
-                            className="text-link hover:underline"
-                          >
-                            Cancel
-                          </button>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                  <div className="p-1 pb-4">{hint.response}</div>
-                </TableCell>
-              </TableRow>
-            )}
-            {/* FollowUps row */}
-            {!hiddenFollowUps.includes(hint.id) &&
-              hint.followUps.map((followUp) => (
-                <TableRow key={`${followUp.id}`}>
-                  <TableCell className="break-words pl-10">
-                    <div className="flex justify-between pb-4">
-                      <p className="inline rounded-md bg-green-100 p-1">
-                        Follow-Up
-                      </p>
-                      {followUp.canEdit && (
-                        <div className="p-1">
-                          {edit?.type === "follow-up" &&
-                          edit.id === followUp.id ? (
-                            <button
-                              onClick={() =>
-                                handleSubmitEdit(
-                                  followUp.id,
-                                  edit.value,
-                                  "follow-up",
-                                )
-                              }
-                              className="text-link hover:underline"
-                            >
-                              Save
-                            </button>
-                          ) : (
-                            <button
-                              onClick={() =>
-                                handleEdit(
-                                  followUp.id,
-                                  followUp.message,
-                                  "follow-up",
-                                )
-                              }
-                              className="text-link hover:underline"
-                            >
-                              Edit
-                            </button>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                    <div className="p-1 pb-4">
-                      {edit?.type === "follow-up" && edit.id === followUp.id ? (
-                        <AutosizeTextarea
-                          maxHeight={500}
-                          className="resize-none"
-                          value={edit.value}
-                          onChange={handleChangeEdit}
-                        />
-                      ) : (
-                        followUp.message
-                      )}
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            {/* New followup row */}
-            {followUp !== null && followUp.hintId === hint.id && (
-              <TableRow key={`${hint.id}-follow-up-request`}>
-                <TableCell className="break-words rounded-lg bg-gray-200">
-                  <p className="p-1 font-bold">Follow-Up</p>
-                  <div className="p-1">
-                    <AutosizeTextarea
-                      maxHeight={500}
-                      className="resize-none"
-                      value={followUp.message}
-                      onChange={(event) => handleChangeFollowUp(hint.id, event)}
-                    />
-                  </div>
-                  <div className="flex space-x-2 p-1">
-                    <Button
-                      onClick={() =>
-                        handleSubmitFollowUp(hint.id, followUp.message)
-                      }
-                    >
-                      Submit
-                    </Button>
-                    <Button variant="outline" onClick={() => setFollowUp(null)}>
-                      Cancel
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            )}
-          </Fragment>
-        ))}
+        {/* Hint request row */}
         {hintState && (
-          <TableRow>
-            <TableCell className="break-words rounded-lg bg-gray-200">
+          <TableRow className="hover:bg-inherit">
+            <TableCell className="w-4"></TableCell>
+            <TableCell className="break-words rounded-lg pb-4">
               <p className="p-1 font-bold">Request</p>
               <p className="p-1 text-gray-800">
                 Please provide as much detail as possible to help us understand
@@ -481,6 +316,203 @@ export default function PreviousHintTable({
             </TableCell>
           </TableRow>
         )}
+        {optimisticHints.map((hint) => (
+          <Fragment key={`${hint.id}`}>
+            {/* Previous hint request row */}
+            <TableRow key={`${hint.id}-request`} className="hover:bg-inherit">
+              <TableCell className="w-4 p-0"></TableCell>
+              <TableCell className="break-words">
+                <div className="flex justify-between pb-2">
+                  <p className="inline rounded-md bg-sky-100 p-1">Team</p>
+                  <div className="p-1">
+                    {edit?.id !== hint.id ? (
+                      <button
+                        onClick={() =>
+                          handleEdit(hint.id, hint.request, "request")
+                        }
+                        className="text-link hover:underline"
+                      >
+                        Edit
+                      </button>
+                    ) : (
+                      <div className="space-x-2">
+                        <button
+                          onClick={() =>
+                            handleSubmitEdit(edit.id, edit.value, "request")
+                          }
+                          className="text-link hover:underline"
+                        >
+                          Save
+                        </button>
+                        <button
+                          onClick={() => setEdit(null)}
+                          className="text-link hover:underline"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="p-1 pb-2">
+                  {edit?.type === "request" && edit.id === hint.id ? (
+                    <AutosizeTextarea
+                      maxHeight={500}
+                      className="resize-none"
+                      value={edit.value}
+                      onChange={handleChangeEdit}
+                    />
+                  ) : (
+                    hint.request
+                  )}
+                </div>
+              </TableCell>
+            </TableRow>
+            {/* Previous hint response row */}
+            {hint.response && (
+              <TableRow
+                key={`${hint.id}-response`}
+                className="hover:bg-inherit"
+              >
+                <TableCell className="relative w-20">
+                  {hint.followUps.length > 0 && (
+                    <div className="absolute left-0 top-3">
+                      {hiddenFollowUps.includes(hint.id) ? (
+                        <button onClick={() => handleHideFollowUps(hint.id)}>
+                          <ChevronRight className="text-link h-5 w-5" />
+                        </button>
+                      ) : (
+                        <button onClick={() => handleHideFollowUps(hint.id)}>
+                          <ChevronDown className="text-link h-5 w-5" />
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </TableCell>
+                <TableCell className="break-words">
+                  <div className="flex justify-between pb-2">
+                    <p className="inline rounded-md bg-orange-100 p-1">Staff</p>
+                    <div className="flex space-x-2 p-1">
+                      {followUp?.hintId !== hint.id ? (
+                        <button
+                          onClick={() => handleFollowUp(hint.id)}
+                          className="text-link hover:underline"
+                        >
+                          Follow-Up
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => setFollowUp(null)}
+                          className="text-link hover:underline"
+                        >
+                          Cancel
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  <div className="p-1 pb-2">{hint.response}</div>
+                </TableCell>
+              </TableRow>
+            )}
+            {/* Previous hint follow-ups row */}
+            {!hiddenFollowUps.includes(hint.id) &&
+              hint.followUps.map((followUp) => (
+                <TableRow key={`${followUp.id}`}>
+                  <TableCell className="w-20"></TableCell>
+                  <TableCell className="break-words pl-10">
+                    <div className="flex justify-between pb-2">
+                      {followUp.canEdit ? (
+                        <p className="inline rounded-md bg-sky-100 p-1">
+                          Team
+                        </p>
+                      ) : (
+                        <p className="inline rounded-md bg-orange-100 p-1">
+                          Staff
+                        </p>
+                      )}
+                      {followUp.canEdit && (
+                        <div className="p-1">
+                          {edit?.type === "follow-up" &&
+                          edit.id === followUp.id ? (
+                            <button
+                              onClick={() =>
+                                handleSubmitEdit(
+                                  followUp.id,
+                                  edit.value,
+                                  "follow-up",
+                                )
+                              }
+                              className="text-link hover:underline"
+                            >
+                              Save
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() =>
+                                handleEdit(
+                                  followUp.id,
+                                  followUp.message,
+                                  "follow-up",
+                                )
+                              }
+                              className="text-link hover:underline"
+                            >
+                              Edit
+                            </button>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-1 pb-2">
+                      {edit?.type === "follow-up" && edit.id === followUp.id ? (
+                        <AutosizeTextarea
+                          maxHeight={500}
+                          className="resize-none"
+                          value={edit.value}
+                          onChange={handleChangeEdit}
+                        />
+                      ) : (
+                        followUp.message
+                      )}
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            {/* New follow-up row */}
+            {followUp !== null && followUp.hintId === hint.id && (
+              <TableRow key={`${hint.id}-follow-up-request`}>
+                <TableCell className="w-20"></TableCell>
+                <TableCell className="break-words rounded-lg bg-gray-200">
+                  <p className="p-1 font-bold">Follow-Up</p>
+                  <p className="p-1 text-gray-800">
+                    Ask for clarification in this follow-up thread. Follow-ups
+                    don't count toward your total hint limit!
+                  </p>
+                  <div className="p-1">
+                    <AutosizeTextarea
+                      maxHeight={500}
+                      className="resize-none"
+                      value={followUp.message}
+                      onChange={(event) => handleChangeFollowUp(hint.id, event)}
+                    />
+                  </div>
+                  <div className="flex space-x-2 p-1">
+                    <Button
+                      onClick={() =>
+                        handleSubmitFollowUp(hint.id, followUp.message)
+                      }
+                    >
+                      Submit
+                    </Button>
+                    <Button variant="outline" onClick={() => setFollowUp(null)}>
+                      Cancel
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            )}
+          </Fragment>
+        ))}
       </TableBody>
     </Table>
   );
