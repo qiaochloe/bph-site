@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import { db } from "~/server/db";
-import { eq, and } from "drizzle-orm";
-import { guesses, hints, puzzles } from "~/server/db/schema";
+import { eq, and, sql } from "drizzle-orm";
+import { guesses, hints, puzzles, followUps } from "~/server/db/schema";
 import PreviousHintTable from "./PreviousHintTable";
 import HintForm from "./HintForm";
 import {
@@ -45,10 +45,29 @@ export default async function DefaultHintsPage({
   }));
 
   // Get previous hints
-  const previousHints = await db.query.hints.findMany({
-    where: and(eq(hints.teamId, session.user.id), eq(hints.puzzleId, puzzleId)),
-    columns: { id: true, request: true, response: true, status: true },
-  });
+  const previousHints = (
+    await db.query.hints.findMany({
+      where: and(
+        eq(hints.teamId, session.user.id),
+        eq(hints.puzzleId, puzzleId),
+      ),
+      columns: { id: true, request: true, response: true, status: true },
+      with: {
+        followUps: {
+          columns: { id: true, message: true, userId: true },
+        },
+      },
+    })
+  )
+    // Check whether the user can edit the hint
+    .map((hint) => ({
+      ...hint,
+      followUps: hint.followUps.map((followUp) => ({
+        id: followUp.id,
+        message: followUp.message,
+        canEdit: followUp.userId === session?.user?.id,
+      })),
+    }));
 
   const hintsRemaining = await getNumberOfHintsRemaining(session.user.id);
 

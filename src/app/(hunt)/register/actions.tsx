@@ -42,9 +42,11 @@ export async function insertTeam(
       createTime: new Date(),
     });
 
-    await axios.post(process.env.DISCORD_WEBHOOK_URL!, {
-      content: `:busts_in_silhouette: **New Team**: ${displayName} ([${username}](https://puzzlethon.brownpuzzle.club/teams/${username}))`,
-    });
+    if (process.env.DISCORD_WEBHOOK_URL) {
+      await axios.post(process.env.DISCORD_WEBHOOK_URL, {
+        content: `:busts_in_silhouette: **New Team**: ${displayName} ([${username}](https://puzzlethon.brownpuzzle.club/teams/${username}))`,
+      });
+    }
 
     return login(username, password);
   } catch (error) {
