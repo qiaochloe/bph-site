@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import { authConfig } from "@/auth.config";
-import { HUNT_START_TIME } from "@/hunt.config";
+import { HUNT_START_TIME, HUNT_END_TIME } from "@/hunt.config";
 
 export const { auth } = NextAuth(authConfig);
 

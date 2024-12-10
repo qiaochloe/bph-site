@@ -9,34 +9,44 @@ import PuzzleTable from "./components/PuzzleTable";
 
 export default async function Home() {
   // Get user id
-  const session = await auth()!;
-  if (!session?.user?.id) {
+  const session = await auth();
+
+  // If the hunt has not yet started, display a message
+  if (new Date() < HUNT_START_TIME) {
     return (
-      <div className="flex grow flex-col items-center">
-        <h1 className="mb-2">Puzzles!</h1>
-        <div>
-          <Link href="/login" className="text-secondary hover:underline">
-            Login
-          </Link>{" "}
-          to access puzzles
+      <div className="flex grow flex-col items-center text-secondary">
+        <div className="mb-6 flex grow flex-col items-center">
+          <h1 className="mb-2 text-secondary">Puzzles!</h1>
+          <p>The hunt has not started yet.</p>
         </div>
       </div>
     );
   }
 
-  if (new Date() > HUNT_END_TIME) {
-    var availablePuzzles: {
-      unlockTime: Date | null;
-      id: string;
-      name: string;
-      answer: string;
-    }[] = (
-      await db.query.puzzles.findMany({
-        columns: { id: true, name: true, answer: true },
-      })
-    ).map((puzzle) => ({ ...puzzle, unlockTime: null }));
-    // Get all puzzles available to the team
-  } else {
+  // If the user is not logged in and the hunt has not ended, display a message
+  if (!session?.user?.id && new Date() < HUNT_END_TIME) {
+    return (
+      <div className="flex grow flex-col items-center text-secondary">
+        <h1 className="mb-2">Puzzles!</h1>
+        <p>
+          <Link href="/login" className="text-perwinkle hover:underline">
+            Login
+          </Link>{" "}
+          to access puzzles
+        </p>
+      </div>
+    );
+  }
+
+  var availablePuzzles: {
+    unlockTime: Date | null;
+    id: string;
+    name: string;
+    answer: string;
+  }[];
+
+  // If the user is logged in and the hunt has not ended
+  if (session?.user?.id && new Date() < HUNT_END_TIME) {
     let initialPuzzles = await db.query.puzzles.findMany({
       columns: { id: true, name: true, answer: true },
       where: inArray(puzzles.id, INITIAL_PUZZLES),
@@ -48,40 +58,43 @@ export default async function Home() {
       with: { puzzle: { columns: { id: true, name: true, answer: true } } },
     });
 
-    var availablePuzzles: {
-      unlockTime: Date | null;
-      id: string;
-      name: string;
-      answer: string;
-    }[] = [
+    availablePuzzles = [
       ...initialPuzzles.map((puzzle) => ({ ...puzzle, unlockTime: null })),
       ...unlockedPuzzles.map((unlock) => ({
         ...unlock.puzzle,
         unlockTime: unlock.unlockTime,
       })),
     ];
+  } else {
+    availablePuzzles = (
+      await db.query.puzzles.findMany({
+        columns: { id: true, name: true, answer: true },
+      })
+    ).map((puzzle) => ({ ...puzzle, unlockTime: null }));
   }
 
+  var solvedPuzzles: { puzzleId: string }[];
+
   // Check which puzzles are solved
-  let solvedPuzzles = await db.query.guesses.findMany({
-    columns: { puzzleId: true },
-    where: and(
-      eq(guesses.teamId, session.user.id),
-      eq(guesses.isCorrect, true),
-    ),
-  });
+  if (session?.user?.id) {
+    solvedPuzzles = await db.query.guesses.findMany({
+      columns: { puzzleId: true },
+      where: and(
+        eq(guesses.teamId, session.user.id),
+        eq(guesses.isCorrect, true),
+      ),
+    });
+  } else {
+    solvedPuzzles = [];
+  }
 
   return (
     <div className="mb-6 flex grow flex-col items-center">
       <h1 className="mb-2">Puzzles!</h1>
-      {new Date() < HUNT_START_TIME && session.user.role != "admin" ? (
-        <p>The hunt has not started yet.</p>
-      ) : (
-        <PuzzleTable
-          availablePuzzles={availablePuzzles}
-          solvedPuzzles={solvedPuzzles}
-        />
-      )}
+      <PuzzleTable
+        availablePuzzles={availablePuzzles}
+        solvedPuzzles={solvedPuzzles}
+      />
     </div>
   );
 }

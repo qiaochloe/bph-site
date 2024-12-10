@@ -2,10 +2,10 @@ import { auth } from "~/server/auth/auth";
 import { db } from "@/db/index";
 import { teams } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import Toast from "../team-page/Toast";
+import Toast from "./Toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TeamInfoForm } from "../team-page/TeamInfoForm";
-import { PasswordResetForm } from "../team-page/PasswordResetForm";
+import { TeamInfoForm } from "./TeamInfoForm";
+import { PasswordResetForm } from "./PasswordResetForm";
 
 export default async function DefaultTeamPage({
   username,
