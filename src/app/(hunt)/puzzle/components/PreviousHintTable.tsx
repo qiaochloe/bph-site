@@ -35,6 +35,7 @@ export default function PreviousHintTable({
   const [optimisticHints, setOptimisticHints] = useState(previousHints);
   const [edit, setEdit] = useState<Message | null>(null);
   const [followUp, setFollowUp] = useState<FollowUp | null>(null);
+  const [hiddenFollowUps, setHiddenFollowUps] = useState<number[]>([]);
 
   const handleEdit = (id: number, value: string, type: MessageType) => {
     setEdit({ id, value, type });
@@ -78,6 +79,14 @@ export default function PreviousHintTable({
         // Insert into database
         await editMessage(id, value, type);
         break;
+    }
+  }
+
+  const handleHideFollowUps = (hintId: number) => {
+    if (hiddenFollowUps.includes(hintId)) {
+      setHiddenFollowUps((prev) => prev.filter((id) => id !== hintId));
+    } else {
+      setHiddenFollowUps((prev) => prev.concat(hintId));
     }
   }
 
@@ -133,7 +142,7 @@ export default function PreviousHintTable({
         {optimisticHints.map((hint) => (
           <>
             {/* Request row */}
-            <TableRow key={`${hint.id}-request`} className="hover:bg-white">
+            <TableRow key={`${hint.id}-request`}>
               <TableCell className="break-words">
                 <div className="pb-4 flex justify-between">
                   <p className="rounded-md p-1 inline bg-sky-100">
@@ -166,7 +175,7 @@ export default function PreviousHintTable({
             {/* Response row */}
             {hint.response &&
               <TableRow key={`${hint.id}-response`}>
-                <TableCell className="break-words">
+                <TableCell className="break-words" onClick={() => handleHideFollowUps(hint.id)}>
                   <div className="flex justify-between pb-4">
                     <p className="rounded-md p-1 inline bg-orange-100">
                       Response
@@ -187,9 +196,9 @@ export default function PreviousHintTable({
               </TableRow>
             }
             {/* FollowUp row */}
-            {hint.followUps.map((followUp) => (
+            {!hiddenFollowUps.includes(hint.id) && hint.followUps.map((followUp) => (
               <TableRow key={`${followUp.id}`}>
-                <TableCell className="break-words">
+                <TableCell className="break-words pl-10">
                   <div className="pb-4 flex justify-between">
                     <p className="rounded-md p-1 inline bg-green-100">
                       Follow-Up
