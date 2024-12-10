@@ -22,3 +22,5 @@ export function SolutionBody(): JSX.Element | null {
   return null;
   // return <div className="text-center">This is an example solution.</div>;
 }
+
+export const copyText = "Hello, world!";
