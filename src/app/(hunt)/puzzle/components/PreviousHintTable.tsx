@@ -96,13 +96,13 @@ export default function PreviousHintTable({
         prev.map((hint) =>
           hint.id === hintId
             ? {
-              ...hint,
-              followUps: hint.followUps.concat({
-                id: 0,
-                message,
-                canEdit: false,
-              }),
-            }
+                ...hint,
+                followUps: hint.followUps.concat({
+                  id: 0,
+                  message,
+                  canEdit: false,
+                }),
+              }
             : hint,
         ),
       );
@@ -117,11 +117,11 @@ export default function PreviousHintTable({
           prev.map((hint) =>
             hint.id === hintId
               ? {
-                ...hint,
-                followUps: hint.followUps.filter(
-                  (followUp) => followUp.id !== 0,
-                ),
-              }
+                  ...hint,
+                  followUps: hint.followUps.filter(
+                    (followUp) => followUp.id !== 0,
+                  ),
+                }
               : hint,
           ),
         );
@@ -133,13 +133,13 @@ export default function PreviousHintTable({
           prev.map((hint) =>
             hint.id === hintId
               ? {
-                ...hint,
-                followUps: hint.followUps.map((followUp) =>
-                  followUp.id === 0
-                    ? { ...followUp, id: followUpId, canEdit: true }
-                    : followUp,
-                ),
-              }
+                  ...hint,
+                  followUps: hint.followUps.map((followUp) =>
+                    followUp.id === 0
+                      ? { ...followUp, id: followUpId, canEdit: true }
+                      : followUp,
+                  ),
+                }
               : hint,
           ),
         );
@@ -255,10 +255,10 @@ export default function PreviousHintTable({
                       <p className="inline rounded-md bg-green-100 p-1">
                         Follow-Up
                       </p>
-                      {followUp.canEdit &&
+                      {followUp.canEdit && (
                         <div className="p-1">
                           {edit?.type === "follow-up" &&
-                            edit.id === followUp.id ? (
+                          edit.id === followUp.id ? (
                             <button
                               onClick={() =>
                                 handleSubmitEdit(
@@ -286,7 +286,7 @@ export default function PreviousHintTable({
                             </button>
                           )}
                         </div>
-                      }
+                      )}
                     </div>
                     <div className="p-1 pb-4">
                       {edit?.type === "follow-up" && edit.id === followUp.id ? (
