@@ -22,9 +22,11 @@ export async function insertFeedback(description: string) {
     where: eq(teams.id, session.user.id),
   });
 
-  await axios.post(process.env.DISCORD_WEBHOOK_URL!, {
-    content: `📝 **Feedback** by [${user?.username}](https://puzzlethon.brownpuzzle.club/teams/${user?.username}): _${description}_`,
-  });
+  if (process.env.DISCORD_WEBHOOK_URL) {
+    await axios.post(process.env.DISCORD_WEBHOOK_URL, {
+      content: `📝 **Feedback** by [${user?.username}](https://puzzlethon.brownpuzzle.club/teams/${user?.username}): _${description}_`,
+    });
+  }
 
   return { error: null };
 }

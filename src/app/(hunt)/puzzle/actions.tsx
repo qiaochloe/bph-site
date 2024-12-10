@@ -73,9 +73,11 @@ export async function insertGuess(puzzleId: string, guess: string) {
     where: eq(teams.id, session.user.id),
   });
 
-  await axios.post(process.env.DISCORD_WEBHOOK_URL!, {
-    content: `${puzzleId == "gate-lock" && correct ? "🏆" : "🧩"} **Guess** by [${user?.username}](https://puzzlethon.brownpuzzle.club/teams/${user?.username}) on [${puzzleId}](https://puzzlethon.brownpuzzle.club/puzzle/${puzzleId}): \`${guess}\` [${correct ? "✓" : "✕"}]`,
-  });
+  if (process.env.DISCORD_WEBHOOK_URL) {
+    await axios.post(process.env.DISCORD_WEBHOOK_URL, {
+      content: `${puzzleId == "gate-lock" && correct ? "🏆" : "🧩"} **Guess** by [${user?.username}](https://puzzlethon.brownpuzzle.club/teams/${user?.username}) on [${puzzleId}](https://puzzlethon.brownpuzzle.club/puzzle/${puzzleId}): \`${guess}\` [${correct ? "✓" : "✕"}]`,
+    });
+  }
 
   revalidatePath(`/puzzle/${puzzleId}`);
 
@@ -118,9 +120,11 @@ export async function insertHint(puzzleId: string, hint: string) {
     });
 
     // TODO: get specific hint ID
-    await axios.post(process.env.DISCORD_WEBHOOK_URL!, {
-      content: `🙏 **Hint** [request](https://puzzlethon.brownpuzzle.club/admin/hints) by [${user?.username}](https://puzzlethon.brownpuzzle.club/teams/${user?.username}) on [${puzzleId}](https://puzzlethon.brownpuzzle.club/puzzle/${puzzleId}): _${hint}_ <@&1310029428864057504>`,
-    });
+    if (process.env.DISCORD_WEBHOOK_URL) {
+      await axios.post(process.env.DISCORD_WEBHOOK_URL, {
+        content: `🙏 **Hint** [request](https://puzzlethon.brownpuzzle.club/admin/hints) by [${user?.username}](https://puzzlethon.brownpuzzle.club/teams/${user?.username}) on [${puzzleId}](https://puzzlethon.brownpuzzle.club/puzzle/${puzzleId}): _${hint}_ <@&1310029428864057504>`,
+      });
+    }
   }
 }
 
