@@ -22,15 +22,15 @@ export default async function Home() {
       displayName: teams.displayName,
       // Exclude finish time if it is after hunt end
       finishTime: sql<Date | null>`
-        case 
-          when ${teams.finishTime} > ${HUNT_END_TIME} then null
-          else ${teams.finishTime}
-        end`.as("finish_time"),
+        CASE 
+          WHEN ${teams.finishTime} > ${HUNT_END_TIME} THEN NULL
+          ELSE ${teams.finishTime}
+        END`.as("finish_time"),
       correctGuesses:
-        sql<number>`count(case when ${guesses.isCorrect} = true then 1 end)`.as(
+        sql<number>`COUNT(CASE WHEN ${guesses.isCorrect} = true THEN 1 END)`.as(
           "correct_guesses",
         ),
-      lastCorrectGuessTime: sql<Date>`max(${guesses.submitTime})`.as(
+      lastCorrectGuessTime: sql<Date>`MAX(${guesses.submitTime})`.as(
         "last_correct_guess_time",
       ),
     })
