@@ -17,7 +17,7 @@ export default {
       },
       colors: {
         secondary: "#808080",
-        "hunt-nav-color": colors.slate[50],
+        "hunt-nav-color": colors.gray[50],
       },
     },
   },

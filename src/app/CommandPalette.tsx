@@ -20,8 +20,8 @@ import {
   House,
   PartyPopper,
   MessageCircleWarning,
-  UserRoundSearch,
   ClipboardPenLine,
+  UsersRound,
 } from "lucide-react";
 
 export function CommandPalette() {
@@ -113,7 +113,7 @@ export function CommandPalette() {
               setOpen(false);
             }}
           >
-            <UserRoundSearch className="text-blue-500" />
+            <UsersRound className="text-blue-500" />
             <span>Teams</span>
           </CommandItem>
           <CommandItem

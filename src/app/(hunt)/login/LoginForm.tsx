@@ -63,7 +63,7 @@ export function LoginForm() {
               <FormLabel>Username</FormLabel>
               <FormControl>
                 <Input
-                  className="placeholder:text-slate-300"
+                  className="placeholder:text-gray-300"
                   placeholder="jcarberr"
                   {...field}
                 />
@@ -81,7 +81,7 @@ export function LoginForm() {
               <FormControl>
                 <Input
                   type="password"
-                  className="placeholder:text-slate-300"
+                  className="placeholder:text-gray-300"
                   placeholder="password"
                   {...field}
                 />
